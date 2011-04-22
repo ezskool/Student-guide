@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Student-guide NTNU</string>
+    <string name="btn_courses">Courses</string>
+    <string name="btn_timetable">Timetable</string>
+    
+    <!-- CourseActivity strings -->
+    <string name="btn_search_course">Search for course</string>
+    <string name="et_course_id">Course id</string>
+    <string name="btn_search">Search</string>
+    <string name="title_search_course">Search for course</string>
+</resources>
