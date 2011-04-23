@@ -17,8 +17,10 @@ import studentguiden.ntnu.main.Util;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class CourseActivity extends Activity{
+	private TextView courseName, courseDescription, courseCredit, courseLevel;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -30,32 +32,26 @@ public class CourseActivity extends Activity{
 		if(extras !=null)
 		{
 		new ContentDownloader().execute(extras.getString("courseId"));
-		
 		}
+		
+		courseName = (TextView)findViewById(R.id.tv_coursename);
+		courseDescription = (TextView)findViewById(R.id.tv_coursedescription);
+		courseLevel = (TextView)findViewById(R.id.tv_courseLevel);
+		courseCredit = (TextView)findViewById(R.id.tv_courseCredit);
+		
 	}
 	
-	public void populateCourseDescription(String courseDescription) throws JSONException {
-		//		JSONObject jObject = new JSONObject();
-//		
-//		jObject = new JSONObject(courseDescription); 
-//		
-//		JSONObject menuObject = jObject.getJSONObject("menu");
-//		
-//		String attributeId = menuObject.getString("id");
-//		System.out.println(attributeId);
-//		String attributeValue = menuObject.getString("value");
-//		System.out.println(attributeValue);
-//		JSONObject popupObject = menuObject.getJSONObject("popup");
-//		
-//		JSONArray menuitemArray = popupObject.getJSONArray("menuitem");
-//		
-//		for (int i = 0; i < 3; i++) {
-//			System.out.println(menuitemArray.getJSONObject(i)
-//					.getString("value").toString());
-//			System.out.println(menuitemArray.getJSONObject(i).getString(
-//					"onclick").toString());
-//		}
-//		
+	public void populateCourseDescription(String rawCourseDescription) throws JSONException {
+		Util.log("Populating course description..");
+		JSONObject jsonCourseObject = new JSONObject(rawCourseDescription).getJSONObject("course"); 
+		
+		courseName.setText(jsonCourseObject.getString("name"));
+		courseLevel.setText(jsonCourseObject.getString("studyLevelName"));
+		courseCredit.setText(jsonCourseObject.getString("credit")+" SP");
+		
+		
+		Util.log("coursename: " +courseName);
+		
 	}
 	
 	private class ContentDownloader extends AsyncTask<String, Void, Integer>{
@@ -83,13 +79,12 @@ public class CourseActivity extends Activity{
 		
 		@Override
 		protected void onPostExecute(Integer result) {
-		System.out.println(textContent);
-//			try {
-////				CourseActivity.this.populateCourseDescription(textContent);
-//			} catch (JSONException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			try {
+				CourseActivity.this.populateCourseDescription(textContent);
+			} catch (JSONException e) {
+				Util.log("populating course description failed: JSONException");
+				e.printStackTrace();
+			}
 		}
 
 		/**

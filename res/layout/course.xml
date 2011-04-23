@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/studentguide_layout"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
+	<LinearLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_centerHorizontal="true"
+		android:layout_alignParentTop="true" android:orientation="vertical">
+		<TextView style="@style/text" android:id="@+id/tv_coursename"
+			android:textStyle="bold" />
+		<TextView style="@style/text" android:id="@+id/tv_courseLevel" />
+		<TextView style="@style/text" android:id="@+id/tv_courseCredit" />
 
-	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-	android:id="@+id/tv_coursename"/>
+		<TextView style="@style/text" android:id="@+id/tv_coursedescription" />
+	</LinearLayout>
 </RelativeLayout>
