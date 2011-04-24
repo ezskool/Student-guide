@@ -1,6 +1,6 @@
 package studentguiden.ntnu.main;
 
-import studentguiden.ntnu.courses.CourseMenuActivity;
+import studentguiden.ntnu.courses.CourseSearchActivity;
 import studentguiden.ntnu.timetable.TimetableActivity;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+/**
+ * @author Håkon Drolsum Røkenes
+ * 
+ */
 
 public class MenuActivity extends Activity implements OnClickListener{
 	
@@ -29,7 +34,7 @@ public class MenuActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		if(v==btn_courses) {
-			Intent intent = new Intent(MenuActivity.this, CourseMenuActivity.class);
+			Intent intent = new Intent(MenuActivity.this, CourseSearchActivity.class);
 			startActivity(intent);
 		}else if(v==btn_timetable) {
 			Intent intent = new Intent(MenuActivity.this, TimetableActivity.class);

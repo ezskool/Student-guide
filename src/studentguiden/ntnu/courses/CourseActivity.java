@@ -25,7 +25,7 @@ import android.widget.TextView;
  * 
  */
 public class CourseActivity extends Activity{
-	private TextView courseName, courseDescription, courseCredit, courseLevel;
+	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -43,9 +43,14 @@ public class CourseActivity extends Activity{
 		courseDescription = (TextView)findViewById(R.id.tv_coursedescription);
 		courseLevel = (TextView)findViewById(R.id.tv_courseLevel);
 		courseCredit = (TextView)findViewById(R.id.tv_courseCredit);
+		courseGoals = (TextView)findViewById(R.id.tv_courseGoals);
 
 	}
 
+	/**
+	 * Parses the course description, and updates user interface with the respective values
+	 * @param rawCourseDescription the string containing the entire course description in JSON format
+	 */
 	public void populateCourseDescription(String rawCourseDescription) {
 		Util.log("Populating course description..");
 
@@ -55,14 +60,16 @@ public class CourseActivity extends Activity{
 			courseName.setText(jsonCourseObject.getString("name"));
 			courseLevel.setText(jsonCourseObject.getString("studyLevelName"));
 			courseCredit.setText(jsonCourseObject.getString("credit")+" SP");
+			
+			JSONArray infoArray = jsonCourseObject.getJSONArray("infoType");
+			courseGoals.setText(infoArray.getJSONObject(0).getString("text"));
+			courseDescription.setText(infoArray.getJSONObject(1).getString("text"));
+			
+			
 		}catch(JSONException e) {
 			Util.log("populating course description failed: JSONException");
 			e.printStackTrace();
 		}
-
-
-
-
 	}
 
 	
