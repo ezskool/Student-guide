@@ -11,7 +11,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="studentguiden.ntnu.courses.CourseMenuActivity"
+		<activity android:name="studentguiden.ntnu.courses.FindCourseActivity"
 			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.timetable.TimetableActivity"
 			android:label="@string/app_name" />
