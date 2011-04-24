@@ -20,6 +20,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 
+/**
+ * @author Håkon Drolsum Røkenes
+ * 
+ */
 public class CourseActivity extends Activity{
 	private TextView courseName, courseDescription, courseCredit, courseLevel;
 
@@ -61,12 +65,14 @@ public class CourseActivity extends Activity{
 
 	}
 
+	
 	private class ContentDownloader extends AsyncTask<String, Void, Integer>{
 
 		private String textContent = "";
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
 
+		
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {
