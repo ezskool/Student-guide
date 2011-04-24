@@ -5,6 +5,11 @@ import studentguiden.ntnu.main.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ * @author Håkon Drolsum Røkenes
+ * 
+ */
+
 public class TimetableActivity extends Activity{
 	
     /** Called when the activity is first created. */

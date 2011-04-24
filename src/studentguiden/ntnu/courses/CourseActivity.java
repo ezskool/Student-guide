@@ -15,51 +15,58 @@ import org.json.JSONObject;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.main.Util;
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 
 public class CourseActivity extends Activity{
 	private TextView courseName, courseDescription, courseCredit, courseLevel;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course);
-		
+
 		Bundle extras = getIntent().getExtras();
-		
+
 		if(extras !=null)
 		{
-		new ContentDownloader().execute(extras.getString("courseId"));
+			new ContentDownloader().execute(extras.getString("courseId"));
 		}
-		
+
 		courseName = (TextView)findViewById(R.id.tv_coursename);
 		courseDescription = (TextView)findViewById(R.id.tv_coursedescription);
 		courseLevel = (TextView)findViewById(R.id.tv_courseLevel);
 		courseCredit = (TextView)findViewById(R.id.tv_courseCredit);
-		
+
 	}
-	
-	public void populateCourseDescription(String rawCourseDescription) throws JSONException {
+
+	public void populateCourseDescription(String rawCourseDescription) {
 		Util.log("Populating course description..");
-		JSONObject jsonCourseObject = new JSONObject(rawCourseDescription).getJSONObject("course"); 
-		
-		courseName.setText(jsonCourseObject.getString("name"));
-		courseLevel.setText(jsonCourseObject.getString("studyLevelName"));
-		courseCredit.setText(jsonCourseObject.getString("credit")+" SP");
-		
-		
-		Util.log("coursename: " +courseName);
-		
+
+		try{
+			JSONObject jsonCourseObject = new JSONObject(rawCourseDescription).getJSONObject("course"); 
+
+			courseName.setText(jsonCourseObject.getString("name"));
+			courseLevel.setText(jsonCourseObject.getString("studyLevelName"));
+			courseCredit.setText(jsonCourseObject.getString("credit")+" SP");
+		}catch(JSONException e) {
+			Util.log("populating course description failed: JSONException");
+			e.printStackTrace();
+		}
+
+
+
+
 	}
-	
+
 	private class ContentDownloader extends AsyncTask<String, Void, Integer>{
-		
+
 		private String textContent = "";
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
-		
+
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {
@@ -76,21 +83,25 @@ public class CourseActivity extends Activity{
 			}
 			return DOWNLOAD_SUCCESSFUL;
 		}
-		
+
+		/**
+		 * Called when doInBackground is finished, and updates the UI thread with course information if successful.
+		 * If the download failed, a toast message will appear.
+		 * @param Integer - indicating whether or not download was successful
+		 */
 		@Override
 		protected void onPostExecute(Integer result) {
-			try {
+			if(result==DOWNLOAD_SUCCESSFUL) {
 				CourseActivity.this.populateCourseDescription(textContent);
-			} catch (JSONException e) {
-				Util.log("populating course description failed: JSONException");
-				e.printStackTrace();
+			}else if(result==DOWNLOAD_FAILED) {
+				Util.displayToastMessage(getString(R.string.download_failed_toast),CourseActivity.this.getApplicationContext());
 			}
 		}
 
 		/**
-		 * Reads all content of a Reader object. Used for reading the content of an URL
+		 * Reads all content from a Reader object. Used for reading the content of an URL
 		 * @param reader
-		 * @return
+		 * @return the string which was read
 		 * @throws IOException
 		 */
 		private String read(Reader reader) throws IOException {

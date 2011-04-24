@@ -13,6 +13,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * @author Håkon Drolsum Røkenes
+ * 
+ */
+
 public class CourseMenuActivity extends Activity implements OnClickListener{
 
 	private Button btn_search_course, btn_search;
