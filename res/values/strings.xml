@@ -4,10 +4,17 @@
     <string name="btn_courses">Courses</string>
     <string name="btn_timetable">Timetable</string>
     
-    <!-- CourseActivity strings -->
+    <!-- CourseSearchActivity strings -->
+    <string name="dialog_find_course_title">Select course</string>
     <string name="btn_search_course">Search for course</string>
+    <string name="btn_find_courses">Find courses</string>    
+    <!-- CourseActivity strings -->
+
     <string name="et_course_id">Course id</string>
     <string name="btn_search">Search</string>
     <string name="title_search_course">Search for course</string>
     <string name="download_failed_toast">Download failed. Please make sure you have a working internet connection, and try again.</string>
+    <string name="invalid_url_toast">Download failed: Could not find course (web server might be down).</string>
+    <string name="course_goals">Course Goals</string>
+    <string name="course_description">Course Description</string>
 </resources>

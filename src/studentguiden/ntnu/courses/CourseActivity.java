@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -34,8 +35,7 @@ public class CourseActivity extends Activity{
 
 		Bundle extras = getIntent().getExtras();
 
-		if(extras !=null)
-		{
+		if(extras !=null){
 			new ContentDownloader().execute(extras.getString("courseId"));
 		}
 
@@ -78,17 +78,17 @@ public class CourseActivity extends Activity{
 		private String textContent = "";
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
+		private final int DOWNLOAD_FAILED_INVALID_URL = 2;
 
 		
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {
 				URL url = new URL("http://www.ime.ntnu.no/api/course/"+params[0]);
-				Util.log("Downloading content from url: "+url.toString());
-				InputStream in = url.openStream();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
-				textContent = read(reader);
-				in.close();
+				textContent = Util.downloadContent(url);
+			}catch(MalformedURLException e) {
+				Util.log("Content download failed: MalformedURLException");
+				return DOWNLOAD_FAILED_INVALID_URL;
 			}catch(IOException e) {
 				Util.log("Content download failed: IOException");
 				e.printStackTrace();
@@ -108,23 +108,12 @@ public class CourseActivity extends Activity{
 				CourseActivity.this.populateCourseDescription(textContent);
 			}else if(result==DOWNLOAD_FAILED) {
 				Util.displayToastMessage(getString(R.string.download_failed_toast),CourseActivity.this.getApplicationContext());
+			}else if(result==DOWNLOAD_FAILED_INVALID_URL) {
+				Util.displayToastMessage(getString(R.string.invalid_url_toast),CourseActivity.this.getApplicationContext());
 			}
 		}
 
-		/**
-		 * Reads all content from a Reader object. Used for reading the content of an URL
-		 * @param reader
-		 * @return the string which was read
-		 * @throws IOException
-		 */
-		private String read(Reader reader) throws IOException {
-			StringBuilder sb = new StringBuilder();
-			int cp;
-			while ((cp = reader.read()) != -1) {
-				sb.append((char) cp);
-			}
-			return sb.toString();
-		}
+
 	}
 
 }
