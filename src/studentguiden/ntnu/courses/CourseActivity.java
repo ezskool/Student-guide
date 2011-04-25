@@ -26,7 +26,7 @@ import android.widget.TextView;
  * 
  */
 public class CourseActivity extends Activity{
-	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals;
+	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, courseGoalsTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -44,6 +44,8 @@ public class CourseActivity extends Activity{
 		courseLevel = (TextView)findViewById(R.id.tv_courseLevel);
 		courseCredit = (TextView)findViewById(R.id.tv_courseCredit);
 		courseGoals = (TextView)findViewById(R.id.tv_courseGoals);
+		courseDescriptionTitle = (TextView)findViewById(R.id.tv_courseDescription_title);
+		courseGoalsTitle = (TextView)findViewById(R.id.tv_courseGoals_title);
 
 	}
 
@@ -62,7 +64,9 @@ public class CourseActivity extends Activity{
 			courseCredit.setText(jsonCourseObject.getString("credit")+" SP");
 			
 			JSONArray infoArray = jsonCourseObject.getJSONArray("infoType");
+			courseGoalsTitle.setText(R.string.course_goals);
 			courseGoals.setText(infoArray.getJSONObject(0).getString("text"));
+			courseDescriptionTitle.setText(R.string.course_description);
 			courseDescription.setText(infoArray.getJSONObject(1).getString("text"));
 			
 			

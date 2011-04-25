@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:paddingTop="10px" android:paddingBottom="10px" android:orientation="vertical">
+	style="@style/studentguide_layout" android:paddingTop="10px"
+	android:paddingBottom="10px" android:orientation="vertical">
 
 	<TextView android:id="@+id/text1" android:textSize="16dip"
 		style="@style/text" android:textStyle="bold" />
 
-	<TextView android:id="@+id/text2" 
-		android:textSize="16dip" style="@style/text" android:layout_alignBottom="@id/text1" />
+	<TextView android:id="@+id/text2" style="@style/text"
+		android:textSize="16dip" android:layout_alignBottom="@id/text1" />
 </LinearLayout>

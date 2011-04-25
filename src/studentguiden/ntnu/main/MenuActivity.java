@@ -3,17 +3,20 @@ package studentguiden.ntnu.main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import studentguiden.ntnu.courses.Course;
 import studentguiden.ntnu.courses.FindCourseActivity;
 import studentguiden.ntnu.timetable.TimetableActivity;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -28,16 +31,18 @@ import android.widget.Button;
 public class MenuActivity extends Activity implements OnClickListener{
 
 	private Button btn_timetable, btn_courses;
-	private boolean hasDownloadedCourses;
-	private String[] courseList, courseNameList;
-	private CourseListInitializer initializer;
+//	private ArrayList<Course> courseList;
 	private ProgressDialog pd;
+	private String rawCourseData;
+	private SharedPreferences prefs;
+
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu);
+		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
 
 		btn_courses = (Button)findViewById(R.id.btn_courses);
 		btn_courses.setOnClickListener(this);
@@ -45,23 +50,23 @@ public class MenuActivity extends Activity implements OnClickListener{
 		btn_timetable = (Button)findViewById(R.id.btn_timetable);
 		btn_timetable.setOnClickListener(this);
 
-		if(!hasDownloadedCourses) {
-			initializer = new CourseListInitializer();
-			initializer.execute("");
+		if((rawCourseData = prefs.getString("rawCourseData", null)) == null) {
+			prefs.edit().putBoolean("hasDownloaded", false).commit();
+			new ContentDownloader().execute("http://www.ime.ntnu.no/api/course/-");
+		}else {
+			Util.log("Course data already downloaded: skipping");
 		}
 	}
 
 	public void startCourseListActivity() {
 		Intent intent = new Intent(MenuActivity.this, FindCourseActivity.class);
-		intent.putExtra("courseList", courseList);
-		intent.putExtra("courseNameList", courseNameList);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onClick(View v) {
 		if(v==btn_courses) {
-			if(hasDownloadedCourses) {
+			if(prefs.getBoolean("hasDownloaded",true)) {
 				startCourseListActivity();
 			}else{
 				pd = ProgressDialog.show(this, "", "Downloading content", true);
@@ -74,16 +79,10 @@ public class MenuActivity extends Activity implements OnClickListener{
 		}
 	}
 
-	public void setCourseList(String[] courses) {
-		this.courseList = courses;
-	}
-	
-	public void setCourseNames(String[] names) {
-		this.courseNameList = names;
-	}
-
-	public void setDownloadComplete() {
-		hasDownloadedCourses = true;
+	public void setRawCourseData(String data) {
+		this.rawCourseData = data;
+		prefs.edit().putString("rawCourseData", data).commit();
+		prefs.edit().putBoolean("hasDownloaded", true).commit();
 		if(pd != null) {
 			if(pd.isShowing()) {
 				startCourseListActivity();
@@ -92,19 +91,19 @@ public class MenuActivity extends Activity implements OnClickListener{
 		}
 	}
 
-	private class CourseListInitializer extends AsyncTask<String, Integer, Integer> {
+
+
+	private class ContentDownloader extends AsyncTask<String, Integer, Integer> {
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
 		private final int DOWNLOAD_FAILED_INVALID_URL = 2;
-		private String rawCourseOverview = "";
-		private JSONArray jsonCourseArray;
-		protected String[] courseIds, courseNames;
-
+		private String rawData = "";
+		
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {
-				URL url = new URL("http://www.ime.ntnu.no/api/course/-");
-				rawCourseOverview = Util.downloadContent(url);
+				URL url = new URL(params[0]);
+				rawData = Util.downloadContent(url);
 			}catch(MalformedURLException e){
 				e.printStackTrace();
 				return DOWNLOAD_FAILED_INVALID_URL;
@@ -113,21 +112,7 @@ public class MenuActivity extends Activity implements OnClickListener{
 				return DOWNLOAD_FAILED;
 			}
 
-			try {
-				jsonCourseArray = new JSONObject(rawCourseOverview).getJSONArray("course");
-				int amountOfCourses = jsonCourseArray.length();
-				courseIds = new String[amountOfCourses];
-				courseNames = new String[amountOfCourses];
-				
-				for (int i = 0; i < amountOfCourses; i++) {
-					JSONObject temp = jsonCourseArray.getJSONObject(i);
-					courseIds[i] = temp.getString("code");
-					courseNames[i] = temp.getString("name");
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+			
 			return DOWNLOAD_SUCCESSFUL;			
 		}
 
@@ -135,9 +120,7 @@ public class MenuActivity extends Activity implements OnClickListener{
 		protected void onPostExecute(Integer result) {
 			if(result == DOWNLOAD_SUCCESSFUL) {
 				Util.log("Course list download was successful");
-				MenuActivity.this.setCourseList(courseIds);
-				MenuActivity.this.setCourseNames(courseNames);
-				MenuActivity.this.setDownloadComplete();
+				MenuActivity.this.setRawCourseData(rawData);
 			}	
 		}
 	}

@@ -1,92 +1,94 @@
 package studentguiden.ntnu.courses;
 
 
+
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.main.Util;
-import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 /**
  * @author Håkon Drolsum Røkenes
  * 
  */
 
-public class FindCourseActivity extends ListActivity implements OnClickListener, OnEditorActionListener{
+public class FindCourseActivity extends ListActivity implements OnClickListener{
 
 	private Button btn_search;
 	private EditText et_search_text;
-	protected String[] courseList, courseNameList;
-	private LayoutInflater inflater;
-
+	private ArrayList<Course> courseList;
+	private SharedPreferences prefs;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course_menu);
 
-		Bundle extras = getIntent().getExtras();
-		if(!extras.isEmpty()) {
-			courseList = extras.getStringArray("courseList");
-			courseNameList = extras.getStringArray("courseNameList");
+		Util.log("starting findcourseactivity");
+		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
+
+		if(prefs.getBoolean("hasDownloaded", false)){
+			Util.log("starting to parse raw course data");
+			new ContentParser().execute(prefs.getString("rawCourseData", ""));
+		}else {
+			Util.log("course data not found");
+			//TODO: prøve å laste ned igjen?
 		}
 
 		btn_search = (Button)findViewById(R.id.btn_search);
 		btn_search.setOnClickListener(this);
 
 		et_search_text = (EditText)findViewById(R.id.et_course_search);
-		et_search_text.setOnEditorActionListener(this);
+	}
 
-		inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		this.setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, courseList) {
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				View row;
-
-				if (null == convertView) {
-					row = inflater.inflate(R.layout.list_item, null);
-				} else {
-					row = convertView;
+	private void setListContent(String searchString) {
+		if(searchString=="" || searchString==null) {
+			this.setListAdapter(new courseListArrayAdapter(this, R.layout.list_item, courseList));
+		}else {
+			searchString.toLowerCase();
+			Util.log("filtering course list, on searchString "+searchString);
+			ArrayList<Course> filteredCourseList = new ArrayList<Course>();
+			for (Course course : courseList) {
+				if(course.getCourseText().toLowerCase().contains(searchString)) {
+					filteredCourseList.add(course);
+					Util.log("adding course to filtered list "+course.getCode());
 				}
-
-				TextView tv1 = (TextView) row.findViewById(R.id.text1);
-				tv1.setText(getItem(position));
-
-				TextView tv2 = (TextView) row.findViewById(R.id.text2);
-				tv2.setText(courseNameList[position]);
-
-				return row;
 			}
-		});
+			this.setListAdapter(new courseListArrayAdapter(this, R.layout.list_item, filteredCourseList));
+		}
 	}
 
 
+	public void setCourseList(ArrayList<Course> courses) {
+		this.courseList = courses;
+		setListContent("");
+	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		String selectedCourse = this.getListAdapter().getItem(position).toString();
-		startCourseActivity(selectedCourse);
+		Course selectedCourse = (Course) this.getListAdapter().getItem(position);
+		startCourseActivity(selectedCourse.getCode());
 	}
 
 	/**
-	 * Starts the CourseActivity class for a course
+	 * Starts the CourseActivity class for a course id
 	 * @param courseId the respective course id
 	 */
 	private void startCourseActivity(String courseId){
@@ -98,15 +100,47 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if(v==btn_search) {
-			startCourseActivity(et_search_text.getText().toString());
+			setListContent(et_search_text.getText().toString());
 		}
 	}
 
-	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if(v==et_search_text) {
 
+	private class ContentParser extends AsyncTask<String, Void, Integer> {
+		private final int PARSING_FAILED = 0;
+		private final int PARSING_SUCCESFUL = 1;
+		private ArrayList<Course> courses = new ArrayList<Course>();
+
+
+		@Override
+		protected Integer doInBackground(String... params) {
+			try {
+				JSONArray jsonCourseArray = new JSONObject(params[0]).getJSONArray("course");
+				int amountOfCourses = jsonCourseArray.length();
+
+
+				for (int i = 0; i < amountOfCourses; i++) {
+					JSONObject temp = jsonCourseArray.getJSONObject(i);
+					courses.add(new Course(temp.getString("code"), temp.getString("name")));
+				}
+			} catch (JSONException e) {
+				Util.log("parsing courses failed: JSONException");
+				e.printStackTrace();
+				return PARSING_FAILED;
+			} 
+
+			return PARSING_SUCCESFUL;
 		}
-		return false;
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(result == PARSING_SUCCESFUL) {
+				Util.log("Course list parsing was successful");
+				FindCourseActivity.this.setCourseList(courses);
+			}	
+		}
+
 	}
+
+
+
 }
