@@ -5,7 +5,9 @@
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:orientation="vertical"
 		android:layout_centerHorizontal="true">
-
+		
+		<TextView style="@style/text" android:text="@string/title_search_course" />
+		
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal">
 
@@ -18,7 +20,8 @@
 		</LinearLayout>
 
 		<ListView android:id="@android:id/list" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" style="@style/studentguide_layout" android:cacheColorHint="#00000000" />
+			android:layout_height="fill_parent" style="@style/studentguide_layout"
+			android:cacheColorHint="#00000000" />
 
 	</LinearLayout>
 </RelativeLayout>

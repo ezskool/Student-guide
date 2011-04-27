@@ -14,7 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.main.Util;
+import studentguiden.ntnu.misc.Util;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -84,7 +84,6 @@ public class CourseActivity extends Activity{
 		private final int DOWNLOAD_FAILED = 1;
 		private final int DOWNLOAD_FAILED_INVALID_URL = 2;
 
-		
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {

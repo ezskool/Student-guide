@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Student-guide NTNU</string>
+    <!-- MenuActivity strings -->
     <string name="btn_courses">Courses</string>
     <string name="btn_timetable">Timetable</string>
+    <string name="btn_dinner">Dinner</string>
     
     <!-- CourseSearchActivity strings -->
     <string name="dialog_find_course_title">Select course</string>
@@ -17,4 +19,8 @@
     <string name="invalid_url_toast">Download failed: Could not find course (web server might be down).</string>
     <string name="course_goals">Course Goals</string>
     <string name="course_description">Course Description</string>
+    
+    <!--  SocialActivity Strings -->
+    <string name="tv_social_title">Social Events</string>
+    <string name="btn_open_link">Open link</string>
 </resources>

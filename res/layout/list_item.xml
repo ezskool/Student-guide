@@ -8,5 +8,7 @@
 		style="@style/text" android:textStyle="bold" />
 
 	<TextView android:id="@+id/text2" style="@style/text"
-		android:textSize="16dip" android:layout_alignBottom="@id/text1" />
+		android:textSize="16dip" />
+	<TextView android:id="@+id/text3" style="@style/text"
+		android:textSize="16dip" />
 </LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" style="@style/studentguide_layout">
+
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical"
+			android:scrollbarAlwaysDrawVerticalTrack="true">
+	
+			<TextView style="@style/text" android:id="@+id/tv_dinner_title" />
+			<TextView style="@style/text" android:id="@+id/tv_dinner_description" />
+
+		</LinearLayout>
+	</ScrollView>
+
+</RelativeLayout>

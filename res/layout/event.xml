@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" style="@style/studentguide_layout">
+
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/layout_text_event">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical">
+
+			<TextView style="@style/text" android:id="@+id/tv_event_title"
+				android:textSize="18dip" android:textStyle="bold"
+				android:layout_marginBottom="10px" android:fitsSystemWindows="true" />
+			<TextView style="@style/text" android:id="@+id/tv_event_description"
+				android:fitsSystemWindows="true" />
+			<TextView style="@style/text" android:id="@+id/tv_event_link"
+				android:fitsSystemWindows="true" android:textColor="#3399FF" />
+		</LinearLayout>
+	</ScrollView>
+
+</RelativeLayout>

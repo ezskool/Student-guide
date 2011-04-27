@@ -2,6 +2,8 @@ package studentguiden.ntnu.courses;
 
 
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -9,30 +11,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+
+import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.main.Util;
+import studentguiden.ntnu.misc.Util;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * @author Håkon Drolsum Røkenes
  * 
  */
 
-public class FindCourseActivity extends ListActivity implements OnClickListener{
+public class FindCourseActivity extends ListActivity implements OnClickListener, OnKeyListener{
 
 	private Button btn_search;
 	private EditText et_search_text;
 	private ArrayList<Course> courseList;
 	private SharedPreferences prefs;
+	private ProgressDialog pd;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -43,23 +53,22 @@ public class FindCourseActivity extends ListActivity implements OnClickListener{
 		Util.log("starting findcourseactivity");
 		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
 
-		if(prefs.getBoolean("hasDownloaded", false)){
-			Util.log("starting to parse raw course data");
-			new ContentParser().execute(prefs.getString("rawCourseData", ""));
-		}else {
-			Util.log("course data not found");
-			//TODO: prøve å laste ned igjen?
-		}
+
+		new ContentParser().execute(prefs.getString("rawCourseData", ""));
+		
+		pd = ProgressDialog.show(this, "", "Downloading content", true);
+		
 
 		btn_search = (Button)findViewById(R.id.btn_search);
 		btn_search.setOnClickListener(this);
 
 		et_search_text = (EditText)findViewById(R.id.et_course_search);
+		et_search_text.setOnKeyListener(this);
 	}
 
 	private void setListContent(String searchString) {
 		if(searchString=="" || searchString==null) {
-			this.setListAdapter(new courseListArrayAdapter(this, R.layout.list_item, courseList));
+			this.setListAdapter(new CourseListArrayAdapter(this, R.layout.list_item, courseList));
 		}else {
 			searchString.toLowerCase();
 			Util.log("filtering course list, on searchString "+searchString);
@@ -67,10 +76,9 @@ public class FindCourseActivity extends ListActivity implements OnClickListener{
 			for (Course course : courseList) {
 				if(course.getCourseText().toLowerCase().contains(searchString)) {
 					filteredCourseList.add(course);
-					Util.log("adding course to filtered list "+course.getCode());
 				}
 			}
-			this.setListAdapter(new courseListArrayAdapter(this, R.layout.list_item, filteredCourseList));
+			this.setListAdapter(new CourseListArrayAdapter(this, R.layout.list_item, filteredCourseList));
 		}
 	}
 
@@ -78,6 +86,16 @@ public class FindCourseActivity extends ListActivity implements OnClickListener{
 	public void setCourseList(ArrayList<Course> courses) {
 		this.courseList = courses;
 		setListContent("");
+	}
+	
+
+
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if(v==et_search_text) {
+			setListContent(et_search_text.getText().toString());
+		}
+		return false;
 	}
 
 	@Override
@@ -108,13 +126,22 @@ public class FindCourseActivity extends ListActivity implements OnClickListener{
 	private class ContentParser extends AsyncTask<String, Void, Integer> {
 		private final int PARSING_FAILED = 0;
 		private final int PARSING_SUCCESFUL = 1;
+		private final int DOWNLOAD_FAILED = 2;
 		private ArrayList<Course> courses = new ArrayList<Course>();
-
+		private String rawData;
 
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {
-				JSONArray jsonCourseArray = new JSONObject(params[0]).getJSONArray("course");
+				if(params[0].equals("")) {
+					URL url = new URL(params[0]);
+					rawData = Util.downloadContent(url);
+					prefs.edit().putString("rawCourseData", rawData).commit();
+				} else{
+					rawData = params[0];
+				}
+				
+				JSONArray jsonCourseArray = new JSONObject(rawData).getJSONArray("course");
 				int amountOfCourses = jsonCourseArray.length();
 
 
@@ -126,7 +153,11 @@ public class FindCourseActivity extends ListActivity implements OnClickListener{
 				Util.log("parsing courses failed: JSONException");
 				e.printStackTrace();
 				return PARSING_FAILED;
-			} 
+			} catch(IOException e) {
+				Util.log("Course content download failed: IOException");
+				e.printStackTrace();
+				return DOWNLOAD_FAILED;
+			}
 
 			return PARSING_SUCCESFUL;
 		}
@@ -136,10 +167,15 @@ public class FindCourseActivity extends ListActivity implements OnClickListener{
 			if(result == PARSING_SUCCESFUL) {
 				Util.log("Course list parsing was successful");
 				FindCourseActivity.this.setCourseList(courses);
+				FindCourseActivity.this.pd.cancel();
 			}	
 		}
 
 	}
+
+
+
+
 
 
 
