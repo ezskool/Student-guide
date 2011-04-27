@@ -1,10 +1,7 @@
 package studentguiden.ntnu.social;
 
-import java.util.ArrayList;
 import java.util.List;
 
-
-import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.FeedEntry;
 import studentguiden.ntnu.main.R;
 
@@ -44,7 +41,8 @@ public class SocialListArrayAdapter extends ArrayAdapter<FeedEntry>{
             TextView text2 = (TextView) view.findViewById(R.id.text2);
 //            TextView text3 = (TextView) view.findViewById(R.id.text3);
             
-            image.setImageResource(R.drawable.samfundet_logo2);
+	        image.setImageResource(R.drawable.ic_samfundet);
+            
             text1.setText(item.getTitle());
             text2.setText("Category: "+item.getCategory());
             }

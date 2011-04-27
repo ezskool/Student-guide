@@ -40,10 +40,10 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 
 	private Button btn_search;
 	private EditText et_search_text;
-	private ArrayList<Course> courseList;
+//	private ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 	private ProgressDialog pd;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +53,16 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 		Util.log("starting findcourseactivity");
 		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
 
+		if(CourseUtilities.getCourseList() == null) {
+//			pd = ProgressDialog.show(this, "", "Downloading content", true);
+//			new ContentParser().execute(prefs.getString("rawCourseData", ""));
+			Util.log("course list empty");
+		}else {
+			setListContent();
+			//TODO: lag en refresh knapp, i tilfelle course content ikke har rukket å laste ned innen man trykker inn hit?
+		}
+		
 
-		new ContentParser().execute(prefs.getString("rawCourseData", ""));
-		
-		pd = ProgressDialog.show(this, "", "Downloading content", true);
-		
 
 		btn_search = (Button)findViewById(R.id.btn_search);
 		btn_search.setOnClickListener(this);
@@ -68,12 +73,12 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 
 	private void setListContent(String searchString) {
 		if(searchString=="" || searchString==null) {
-			this.setListAdapter(new CourseListArrayAdapter(this, R.layout.list_item, courseList));
+			this.setListAdapter(new CourseListArrayAdapter(this, R.layout.list_item, CourseUtilities.getCourseList()));
 		}else {
 			searchString.toLowerCase();
 			Util.log("filtering course list, on searchString "+searchString);
 			ArrayList<Course> filteredCourseList = new ArrayList<Course>();
-			for (Course course : courseList) {
+			for (Course course : CourseUtilities.getCourseList()) {
 				if(course.getCourseText().toLowerCase().contains(searchString)) {
 					filteredCourseList.add(course);
 				}
@@ -82,12 +87,15 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 		}
 	}
 
-
-	public void setCourseList(ArrayList<Course> courses) {
-		this.courseList = courses;
+	private void setListContent() {
 		setListContent("");
 	}
-	
+
+//	public void setCourseList(ArrayList<Course> courses) {
+//		this.courseList = courses;
+//		setListContent("");
+//	}
+
 
 
 	@Override
@@ -123,60 +131,52 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 	}
 
 
-	private class ContentParser extends AsyncTask<String, Void, Integer> {
-		private final int PARSING_FAILED = 0;
-		private final int PARSING_SUCCESFUL = 1;
-		private final int DOWNLOAD_FAILED = 2;
-		private ArrayList<Course> courses = new ArrayList<Course>();
-		private String rawData;
-
-		@Override
-		protected Integer doInBackground(String... params) {
-			try {
-				if(params[0].equals("")) {
-					URL url = new URL(params[0]);
-					rawData = Util.downloadContent(url);
-					prefs.edit().putString("rawCourseData", rawData).commit();
-				} else{
-					rawData = params[0];
-				}
-				
-				JSONArray jsonCourseArray = new JSONObject(rawData).getJSONArray("course");
-				int amountOfCourses = jsonCourseArray.length();
-
-
-				for (int i = 0; i < amountOfCourses; i++) {
-					JSONObject temp = jsonCourseArray.getJSONObject(i);
-					courses.add(new Course(temp.getString("code"), temp.getString("name")));
-				}
-			} catch (JSONException e) {
-				Util.log("parsing courses failed: JSONException");
-				e.printStackTrace();
-				return PARSING_FAILED;
-			} catch(IOException e) {
-				Util.log("Course content download failed: IOException");
-				e.printStackTrace();
-				return DOWNLOAD_FAILED;
-			}
-
-			return PARSING_SUCCESFUL;
-		}
-
-		@Override
-		protected void onPostExecute(Integer result) {
-			if(result == PARSING_SUCCESFUL) {
-				Util.log("Course list parsing was successful");
-				FindCourseActivity.this.setCourseList(courses);
-				FindCourseActivity.this.pd.cancel();
-			}	
-		}
-
-	}
-
-
-
-
-
-
-
+//	private class ContentParser extends AsyncTask<String, Void, Integer> {
+//		private final int PARSING_FAILED = 0;
+//		private final int PARSING_SUCCESFUL = 1;
+//		private final int DOWNLOAD_FAILED = 2;
+//		private ArrayList<Course> courses = new ArrayList<Course>();
+//		private String rawData;
+//
+//		@Override
+//		protected Integer doInBackground(String... params) {
+//			try {
+//				if(params[0].equals("")) {
+//					URL url = new URL(params[0]);
+//					rawData = Util.downloadContent(url);
+//					prefs.edit().putString("rawCourseData", rawData).commit();
+//				} else{
+//					rawData = params[0];
+//				}
+//
+//				JSONArray jsonCourseArray = new JSONObject(rawData).getJSONArray("course");
+//				int amountOfCourses = jsonCourseArray.length();
+//
+//
+//				for (int i = 0; i < amountOfCourses; i++) {
+//					JSONObject temp = jsonCourseArray.getJSONObject(i);
+//					courses.add(new Course(temp.getString("code"), temp.getString("name")));
+//				}
+//			} catch (JSONException e) {
+//				Util.log("parsing courses failed: JSONException");
+//				e.printStackTrace();
+//				return PARSING_FAILED;
+//			} catch(IOException e) {
+//				Util.log("Course content download failed: IOException");
+//				e.printStackTrace();
+//				return DOWNLOAD_FAILED;
+//			}
+//			return PARSING_SUCCESFUL;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(Integer result) {
+//			if(result == PARSING_SUCCESFUL) {
+//				Util.log("Course list parsing was successful");
+//				CourseUtilities.setCourseList(courses);
+//				FindCourseActivity.this.pd.cancel();
+//				FindCourseActivity.this.setListContent();
+//			}	
+//		}
+//	}
 }
