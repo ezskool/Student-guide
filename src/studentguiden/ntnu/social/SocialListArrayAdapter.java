@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SocialListArrayAdapter extends ArrayAdapter<FeedEntry>{
@@ -38,10 +39,12 @@ public class SocialListArrayAdapter extends ArrayAdapter<FeedEntry>{
 
         FeedEntry item = items.get(position);
         if (item!= null) {
+        	ImageView image = (ImageView) view.findViewById(R.id.img_item_icon);
             TextView text1 = (TextView) view.findViewById(R.id.text1);
             TextView text2 = (TextView) view.findViewById(R.id.text2);
 //            TextView text3 = (TextView) view.findViewById(R.id.text3);
             
+            image.setImageResource(R.drawable.samfundet_logo2);
             text1.setText(item.getTitle());
             text2.setText("Category: "+item.getCategory());
             }
