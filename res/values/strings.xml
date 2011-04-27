@@ -23,4 +23,7 @@
     <!--  SocialActivity Strings -->
     <string name="tv_social_title">Social Events</string>
     <string name="btn_open_link">Open link</string>
+    
+    <!-- DinnerActivity strings -->
+    <string name="text_select_place">Select Place</string>
 </resources>

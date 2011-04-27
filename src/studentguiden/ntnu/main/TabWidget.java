@@ -3,6 +3,7 @@ package studentguiden.ntnu.main;
 
 import studentguiden.ntnu.courses.FindCourseActivity;
 import studentguiden.ntnu.dinner.DinnerActivity;
+import studentguiden.ntnu.dinner.SelectCampusActivity;
 import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.social.SocialActivity;
 import android.app.Activity;
@@ -36,7 +37,7 @@ public class TabWidget extends TabActivity{
 		courseTab = tabHost.newTabSpec("Courses").setIndicator("Courses",res.getDrawable(R.drawable.ic_options)).setContent(intent);
 		tabHost.addTab(courseTab);
 
-		intent = new Intent().setClass(this, DinnerActivity.class);
+		intent = new Intent().setClass(this, SelectCampusActivity.class);
 		dinnerTab = tabHost.newTabSpec("Dinner").setIndicator("Dinner",res.getDrawable(R.drawable.ic_cut)).setContent(intent);
 		tabHost.addTab(dinnerTab);
 

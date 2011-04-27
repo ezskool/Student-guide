@@ -20,34 +20,37 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class SocialActivity extends ListActivity{
-	private TextView tv_social_title;
+	private TextView tv_list_title;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.social);
+		setContentView(R.layout.list);
 
+		tv_list_title = (TextView)findViewById(R.id.tv_list_title);
+		tv_list_title.setText(getString(R.string.tv_social_title));
+		
 		new SocialDownloader().execute("http://www.samfundet.no/arrangement/rss");
 	}
 
 	private void createListContent(List<FeedEntry> entries) {
 		this.setListAdapter(new SocialListArrayAdapter(this, R.layout.list_item, entries));
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		FeedEntry entry = (FeedEntry) this.getListAdapter().getItem(position);
-		
+
 		Intent intent = new Intent(this, EventActivity.class);
 		intent.putExtra("title", entry.getTitle());
 		intent.putExtra("description", entry.getDescription());
 		intent.putExtra("link", entry.getGuid());
-		
+
 		startActivity(intent);
 	}
-	
+
 	private class SocialDownloader extends AsyncTask<String, Void, Integer> {
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
@@ -63,14 +66,10 @@ public class SocialActivity extends ListActivity{
 
 		@Override
 		protected Integer doInBackground(String... params) {
+			entries = feedHandler.getLatestArticles(params[0]);
 
-			try {
-				URL url = new URL(params[0]);
-				entries = feedHandler.getLatestArticles(params[0]);
-
-			}catch(MalformedURLException e){
+			if(entries == null){
 				Util.log("Social data download failed: invalid URL");
-				e.printStackTrace();
 				return DOWNLOAD_FAILED_INVALID_URL;
 			}
 			return DOWNLOAD_SUCCESSFUL;
@@ -80,13 +79,8 @@ public class SocialActivity extends ListActivity{
 		protected void onPostExecute(Integer result) {
 			if(result == DOWNLOAD_SUCCESSFUL) {
 				Util.log("Social data download was successful");
-				displayEntryElements();
-
+				SocialActivity.this.createListContent(entries);
 			}	
-		}
-		private void displayEntryElements() {
-
-			SocialActivity.this.createListContent(entries);
 		}
 	}
 }
