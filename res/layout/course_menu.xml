@@ -2,26 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	style="@style/studentguide_layout">
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="vertical"
-		android:layout_centerHorizontal="true">
-		
-		<TextView style="@style/text" android:text="@string/title_search_course" />
-		
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:orientation="horizontal">
 
-			<EditText android:layout_width="200px"
-				android:layout_height="wrap_content" android:id="@+id/et_course_search"
-				android:hint="@string/et_course_id" android:singleLine="true" />
-			<Button android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:id="@+id/btn_search"
-				android:text="@string/btn_search" />
-		</LinearLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:orientation="vertical">
+
+	<Button android:id="@+id/btn_search" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/title_search_course"
+			android:layout_above="@android:id/list"
+			android:layout_gravity="center_horizontal" />
 
 		<ListView android:id="@android:id/list" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" style="@style/studentguide_layout"
-			android:cacheColorHint="#00000000" />
+			android:layout_height="fill_parent"/>
 
+	
 	</LinearLayout>
+
+
 </RelativeLayout>

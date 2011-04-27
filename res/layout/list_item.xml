@@ -7,13 +7,11 @@
 	<ImageView android:id="@+id/img_item_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"/>
 	<LinearLayout android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:orientation="vertical" android:paddingLeft="5px" android:layout_gravity="center_vertical">
-		<TextView android:id="@+id/text1" android:textSize="16dip"
+		<TextView android:id="@+id/text1" android:textSize="14dip"
 			style="@style/text" android:textStyle="bold" />
 
 		<TextView android:id="@+id/text2" style="@style/text"
-			android:textSize="16dip" />
-		<TextView android:id="@+id/text3" style="@style/text"
-			android:textSize="16dip" />
+			android:textSize="14dip" />
 </LinearLayout>
 	
 </LinearLayout>
