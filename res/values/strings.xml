@@ -34,4 +34,7 @@
     
     <!-- DinnerActivity strings -->
     <string name="text_select_place">Select Place</string>
+    
+    <!-- Waiting messages -->
+    <string name="downloading_content">Downloading content..</string>
 </resources>
