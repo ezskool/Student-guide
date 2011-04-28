@@ -13,14 +13,20 @@ import org.json.JSONObject;
 
 
 import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.MetaCourse;
+import studentguiden.ntnu.main.Globals;
+import studentguiden.ntnu.main.HomeActivity;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,13 +42,15 @@ import android.widget.TextView.OnEditorActionListener;
  * 
  */
 
-public class FindCourseActivity extends ListActivity implements OnClickListener, OnKeyListener{
+public class FindCourseActivity extends ListActivity implements TextWatcher{
 
-	private Button btn_search;
-	private EditText et_search_text;
+	private final int DIALOG_SEARCH_COURSE = 0;
+	
+	private EditText et_search;
 //	private ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 	private ProgressDialog pd;
+	private Dialog searchDialog;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -53,22 +61,25 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 		Util.log("starting findcourseactivity");
 		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
 
+		initializeViewElements();
+		
 		if(CourseUtilities.getCourseList() == null) {
 //			pd = ProgressDialog.show(this, "", "Downloading content", true);
 //			new ContentParser().execute(prefs.getString("rawCourseData", ""));
-			Util.log("course list empty");
 		}else {
-			setListContent();
+			setListContent(et_search.getText().toString());
 			//TODO: lag en refresh knapp, i tilfelle course content ikke har rukket å laste ned innen man trykker inn hit?
 		}
 		
 
-
-		btn_search = (Button)findViewById(R.id.btn_search);
-		btn_search.setOnClickListener(this);
-
-		et_search_text = (EditText)findViewById(R.id.et_course_search);
-		et_search_text.setOnKeyListener(this);
+	
+		
+	}
+	
+	private void initializeViewElements() {
+	
+		et_search = (EditText)findViewById(R.id.et_search);
+		et_search.addTextChangedListener(this);
 	}
 
 	private void setListContent(String searchString) {
@@ -77,8 +88,8 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 		}else {
 			searchString.toLowerCase();
 			Util.log("filtering course list, on searchString "+searchString);
-			ArrayList<Course> filteredCourseList = new ArrayList<Course>();
-			for (Course course : CourseUtilities.getCourseList()) {
+			ArrayList<MetaCourse> filteredCourseList = new ArrayList<MetaCourse>();
+			for (MetaCourse course : CourseUtilities.getCourseList()) {
 				if(course.getCourseText().toLowerCase().contains(searchString)) {
 					filteredCourseList.add(course);
 				}
@@ -87,29 +98,10 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 		}
 	}
 
-	private void setListContent() {
-		setListContent("");
-	}
-
-//	public void setCourseList(ArrayList<Course> courses) {
-//		this.courseList = courses;
-//		setListContent("");
-//	}
-
-
-
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if(v==et_search_text) {
-			setListContent(et_search_text.getText().toString());
-		}
-		return false;
-	}
-
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Course selectedCourse = (Course) this.getListAdapter().getItem(position);
+		MetaCourse selectedCourse = (MetaCourse) this.getListAdapter().getItem(position);
 		startCourseActivity(selectedCourse.getCode());
 	}
 
@@ -122,16 +114,31 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 		intent.putExtra("courseId", courseId);
 		startActivity(intent);
 	}
-
-	@Override
-	public void onClick(View v) {
-		if(v==btn_search) {
-			setListContent(et_search_text.getText().toString());
+	
+	protected Dialog onCreateDialog(int id) {
+		if(id==DIALOG_SEARCH_COURSE) {
+			return searchDialog;
 		}
+		return null;
 	}
 
+	@Override
+	public void afterTextChanged(Editable s) {
+		
+	}
 
-//	private class ContentParser extends AsyncTask<String, Void, Integer> {
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		setListContent(et_search.getText().toString());
+	}
+	
+//	public class ContentParser extends AsyncTask<String, Void, Integer> {
 //		private final int PARSING_FAILED = 0;
 //		private final int PARSING_SUCCESFUL = 1;
 //		private final int DOWNLOAD_FAILED = 2;
@@ -142,9 +149,9 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 //		protected Integer doInBackground(String... params) {
 //			try {
 //				if(params[0].equals("")) {
-//					URL url = new URL(params[0]);
+//					URL url = new URL(Globals.courseListURL);
 //					rawData = Util.downloadContent(url);
-//					prefs.edit().putString("rawCourseData", rawData).commit();
+//				
 //				} else{
 //					rawData = params[0];
 //				}
@@ -173,10 +180,16 @@ public class FindCourseActivity extends ListActivity implements OnClickListener,
 //		protected void onPostExecute(Integer result) {
 //			if(result == PARSING_SUCCESFUL) {
 //				Util.log("Course list parsing was successful");
+//				prefs.edit().putString("rawData", rawData).commit();
+//				prefs.edit().putBoolean("hasDownloaded", true).commit();
 //				CourseUtilities.setCourseList(courses);
+//				FindCourseActivity.this.setListContent("");
 //				FindCourseActivity.this.pd.cancel();
-//				FindCourseActivity.this.setListContent();
-//			}	
+//			}else {
+//				FindCourseActivity.this.pd.cancel();
+//				//TODO: feilmelding om man ikke har nett osv
+//			}
 //		}
 //	}
+
 }

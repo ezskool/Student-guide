@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import studentguiden.ntnu.courses.CourseUtilities;
 import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.misc.Util;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -19,24 +20,42 @@ import android.os.Bundle;
 
 public class HomeActivity extends Activity{
 	private SharedPreferences prefs;
-	
+	private ProgressDialog pd;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
-		
+
+
 		if(CourseUtilities.getCourseList() == null) {
-			new ContentParser().execute(prefs.getString("rawCourseData", ""));
+			String raw = prefs.getString("rawCourseData", "");
+			if(raw.equals("")) {
+				prefs.edit().putBoolean("hasDownloaded", false).commit();
+				new ContentParser().execute("");
+			}else {
+				prefs.edit().putString("rawData", raw).commit();
+				prefs.edit().putBoolean("hasDownloaded", true).commit();
+			}
 		}
 	}
-	
+
+	public void showProgressDialog() {
+		pd = ProgressDialog.show(this, "", "Downloading content", true);
+	}
+
 	private class ContentParser extends AsyncTask<String, Void, Integer> {
 		private final int PARSING_FAILED = 0;
 		private final int PARSING_SUCCESFUL = 1;
 		private final int DOWNLOAD_FAILED = 2;
-		private ArrayList<Course> courses = new ArrayList<Course>();
+		private ArrayList<MetaCourse> courses = new ArrayList<MetaCourse>();
 		private String rawData;
+
+		@Override
+		protected void onPreExecute() {
+			HomeActivity.this.showProgressDialog();
+		}
 
 		@Override
 		protected Integer doInBackground(String... params) {
@@ -44,7 +63,7 @@ public class HomeActivity extends Activity{
 				if(params[0].equals("")) {
 					URL url = new URL(Globals.courseListURL);
 					rawData = Util.downloadContent(url);
-				
+
 				} else{
 					rawData = params[0];
 				}
@@ -55,7 +74,7 @@ public class HomeActivity extends Activity{
 
 				for (int i = 0; i < amountOfCourses; i++) {
 					JSONObject temp = jsonCourseArray.getJSONObject(i);
-					courses.add(new Course(temp.getString("code"), temp.getString("name")));
+					courses.add(new MetaCourse(temp.getString("code"), temp.getString("name")));
 				}
 			} catch (JSONException e) {
 				Util.log("parsing courses failed: JSONException");
@@ -76,7 +95,11 @@ public class HomeActivity extends Activity{
 				prefs.edit().putString("rawData", rawData).commit();
 				prefs.edit().putBoolean("hasDownloaded", true).commit();
 				CourseUtilities.setCourseList(courses);
-			}	
+				HomeActivity.this.pd.cancel();
+			}else {
+				HomeActivity.this.pd.cancel();
+				//TODO: feilmelding om man ikke har nett osv
+			}
 		}
 	}
 

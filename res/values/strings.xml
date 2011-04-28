@@ -7,11 +7,16 @@
     <string name="btn_dinner">Dinner</string>
     
     <!-- CourseSearchActivity strings -->
+    <string name="et_search_course">Filter courses</string>
     <string name="dialog_find_course_title">Select course</string>
     <string name="btn_search_course">Search for course</string>
     <string name="btn_find_courses">Find courses</string>    
+    
     <!-- CourseActivity strings -->
-
+    <string name="course_type">Course Type: </string>
+	<string name="student_points">Student Points: </string>
+	<string name="taught_in_semester_spring">Taught in spring semester</string>
+	<string name="taught_in_semester_autumn">Taught in autumn semester</string>
     <string name="et_course_id">Course id</string>
     <string name="btn_search">Search</string>
     <string name="title_search_course">Search for course</string>
@@ -19,6 +24,9 @@
     <string name="invalid_url_toast">Download failed: Could not find course (web server might be down).</string>
     <string name="course_goals">Course Goals</string>
     <string name="course_description">Course Description</string>
+    <string name="room">Room: </string>
+    <string name="tv_course_schedule_header">Course Schedule</string>
+    <string name="taught_in_weeks">Taught in weeks: </string>
     
     <!--  SocialActivity Strings -->
     <string name="tv_social_title">Social Events</string>

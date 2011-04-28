@@ -49,9 +49,8 @@ public class DinnerActivity extends Activity {
 		protected Integer doInBackground(String... params) {
 			entries = feedHandler.getLatestArticles(params[0]+getCurrentDayURI());
 
-			if(entries==null) {
-				Util.log("Dinner data download failed");
-				return DOWNLOAD_FAILED_INVALID_URL;
+			if(entries.size() == 0) {
+				return DOWNLOAD_FAILED;
 			}
 			return DOWNLOAD_SUCCESSFUL;
 		}
@@ -61,8 +60,10 @@ public class DinnerActivity extends Activity {
 			if(result == DOWNLOAD_SUCCESSFUL) {
 				Util.log("Dinner data download was successful");
 				displayEntryElements();
-
-			}	
+			}else if(result == DOWNLOAD_FAILED || result == DOWNLOAD_FAILED_INVALID_URL) {
+				//TODO: si fra at download faila
+				Util.log("Dinner data download failed");
+			}
 		}
 
 		private void displayEntryElements() {
@@ -71,27 +72,27 @@ public class DinnerActivity extends Activity {
 		}
 
 		private String getCurrentDayURI() {
-			Calendar calendar = Calendar.getInstance();
-			int weekday = calendar.get(Calendar.DAY_OF_WEEK);
-
-			switch(weekday){
-
-			case 2:
-				return "&mo=on";
-			case 3:
-				return "&ti=on";
-			case 4:
-				return "&on=on";
-			case 5:
-				return "&tu=on";
-			case 6:
-				return "&fr=on";
-			case 7:
-				return "&sa=on";
-			case 1:
-				return "&su=on";
-			}
-			return "";
+//			Calendar calendar = Calendar.getInstance();
+//			int weekday = calendar.get(Calendar.DAY_OF_WEEK);
+//
+//			switch(weekday){
+//
+//			case 2:
+//				return "&mo=on";
+//			case 3:
+//				return "&ti=on";
+//			case 4:
+//				return "&on=on";
+//			case 5:
+//				return "&tu=on";
+//			case 6:
+//				return "&fr=on";
+//			case 7:
+//				return "&sa=on";
+//			case 1:
+//				return "&su=on";
+//			}
+			return "&ma=on&ti=on&on=on&to=on&fr=on";
 		}
 	}
 	}

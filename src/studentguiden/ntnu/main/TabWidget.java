@@ -38,7 +38,7 @@ public class TabWidget extends TabActivity{
 		tabHost.addTab(courseTab);
 
 		intent = new Intent().setClass(this, SelectCampusActivity.class);
-		dinnerTab = tabHost.newTabSpec("Dinner").setIndicator("Dinner",res.getDrawable(R.drawable.ic_cut)).setContent(intent);
+		dinnerTab = tabHost.newTabSpec("Dinner").setIndicator("Dinner",res.getDrawable(R.drawable.ic_dinner)).setContent(intent);
 		tabHost.addTab(dinnerTab);
 
 		tabHost.setCurrentTab(0);

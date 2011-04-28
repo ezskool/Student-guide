@@ -12,12 +12,17 @@
 				android:textStyle="bold" />
 			<TextView style="@style/text" android:id="@+id/tv_courseLevel" />
 			<TextView style="@style/text" android:id="@+id/tv_courseCredit" />
+			<TextView style="@style/text" android:id="@+id/tv_course_type" />
+			<TextView style="@style/text" android:id="@+id/tv_course_semester" />
+			<TextView style="@style/text" android:id="@+id/tv_course_prerequisites"/>
 			<TextView style="@style/text" android:id="@+id/tv_courseGoals_title"
 				android:textStyle="bold" />
 			<TextView style="@style/text" android:id="@+id/tv_courseGoals" />
 			<TextView style="@style/text" android:id="@+id/tv_courseDescription_title"
 				android:textStyle="bold" />
 			<TextView style="@style/text" android:id="@+id/tv_coursedescription" />
+			<TextView style="@style/text" android:text="@string/tv_course_schedule_header" android:textStyle="bold"/>
+			<TextView style="@style/text" android:id="@+id/tv_course_schedule" />
 		</LinearLayout>
 	</ScrollView>
 </RelativeLayout>

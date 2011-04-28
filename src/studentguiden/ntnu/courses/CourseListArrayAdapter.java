@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 
 import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.main.R;
 
 import android.content.Context;
@@ -13,13 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class CourseListArrayAdapter extends ArrayAdapter<Course>{
+public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
 
 	private Context context;
-	private ArrayList<Course> items;
+	private ArrayList<MetaCourse> items;
 	
 	public CourseListArrayAdapter(Context context, int textViewResourceId,
-			ArrayList<Course> items) {
+			ArrayList<MetaCourse> items) {
 		super(context, textViewResourceId, items);
 		this.context = context;
 		this.items = items;
@@ -34,7 +35,7 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course>{
         	view = convertView;
         }
 
-        Course item = items.get(position);
+       MetaCourse item = items.get(position);
         if (item!= null) {
             TextView text1 = (TextView) view.findViewById(R.id.text1);
             TextView text2 = (TextView) view.findViewById(R.id.text2);

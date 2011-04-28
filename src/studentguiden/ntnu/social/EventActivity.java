@@ -10,11 +10,13 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EventActivity extends Activity implements OnClickListener{
 	private TextView tv_event_title, tv_event_description, tv_event_link;
 	private String link;
+	private ImageView banner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,9 @@ public class EventActivity extends Activity implements OnClickListener{
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 		tv_event_link.setText(content);
 		tv_event_link.setOnClickListener(this);
+		
+		banner = (ImageView)findViewById(R.id.iv_event_banner);
+		banner.setImageResource(extras.getInt("bannerResource"));
 	}
 
 	@Override
