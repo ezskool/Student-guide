@@ -110,8 +110,6 @@ public class RSSHandler extends DefaultHandler {
 		if (localName.equalsIgnoreCase("item")) {
 
 			articleList.add(currentArticle);
-			Util.log("adding new article: "+currentArticle.getTitle());
-			
 			currentArticle = new FeedEntry();
 
 			// Lets check if we've hit our limit on number of articles

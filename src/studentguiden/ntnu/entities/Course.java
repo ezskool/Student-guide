@@ -7,7 +7,9 @@ public class Course {
 	private boolean taughtInSpring, taughtInAutumn;
 	private ArrayList<Lecture> lectureList;
 
-	
+	public Course() {
+		lectureList = new ArrayList<Lecture>();
+	}
 	public String getCode() {
 		return code;
 	}
@@ -30,9 +32,6 @@ public class Course {
 	}
 	
 	public void addLecture(Lecture lecture) {
-		if(lectureList== null) {
-			lectureList = new ArrayList<Lecture>();
-		}
 		lectureList.add(lecture);
 	}
 

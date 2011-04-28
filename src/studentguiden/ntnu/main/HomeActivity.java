@@ -21,6 +21,8 @@ import android.os.Bundle;
 public class HomeActivity extends Activity{
 	private SharedPreferences prefs;
 	private ProgressDialog pd;
+	private ContentParser cp;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +35,15 @@ public class HomeActivity extends Activity{
 			String raw = prefs.getString("rawCourseData", "");
 			if(raw.equals("")) {
 				prefs.edit().putBoolean("hasDownloaded", false).commit();
-				new ContentParser().execute("");
+				cp = new ContentParser();
+				cp.execute("");
 			}else {
 				prefs.edit().putString("rawData", raw).commit();
 				prefs.edit().putBoolean("hasDownloaded", true).commit();
 			}
 		}
+		
+		
 	}
 
 	public void showProgressDialog() {
@@ -54,7 +59,8 @@ public class HomeActivity extends Activity{
 
 		@Override
 		protected void onPreExecute() {
-			HomeActivity.this.showProgressDialog();
+//			HomeActivity.this.showProgressDialog();
+			
 		}
 
 		@Override
@@ -76,6 +82,7 @@ public class HomeActivity extends Activity{
 					JSONObject temp = jsonCourseArray.getJSONObject(i);
 					courses.add(new MetaCourse(temp.getString("code"), temp.getString("name")));
 				}
+				
 			} catch (JSONException e) {
 				Util.log("parsing courses failed: JSONException");
 				e.printStackTrace();
@@ -95,12 +102,11 @@ public class HomeActivity extends Activity{
 				prefs.edit().putString("rawData", rawData).commit();
 				prefs.edit().putBoolean("hasDownloaded", true).commit();
 				CourseUtilities.setCourseList(courses);
-				HomeActivity.this.pd.cancel();
+//				HomeActivity.this.pd.cancel();
 			}else {
-				HomeActivity.this.pd.cancel();
+//				HomeActivity.this.pd.cancel();
 				//TODO: feilmelding om man ikke har nett osv
 			}
 		}
 	}
-
 }
