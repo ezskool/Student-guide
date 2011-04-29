@@ -3,21 +3,26 @@ package studentguiden.ntnu.entities;
 import java.util.ArrayList;
 
 public class Lecture {
-	private String weeks, activityDescription, day, start, end, room, roomCode;
+	private String  activityDescription, day, start, end, room, roomCode;
 	private ArrayList<String> studyProgrammes;
 	private int dayNumber;
+	private String[] weeks;
 
 	
 	/**
 	 * @return the weeks
 	 */
-	public String getWeeks() {
+	public String[] getWeeks() {
 		return weeks;
 	}
 	/**
-	 * @param weeks the weeks to set
+	 * @param weeks splits the weeks on each "," separating them and creates an array of weeks
 	 */
 	public void setWeeks(String weeks) {
+		setWeeks(weeks.split(","));
+	}
+	
+	public void setWeeks(String[] weeks) {
 		this.weeks = weeks;
 	}
 	/**
@@ -105,7 +110,7 @@ public class Lecture {
 		studyProgrammes.add(programCode);
 	}
 	/**
-	 * @return the dayNumber - 0 for monday.. 6 for sunday
+	 * @return the dayNumber - 1 for sunday, 2 for monday..
 	 */
 	public int getDayNumber() {
 		return dayNumber;

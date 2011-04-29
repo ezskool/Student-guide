@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Student-guide NTNU</string>
+    <!-- Home strings -->
+    <string name="header_timetable">Lectures today:</string>
+    
     <!-- MenuActivity strings -->
     <string name="btn_courses">Courses</string>
     <string name="btn_timetable">Timetable</string>

@@ -1,14 +1,8 @@
 package studentguiden.ntnu.courses;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +11,12 @@ import org.json.JSONObject;
 import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.main.R.id;
+import studentguiden.ntnu.misc.JSONHelper;
 import studentguiden.ntnu.misc.Util;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -113,13 +105,16 @@ public class CourseActivity extends Activity{
 
 		@Override
 		protected Integer doInBackground(String... params) {
+			currentCourse = new Course();
 			try {
 				URL courseURL = new URL("http://www.ime.ntnu.no/api/course/"+params[0]);
 				textContent = Util.downloadContent(courseURL);
 				URL scheduleURL = new URL("http://www.ime.ntnu.no/api/schedule/"+params[0]);
 				scheduleContent = Util.downloadContent(scheduleURL);
 
-				currentCourse  = createCourseObject(textContent, scheduleContent);
+				JSONHelper.updateCourseData(currentCourse, textContent);
+//				updateScheduleData(currentCourse, scheduleContent);
+				JSONHelper.updateScheduleData(currentCourse, scheduleContent);
 			}catch(MalformedURLException e) {
 				Util.log("Content download failed: MalformedURLException");
 				e.printStackTrace();
@@ -128,74 +123,99 @@ public class CourseActivity extends Activity{
 				Util.log("Content download failed: IOException");
 				e.printStackTrace();
 				return DOWNLOAD_FAILED;
-			}catch(JSONException e) {
-				Util.log("Parsing failed: JSONException");
-				e.printStackTrace();
-				return PARSING_FAILED;
-
 			}
 			return DOWNLOAD_SUCCESSFUL;
 		}
 
-		/**
-		 * parses the raw schedule and course data, and creates a course object
-		 * @param description
-		 * @param schedule
-		 * @return 
-		 */
-		private Course createCourseObject(String description, String schedule) throws JSONException{
-			//TODO: kaller jsonexception hvis node ikke finnes, noe det ikke gjøre for mange fag
-			Course temp = new Course();
-			JSONObject jsonCourseObject = new JSONObject(description).optJSONObject("course"); 
+//		/**
+//		 * parses the raw course data, and updates the course object
+//		 * @param description
+//		 * @param schedule
+//		 * @return 
+//		 */
+//		private void updateCourseData(Course course, String description) {
+//			
+//			try {
+//			JSONObject jsonCourseObject = new JSONObject(description).optJSONObject("course"); 
+//			if(jsonCourseObject != null) {
+//				course.setCode(getStringFromObject(jsonCourseObject, "code"));
+//				course.setName(getStringFromObject(jsonCourseObject, "name"));
+//				course.setCourseType(getStringFromObject(jsonCourseObject, "courseTypeName"));
+//				course.setCredit(getStringFromObject(jsonCourseObject, "credit"));
+//				course.setStudyLevel(getStringFromObject(jsonCourseObject, "studyLevelName"));
+//
+//				JSONArray infoArray = jsonCourseObject.optJSONArray("infoType");
+//				if(infoArray!= null) {
+//					course.setDescription(getStringFromObject(infoArray.getJSONObject(1), "text"));
+//
+//					course.setGoals(getStringFromObject(infoArray.getJSONObject(0), "text"));
+//					course.setPrerequisites(getStringFromObject(infoArray.getJSONObject(3), "name")+"\n"+getStringFromObject(infoArray.getJSONObject(3), "text"));
+//				}
+//			}
+//			}catch (JSONException e) {
+//				Util.log("parsing of course description content failed");
+//				e.printStackTrace();
+//			}
+//
+//
+//
+//		}
+		
+//		/**
+//		 * updates the course object with schedule data from json string
+//		 * @param course
+//		 * @param schedule
+//		 */
+//		private void updateScheduleData(Course course, String schedule) {
+//			JSONArray jsonScheduleList;
+//			try {
+//				jsonScheduleList = new JSONObject(schedule).optJSONArray("activity");
+//
+//
+//				if(jsonScheduleList!=null) {
+//
+//					int n = jsonScheduleList.length();
+//
+//					for (int i = 0; i < n; i++) {
+//						Lecture lecture = new Lecture();
+//						JSONObject item = jsonScheduleList.getJSONObject(i);
+//						lecture.setActivityDescription(item.getString("activityDescription"));
+//						lecture.setWeeks(item.getString("weeks"));
+//
+//						//TODO: iterate for more "schedules"? are there more schedules?
+//						JSONObject jsonSchedule = item.getJSONArray("activitySchedules").getJSONObject(0);
+//
+//						lecture.setDay(jsonSchedule.getString("dayName"));
+//						lecture.setDayNumber(jsonSchedule.getInt("dayNumber"));
+//						lecture.setStart(jsonSchedule.getString("start"));
+//						lecture.setEnd(jsonSchedule.getString("end"));
+//
+//						JSONObject jsonRooms = jsonSchedule.getJSONArray("rooms").getJSONObject(0);
+//						lecture.setRoom(jsonRooms.getString("location"));
+//						lecture.setRoomCode(jsonRooms.getString("lydiaCode"));
+//
+//						course.addLecture(lecture);
+//					}
+//				}
+//			} catch (JSONException e) {
+//				Util.log("Parsing of schedule content failed: JSONException");
+//				e.printStackTrace();
+//			}
+//		}
 
-			temp.setCode(getStringFromObject(jsonCourseObject, "code"));
-			temp.setName(getStringFromObject(jsonCourseObject, "name"));
-			temp.setCourseType(getStringFromObject(jsonCourseObject, "courseTypeName"));
-			temp.setCredit(getStringFromObject(jsonCourseObject, "credit"));
-			temp.setStudyLevel(getStringFromObject(jsonCourseObject, "studyLevelName"));
-
-			JSONArray infoArray = jsonCourseObject.optJSONArray("infoType");
-			if(infoArray!= null) {
-				temp.setDescription(getStringFromObject(infoArray.getJSONObject(1), "text"));
-
-				temp.setGoals(getStringFromObject(infoArray.getJSONObject(0), "text"));
-				temp.setPrerequisites(getStringFromObject(infoArray.getJSONObject(3), "name")+"\n"+getStringFromObject(infoArray.getJSONObject(3), "text"));
-			}
-			JSONArray jsonScheduleList = new JSONObject(schedule).getJSONArray("activity");
-			if(jsonScheduleList!=null) {
-				int n = jsonScheduleList.length();
-
-				for (int i = 0; i < n; i++) {
-					Lecture lecture = new Lecture();
-					JSONObject item = jsonScheduleList.getJSONObject(i);
-					lecture.setActivityDescription(item.getString("activityDescription"));
-					lecture.setWeeks(item.getString("weeks"));
-
-					//TODO: iterate for more "schedules"? are there more schedules?
-					JSONObject jsonSchedule = item.getJSONArray("activitySchedules").getJSONObject(0);
-
-					lecture.setDay(jsonSchedule.getString("dayName"));
-					lecture.setDayNumber(jsonSchedule.getInt("dayNumber"));
-					lecture.setStart(jsonSchedule.getString("start"));
-					lecture.setEnd(jsonSchedule.getString("end"));
-
-					JSONObject jsonRooms = jsonSchedule.getJSONArray("rooms").getJSONObject(0);
-					lecture.setRoom(jsonRooms.getString("location"));
-					lecture.setRoomCode(jsonRooms.getString("lydiaCode"));
-
-					temp.addLecture(lecture);
-				}
-			}
-			return temp;
-		}
-
-		private String getStringFromObject(JSONObject object, String query) throws JSONException{
-			if(object.has(query)) {
-				return object.getString(query);
-			}
-			return "";
-		}
-
+//		/**
+//		 * returns the string from json object if it exists, else returns "". This is done to avoid jsonexception, thus skipping the rest of the parsing process
+//		 * @param object
+//		 * @param query
+//		 * @return
+//		 * @throws JSONException
+//		 */
+//		private String getStringFromObject(JSONObject object, String query) throws JSONException{
+//			if(object.has(query)) {
+//				return object.getString(query);
+//			}
+//			return "";
+//		}
 
 
 		/**
@@ -215,8 +235,6 @@ public class CourseActivity extends Activity{
 			}
 			CourseActivity.this.pd.cancel();
 		}
-
-
 	}
 
 }

@@ -7,9 +7,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Calendar;
+import java.util.Locale;
+
+import studentguiden.ntnu.entities.Lecture;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /**
@@ -18,7 +25,7 @@ import android.widget.Toast;
  */
 
 public class Util {
-
+	
 	public static void log(String msg) {
 		Log.d("student-guide", msg);
 	}
@@ -60,4 +67,32 @@ public class Util {
 		
 		return textContent;
 	}
+	
+	public static boolean isLectureToday(Lecture lecture) {
+		if(lecture.getDayNumber()+2==(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) && isLectureThisWeek(lecture) ) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public static boolean isLectureThisWeek(Lecture lecture) {
+		for (int i = 0; i < lecture.getWeeks().length; i++) {
+			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == Integer.parseInt(lecture.getWeeks()[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+//	/**
+//	 * adds a horizontal line to the selected layout
+//	 * @param layout
+//	 * @param context
+//	 */
+//	public static void addHorizontalLine(LinearLayout layout, Context context) {
+//		View v = new View(context);
+//		v.setBackgroundColor(Color.GRAY);
+//		
+//	}
 }

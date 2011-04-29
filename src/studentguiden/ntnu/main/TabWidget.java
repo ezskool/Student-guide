@@ -6,6 +6,7 @@ import studentguiden.ntnu.dinner.DinnerActivity;
 import studentguiden.ntnu.dinner.SelectCampusActivity;
 import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.social.SocialActivity;
+import studentguiden.ntnu.timetable.TimetableActivity;
 import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Intent;
