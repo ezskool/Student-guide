@@ -2,12 +2,55 @@ package studentguiden.ntnu.entities;
 
 import java.util.ArrayList;
 
+import studentguiden.ntnu.misc.Util;
+
 public class Lecture {
-	private String  activityDescription, day, start, end, room, roomCode;
+	private String  activityDescription, day, start, end, room, roomCode, courseCode;
 	private ArrayList<String> studyProgrammes;
 	private int dayNumber;
 	private String[] weeks;
 
+	public Lecture(){}
+
+	public Lecture(String code, String start, String end, String day, String weeks, String room) {
+		this.start = start;
+		this.end = end;
+		this.day = day;
+		this.room = room;
+		this.courseCode = code;
+		this.weeks = retrieveWeeks(weeks);
+	}
+
+	public String[] retrieveWeeks(String weeks) {
+		Util.log("WEEK:"+weeks);
+		String[] temp = weeks.split("-");
+		if(temp.length >1) {
+			
+			int duration = Integer.parseInt(temp[1])-Integer.parseInt(temp[0]);
+			Util.log("lecture has a duration of "+duration+". this is parsed from "+weeks);
+			String[] out = new String[duration+1];
+			for (int i = 0; i < duration+1; i++) {
+				out[i] = Integer.toString(i+Integer.parseInt(temp[0]));
+			}
+			return out;
+		}
+		return new String[] {""};
+	}
+
+	
+	/**
+	 * @return the courseCode
+	 */
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	/**
+	 * @param courseCode the courseCode to set
+	 */
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
+	}
 
 	/**
 	 * @return the weeks

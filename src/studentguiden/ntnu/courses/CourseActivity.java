@@ -32,6 +32,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 	private String courseCode;
 	private Button btn_add_my_course;
 	private Course thisCourse;
+	private String thisCourseId;
 
 
 	@Override
@@ -43,7 +44,8 @@ public class CourseActivity extends Activity implements OnClickListener{
 		pd = ProgressDialog.show(this, "", getString(R.string.downloading_content));
 
 		if(extras !=null){
-			courseCode = extras.getString("courseId");
+			courseCode = extras.getString("code");
+			thisCourseId = extras.getString("id");
 			new ContentDownloader().execute(courseCode);
 		}
 
@@ -79,7 +81,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 				new ContentDownloader().execute(courseCode);
 			}
 		}else if(v==btn_add_my_course) {
-			CourseUtilities.addToMyCourses(thisCourse);
+			CourseUtilities.addToMyCourses(thisCourse, this);			
 		}
 	}
 
@@ -139,7 +141,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 				textContent = Util.downloadContent(courseURL);
 				URL scheduleURL = new URL("http://www.ime.ntnu.no/api/schedule/"+params[0]);
 				scheduleContent = Util.downloadContent(scheduleURL);
-
+				
 				JSONHelper.updateCourseData(currentCourse, textContent);
 				JSONHelper.updateScheduleData(currentCourse, scheduleContent);
 			}catch(MalformedURLException e) {

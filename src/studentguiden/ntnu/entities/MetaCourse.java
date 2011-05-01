@@ -1,7 +1,7 @@
 package studentguiden.ntnu.entities;
 
 public class MetaCourse {
-	private String code, name, courseText;
+	private String code, name, courseText, id;
 	
 	public MetaCourse(String code, String name) {
 		this.name = name;
@@ -29,6 +29,21 @@ public class MetaCourse {
 	public String getCourseText() {
 		return courseText;
 	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	
 	
 	

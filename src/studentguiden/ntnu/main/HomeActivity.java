@@ -42,13 +42,13 @@ public class HomeActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
-		
+
 		if(!Globals.hasCalledCourseDownloader) {
 			new CourseDownloader(this, prefs).execute();
 			Globals.hasCalledCourseDownloader = true;
 		}
-//		new TimetableUpdater().execute("http://www.ime.ntnu.no/api/schedule/tdt4242", "http://www.ime.ntnu.no/api/schedule/tdt4240","http://www.ime.ntnu.no/api/schedule/tdt4215");
-
+		//		new TimetableUpdater().execute("http://www.ime.ntnu.no/api/schedule/tdt4242", "http://www.ime.ntnu.no/api/schedule/tdt4240","http://www.ime.ntnu.no/api/schedule/tdt4215");
+		updateTimetable();
 	}
 
 	public void updateView(ArrayList<Course> courses) {
@@ -66,6 +66,28 @@ public class HomeActivity extends Activity{
 				}
 			}
 		}
+		if(!hasLecture) {
+			TextView  tv = new TextView(this);
+			tv.setText(getString(R.string.no_lectures));
+			lecture_row.addView(tv);
+		}
+	}
+
+	private void updateTimetable() {
+		LinearLayout lecture_row = (LinearLayout)findViewById(R.id.lecture_row);
+		ArrayList<Lecture> lectures = CourseUtilities.getMyLectures(this);
+		boolean hasLecture = false;
+
+		for (Lecture lecture : lectures) {
+			if(Util.isLectureToday(lecture)) {
+				TextView tv = new TextView(this);
+				tv.setText(lecture.getCourseCode()+" "+lecture.getStart()+" - "+lecture.getEnd()+"   "+" - Room: " +lecture.getRoom());
+				lecture_row.addView(tv);
+
+				hasLecture = true;
+			}
+		}
+		
 		if(!hasLecture) {
 			TextView  tv = new TextView(this);
 			tv.setText(getString(R.string.no_lectures));
@@ -126,62 +148,62 @@ public class HomeActivity extends Activity{
 
 	}
 
-//	private class ContentParser extends AsyncTask<String, Void, Integer> {
-//		private final int PARSING_FAILED = 0;
-//		private final int PARSING_SUCCESFUL = 1;
-//		private final int DOWNLOAD_FAILED = 2;
-//		private ArrayList<MetaCourse> courses = new ArrayList<MetaCourse>();
-//		private String rawData;
-//
-//		@Override
-//		protected void onPreExecute() {
-//			//			HomeActivity.this.showProgressDialog();
-//
-//		}
-//
-//		@Override
-//		protected Integer doInBackground(String... params) {
-//			try {
-//				if(params[0].equals("")) {
-//					URL url = new URL(Globals.courseListURL);
-//					rawData = Util.downloadContent(url);
-//
-//				} else{
-//					rawData = params[0];
-//				}
-//
-//				JSONArray jsonCourseArray = new JSONObject(rawData).getJSONArray("course");
-//				int amountOfCourses = jsonCourseArray.length();
-//
-//
-//				for (int i = 0; i < amountOfCourses; i++) {
-//					JSONObject temp = jsonCourseArray.getJSONObject(i);
-//					courses.add(new MetaCourse(temp.getString("code"), temp.getString("name")));
-//				}
-//
-//			} catch (JSONException e) {
-//				Util.log("parsing courses failed: JSONException");
-//				e.printStackTrace();
-//				return PARSING_FAILED;
-//			} catch(IOException e) {
-//				Util.log("Course content download failed: IOException");
-//				e.printStackTrace();
-//				return DOWNLOAD_FAILED;
-//			}
-//			return PARSING_SUCCESFUL;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(Integer result) {
-//			if(result == PARSING_SUCCESFUL) {
-//				Util.log("Course list parsing was successful");
-//				prefs.edit().putString("rawData", rawData).commit();
-//				prefs.edit().putBoolean("hasDownloaded", true).commit();
-//				CourseUtilities.setCourseList(courses);
-//				//				HomeActivity.this.pd.cancel();
-//			}else {
-//				Util.displayToastMessage(getString(R.string.download_failed_toast),HomeActivity.this.getApplicationContext());
-//			}
-//		}
-//	}
+	//	private class ContentParser extends AsyncTask<String, Void, Integer> {
+	//		private final int PARSING_FAILED = 0;
+	//		private final int PARSING_SUCCESFUL = 1;
+	//		private final int DOWNLOAD_FAILED = 2;
+	//		private ArrayList<MetaCourse> courses = new ArrayList<MetaCourse>();
+	//		private String rawData;
+	//
+	//		@Override
+	//		protected void onPreExecute() {
+	//			//			HomeActivity.this.showProgressDialog();
+	//
+	//		}
+	//
+	//		@Override
+	//		protected Integer doInBackground(String... params) {
+	//			try {
+	//				if(params[0].equals("")) {
+	//					URL url = new URL(Globals.courseListURL);
+	//					rawData = Util.downloadContent(url);
+	//
+	//				} else{
+	//					rawData = params[0];
+	//				}
+	//
+	//				JSONArray jsonCourseArray = new JSONObject(rawData).getJSONArray("course");
+	//				int amountOfCourses = jsonCourseArray.length();
+	//
+	//
+	//				for (int i = 0; i < amountOfCourses; i++) {
+	//					JSONObject temp = jsonCourseArray.getJSONObject(i);
+	//					courses.add(new MetaCourse(temp.getString("code"), temp.getString("name")));
+	//				}
+	//
+	//			} catch (JSONException e) {
+	//				Util.log("parsing courses failed: JSONException");
+	//				e.printStackTrace();
+	//				return PARSING_FAILED;
+	//			} catch(IOException e) {
+	//				Util.log("Course content download failed: IOException");
+	//				e.printStackTrace();
+	//				return DOWNLOAD_FAILED;
+	//			}
+	//			return PARSING_SUCCESFUL;
+	//		}
+	//
+	//		@Override
+	//		protected void onPostExecute(Integer result) {
+	//			if(result == PARSING_SUCCESFUL) {
+	//				Util.log("Course list parsing was successful");
+	//				prefs.edit().putString("rawData", rawData).commit();
+	//				prefs.edit().putBoolean("hasDownloaded", true).commit();
+	//				CourseUtilities.setCourseList(courses);
+	//				//				HomeActivity.this.pd.cancel();
+	//			}else {
+	//				Util.displayToastMessage(getString(R.string.download_failed_toast),HomeActivity.this.getApplicationContext());
+	//			}
+	//		}
+	//	}
 }

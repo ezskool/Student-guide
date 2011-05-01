@@ -34,6 +34,7 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 	private DataBaseAdapter db;
 	private SharedPreferences prefs;
 	private ArrayList<MetaCourse> courseList;
+	private String test;
 
 	public CourseDownloader(Context context, SharedPreferences prefs) {
 		this.context = context;
@@ -71,10 +72,13 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 			
 	
 		}catch(MalformedURLException e) {
+			e.printStackTrace();
 			return DOWNLOAD_FAILED_MALFORMED_URL;
 		}catch(IOException e) {
+			e.printStackTrace();
 			return DOWNLOAD_FAILED;
 		}catch(JSONException e) {
+			e.printStackTrace();
 			return PARSING_FAILED;
 		}		
 		return DOWNLOAD_SUCCESFUL;

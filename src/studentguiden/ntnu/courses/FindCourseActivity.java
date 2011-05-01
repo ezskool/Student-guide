@@ -94,8 +94,8 @@ public class FindCourseActivity extends ListActivity implements TextWatcher{
 			Util.log("clicked");
 		}else {
 
-			Course selectedCourse = (Course) this.getListAdapter().getItem(position);
-			startCourseActivity(selectedCourse.getCode());
+			MetaCourse selectedCourse = (MetaCourse) this.getListAdapter().getItem(position);
+			startCourseActivity(selectedCourse.getId(), selectedCourse.getCode());
 		}
 	}
 
@@ -103,9 +103,10 @@ public class FindCourseActivity extends ListActivity implements TextWatcher{
 	 * Starts the CourseActivity class for a course id
 	 * @param courseId the respective course id
 	 */
-	private void startCourseActivity(String courseId){
+	private void startCourseActivity(String id, String code){
 		Intent intent = new Intent(FindCourseActivity.this, CourseActivity.class);
-		intent.putExtra("courseId", courseId);
+		intent.putExtra("code", code);
+		intent.putExtra("id", id);
 		startActivity(intent);
 	}
 

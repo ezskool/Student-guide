@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Student-guide NTNU</string>
+    <!-- Home strings -->
+    <string name="header_timetable">Lectures today:</string>
+    
+    <!-- MenuActivity strings -->
+    <string name="btn_courses">Courses</string>
+    <string name="btn_timetable">Timetable</string>
+    <string name="btn_dinner">Dinner</string>
+    
+    <!-- CourseSearchActivity strings -->
+    <string name="et_search_course">Filter courses</string>
+    <string name="dialog_find_course_title">Select course</string>
+    <string name="btn_search_course">Search for course</string>
+    <string name="btn_find_courses">Find courses</string>    
+    
+    <!-- CourseActivity strings -->
+    <string name="course_type">Course Type: </string>
+	<string name="student_points">Student Points: </string>
+	<string name="taught_in_semester_spring">Taught in spring semester</string>
+	<string name="taught_in_semester_autumn">Taught in autumn semester</string>
+    <string name="et_course_id">Course id</string>
+    <string name="btn_search">Search</string>
+    <string name="title_search_course">Search for course</string>
+    <string name="download_failed_toast">Download failed. Please make sure you have a working internet connection, and try again.</string>
+    <string name="invalid_url_toast">Download failed: Could not find course (web server might be down).</string>
+    <string name="course_goals">Course Goals</string>
+    <string name="course_description">Course Description</string>
+    <string name="room">Room: </string>
+    <string name="tv_course_schedule_header">Course Schedule</string>
+    <string name="taught_in_weeks">Taught in weeks: </string>
+    
+    <!--  SocialActivity Strings -->
+    <string name="tv_social_title">Social Events</string>
+    <string name="btn_open_link">Open link</string>
+    <string name="event_content_by">Event content by:</string>
+    
+    <!-- DinnerActivity strings -->
+    <string name="text_select_place">Select Place</string>
+    
+    <!-- Waiting messages -->
+    <string name="downloading_content">Downloading content..</string>
+</resources>
