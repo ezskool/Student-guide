@@ -7,12 +7,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import studentguiden.ntnu.entities.Lecture;
+import studentguiden.ntnu.storage.DataBaseAdapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -85,14 +88,34 @@ public class Util {
 		return false;
 	}
 	
-//	/**
-//	 * adds a horizontal line to the selected layout
-//	 * @param layout
-//	 * @param context
-//	 */
-//	public static void addHorizontalLine(LinearLayout layout, Context context) {
-//		View v = new View(context);
-//		v.setBackgroundColor(Color.GRAY);
-//		
-//	}
+
+	public static String getDate(String day) {
+
+		int dayNumber = 0;
+		
+		if(day.equalsIgnoreCase("mandag")) {
+			dayNumber = 2;
+		}else if(day.equalsIgnoreCase("tirsdag")) {
+			dayNumber = 3;
+		}else if(day.equalsIgnoreCase("onsdag")) {
+			dayNumber = 4;
+		}else if(day.equalsIgnoreCase("torsdag")) {
+			dayNumber = 5;
+		}else if(day.equalsIgnoreCase("fredag")) {
+			dayNumber  = 6;
+		}else if(day.equalsIgnoreCase("lørdag")) {
+			dayNumber = 7;
+		}else if(day.equalsIgnoreCase("søndag")) {
+			dayNumber = 1;
+		}
+		
+		Calendar cal = Calendar.getInstance();
+		int currentDay = cal.get(Calendar.DAY_OF_WEEK);
+		if(currentDay != dayNumber) {
+			int days = (dayNumber - currentDay + 2) % 7;
+			cal.set(Calendar.DAY_OF_YEAR, days);
+		}
+		
+		return cal.get(Calendar.YEAR)+"-"+cal.get(Calendar.MONTH)+"-"+cal.get(Calendar.DAY_OF_MONTH);
+	}
 }

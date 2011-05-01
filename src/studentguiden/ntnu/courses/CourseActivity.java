@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
@@ -17,16 +13,25 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
  * @author Håkon Drolsum Røkenes
  * 
  */
-public class CourseActivity extends Activity{
+public class CourseActivity extends Activity implements OnClickListener{
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
-	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle;
+	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar;
 	private ProgressDialog pd;
+	private ImageButton btn_back, btn_refresh;
+	private Bundle extras;
+	private String courseCode;
+	private Button btn_add_my_course;
+	private Course thisCourse;
 
 
 	@Override
@@ -38,7 +43,8 @@ public class CourseActivity extends Activity{
 		pd = ProgressDialog.show(this, "", getString(R.string.downloading_content));
 
 		if(extras !=null){
-			new ContentDownloader().execute(extras.getString("courseId"));
+			courseCode = extras.getString("courseId");
+			new ContentDownloader().execute(courseCode);
 		}
 
 		courseName = (TextView)findViewById(R.id.tv_coursename);
@@ -53,7 +59,28 @@ public class CourseActivity extends Activity{
 		coursePrerequisites = (TextView)findViewById(R.id.tv_course_prerequisites);
 		courseSchedule = (TextView)findViewById(R.id.tv_course_schedule);
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
+		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 
+		btn_back = (ImageButton)findViewById(R.id.btn_back);
+		btn_refresh = (ImageButton)findViewById(R.id.btn_refresh);
+		btn_back.setOnClickListener(this);
+		btn_refresh.setOnClickListener(this);
+		
+		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
+		btn_add_my_course.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v==btn_back) {
+			super.finish();
+		}else if(v==btn_refresh) {
+			if(!courseCode.equals("")) {
+				new ContentDownloader().execute(courseCode);
+			}
+		}else if(v==btn_add_my_course) {
+			CourseUtilities.addToMyCourses(thisCourse);
+		}
 	}
 
 	/**
@@ -61,11 +88,12 @@ public class CourseActivity extends Activity{
 	 * @param course
 	 */
 	public void updateView(Course course) {
+		thisCourse = course;
 		Util.log("Updating course view with course data");
+		tv_statusbar.setText(course.getCode());
 		courseName.setText(course.getName());
 		courseLevel.setText(course.getStudyLevel());
 		courseCredit.setText(course.getCredit()+" "+getString(R.string.student_points));
-		courseType.setText(getString(R.string.course_type)+" "+course.getCourseType());
 
 		if(course.isTaughtInSpring()) {
 			courseSemesterTaught.setText(getString(R.string.taught_in_semester_spring));
@@ -85,7 +113,7 @@ public class CourseActivity extends Activity{
 				courseSchedule.append(lecture.getStart()+"-");
 				courseSchedule.append(lecture.getEnd()+"\n");
 				courseSchedule.append(getString(R.string.room)+lecture.getRoom()+"\n");
-				courseSchedule.append(getString(R.string.taught_in_weeks)+lecture.getWeeks());
+				courseSchedule.append(getString(R.string.taught_in_weeks)+lecture.getWeeksText());
 				courseSchedule.append("\n\n");
 			}
 		}
@@ -113,7 +141,6 @@ public class CourseActivity extends Activity{
 				scheduleContent = Util.downloadContent(scheduleURL);
 
 				JSONHelper.updateCourseData(currentCourse, textContent);
-//				updateScheduleData(currentCourse, scheduleContent);
 				JSONHelper.updateScheduleData(currentCourse, scheduleContent);
 			}catch(MalformedURLException e) {
 				Util.log("Content download failed: MalformedURLException");
@@ -126,97 +153,6 @@ public class CourseActivity extends Activity{
 			}
 			return DOWNLOAD_SUCCESSFUL;
 		}
-
-//		/**
-//		 * parses the raw course data, and updates the course object
-//		 * @param description
-//		 * @param schedule
-//		 * @return 
-//		 */
-//		private void updateCourseData(Course course, String description) {
-//			
-//			try {
-//			JSONObject jsonCourseObject = new JSONObject(description).optJSONObject("course"); 
-//			if(jsonCourseObject != null) {
-//				course.setCode(getStringFromObject(jsonCourseObject, "code"));
-//				course.setName(getStringFromObject(jsonCourseObject, "name"));
-//				course.setCourseType(getStringFromObject(jsonCourseObject, "courseTypeName"));
-//				course.setCredit(getStringFromObject(jsonCourseObject, "credit"));
-//				course.setStudyLevel(getStringFromObject(jsonCourseObject, "studyLevelName"));
-//
-//				JSONArray infoArray = jsonCourseObject.optJSONArray("infoType");
-//				if(infoArray!= null) {
-//					course.setDescription(getStringFromObject(infoArray.getJSONObject(1), "text"));
-//
-//					course.setGoals(getStringFromObject(infoArray.getJSONObject(0), "text"));
-//					course.setPrerequisites(getStringFromObject(infoArray.getJSONObject(3), "name")+"\n"+getStringFromObject(infoArray.getJSONObject(3), "text"));
-//				}
-//			}
-//			}catch (JSONException e) {
-//				Util.log("parsing of course description content failed");
-//				e.printStackTrace();
-//			}
-//
-//
-//
-//		}
-		
-//		/**
-//		 * updates the course object with schedule data from json string
-//		 * @param course
-//		 * @param schedule
-//		 */
-//		private void updateScheduleData(Course course, String schedule) {
-//			JSONArray jsonScheduleList;
-//			try {
-//				jsonScheduleList = new JSONObject(schedule).optJSONArray("activity");
-//
-//
-//				if(jsonScheduleList!=null) {
-//
-//					int n = jsonScheduleList.length();
-//
-//					for (int i = 0; i < n; i++) {
-//						Lecture lecture = new Lecture();
-//						JSONObject item = jsonScheduleList.getJSONObject(i);
-//						lecture.setActivityDescription(item.getString("activityDescription"));
-//						lecture.setWeeks(item.getString("weeks"));
-//
-//						//TODO: iterate for more "schedules"? are there more schedules?
-//						JSONObject jsonSchedule = item.getJSONArray("activitySchedules").getJSONObject(0);
-//
-//						lecture.setDay(jsonSchedule.getString("dayName"));
-//						lecture.setDayNumber(jsonSchedule.getInt("dayNumber"));
-//						lecture.setStart(jsonSchedule.getString("start"));
-//						lecture.setEnd(jsonSchedule.getString("end"));
-//
-//						JSONObject jsonRooms = jsonSchedule.getJSONArray("rooms").getJSONObject(0);
-//						lecture.setRoom(jsonRooms.getString("location"));
-//						lecture.setRoomCode(jsonRooms.getString("lydiaCode"));
-//
-//						course.addLecture(lecture);
-//					}
-//				}
-//			} catch (JSONException e) {
-//				Util.log("Parsing of schedule content failed: JSONException");
-//				e.printStackTrace();
-//			}
-//		}
-
-//		/**
-//		 * returns the string from json object if it exists, else returns "". This is done to avoid jsonexception, thus skipping the rest of the parsing process
-//		 * @param object
-//		 * @param query
-//		 * @return
-//		 * @throws JSONException
-//		 */
-//		private String getStringFromObject(JSONObject object, String query) throws JSONException{
-//			if(object.has(query)) {
-//				return object.getString(query);
-//			}
-//			return "";
-//		}
-
 
 		/**
 		 * Called when doInBackground is finished, and updates the UI thread with course information if successful.
@@ -236,5 +172,7 @@ public class CourseActivity extends Activity{
 			CourseActivity.this.pd.cancel();
 		}
 	}
+
+
 
 }

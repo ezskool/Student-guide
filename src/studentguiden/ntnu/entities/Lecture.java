@@ -8,12 +8,22 @@ public class Lecture {
 	private int dayNumber;
 	private String[] weeks;
 
-	
+
 	/**
 	 * @return the weeks
 	 */
 	public String[] getWeeks() {
 		return weeks;
+	}
+
+	public String getWeeksText() {
+		if(weeks.length==1) {
+			return weeks[0];
+		} else if(weeks.length >2) {
+			return weeks[0]+"-"+weeks[weeks.length-1];
+		}else {
+			return "";
+		}
 	}
 	/**
 	 * @param weeks splits the weeks on each "," separating them and creates an array of weeks
@@ -21,7 +31,7 @@ public class Lecture {
 	public void setWeeks(String weeks) {
 		setWeeks(weeks.split(","));
 	}
-	
+
 	public void setWeeks(String[] weeks) {
 		this.weeks = weeks;
 	}
@@ -121,5 +131,5 @@ public class Lecture {
 	public void setDayNumber(int dayNumber) {
 		this.dayNumber = dayNumber;
 	}
-	
+
 }

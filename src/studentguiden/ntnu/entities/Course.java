@@ -3,12 +3,18 @@ package studentguiden.ntnu.entities;
 import java.util.ArrayList;
 
 public class Course {
-	private String code, name, courseText, credit, studyLevel, courseType, goals, description, prerequisites;
+	private String code, name, courseText, credit, studyLevel, courseType, goals, description, prerequisites, timespan;
 	private boolean taughtInSpring, taughtInAutumn;
 	private ArrayList<Lecture> lectureList;
 
+	public Course(String code, String name) {
+		this();
+		this.code = code;
+		this.name = name;
+	}
+	
 	public Course() {
-		lectureList = new ArrayList<Lecture>();
+		
 	}
 	public String getCode() {
 		return code;
@@ -16,10 +22,20 @@ public class Course {
 
 	public String getName() {
 		return name;
-	}		
+	}			
 	
-	
-	
+	/**
+	 * @return the timeSpan
+	 */
+	public String getTimespan() {
+		return timespan;
+	}
+	/**
+	 * @param timeSpan the timeSpan to set
+	 */
+	public void setTimespan(String timeSpan) {
+		this.timespan = timeSpan;
+	}
 	/**
 	 * @return the lectureList
 	 */
@@ -32,6 +48,10 @@ public class Course {
 	}
 	
 	public void addLecture(Lecture lecture) {
+		if(lectureList == null) {
+			lectureList = new ArrayList<Lecture>();
+		}
+			
 		lectureList.add(lecture);
 	}
 

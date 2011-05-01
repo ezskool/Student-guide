@@ -1,24 +1,33 @@
 package studentguiden.ntnu.dinner;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
+
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 
 import studentguiden.ntnu.entities.FeedEntry;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.RSSHandler;
 import studentguiden.ntnu.misc.Util;
+import studentguiden.ntnu.social.SocialActivity;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class DinnerActivity extends Activity {
-	private TextView tv_dinner_title, tv_dinner_description;
+public class DinnerActivity extends Activity implements OnClickListener{
+	private TextView tv_dinner_title, tv_dinner_description, tv_statusbar;
+	private ImageButton btn_refresh, btn_back;
+	private String url;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +36,37 @@ public class DinnerActivity extends Activity {
 		
 		tv_dinner_title = (TextView)findViewById(R.id.tv_dinner_title);
 		tv_dinner_description = (TextView)findViewById(R.id.tv_dinner_description);
+		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
+		
+		btn_refresh = (ImageButton)findViewById(R.id.btn_refresh);
+		btn_back = (ImageButton)findViewById(R.id.btn_back);
+		btn_refresh.setOnClickListener(this);
+		btn_back.setOnClickListener(this);
 		
 		Bundle extras = getIntent().getExtras();
-		new DinnerDownloader().execute(extras.getString("URL"));
+		tv_statusbar.setText(extras.getString("canteen"));
+		url = extras.getString("URL");
+		new DinnerDownloader().execute(url);
+	}
+	
+	@Override
+	public void onClick(View v) {
+		if(v==btn_back) {
+			super.finish();
+		}else if(v==btn_refresh) {
+			if(!url.equals("")) {
+				tv_dinner_description.setText("");
+				new DinnerDownloader().execute(url);
+			}
+		}
+		
 	}
 
 	private class DinnerDownloader extends AsyncTask<String, Void, Integer> {
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
 		private final int DOWNLOAD_FAILED_INVALID_URL = 2;
+		private final int PARSING_FAILED = 3;
 		private String rawText = "";
 		private RSSHandler feedHandler;
 		private List<FeedEntry> entries;
@@ -47,11 +78,21 @@ public class DinnerActivity extends Activity {
 
 		@Override
 		protected Integer doInBackground(String... params) {
-			entries = feedHandler.getLatestArticles(params[0]+getCurrentDayURI());
-
-			if(entries.size() == 0) {
+			
+			try {
+				entries = feedHandler.getLatestArticles(params[0]+getCurrentDayURI());
+			} catch (IOException e) {
+				e.printStackTrace();
 				return DOWNLOAD_FAILED;
+			} catch (SAXException e) {
+				e.printStackTrace();
+				return PARSING_FAILED;
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+				return PARSING_FAILED;
 			}
+
+			
 			return DOWNLOAD_SUCCESSFUL;
 		}
 
@@ -63,6 +104,7 @@ public class DinnerActivity extends Activity {
 			}else if(result == DOWNLOAD_FAILED || result == DOWNLOAD_FAILED_INVALID_URL) {
 				//TODO: si fra at download faila
 				Util.log("Dinner data download failed");
+				Util.displayToastMessage(getString(R.string.download_failed_toast),DinnerActivity.this.getApplicationContext());
 			}
 		}
 
@@ -95,5 +137,7 @@ public class DinnerActivity extends Activity {
 			return "&ma=on&ti=on&on=on&to=on&fr=on";
 		}
 	}
+
+	
 	}
 

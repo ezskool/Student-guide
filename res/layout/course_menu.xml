@@ -14,11 +14,7 @@
 		android:id="@+id/et_search" android:hint="@string/et_search_course"
 		android:singleLine="true" />
 
-		<ListView android:id="@android:id/list" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" />
-
+		<include layout="@layout/list"/>
 
 	</LinearLayout>
-
-
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
@@ -35,7 +36,7 @@ public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
         	view = convertView;
         }
 
-       MetaCourse item = items.get(position);
+        MetaCourse item = items.get(position);
         if (item!= null) {
             TextView text1 = (TextView) view.findViewById(R.id.text1);
             TextView text2 = (TextView) view.findViewById(R.id.text2);
@@ -43,6 +44,9 @@ public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
             text1.setText(item.getCode());
             text2.setText(item.getName());
             }
+        //TODO: fiks list bilde click greier
+//        ImageView btn_add_course = (ImageView)view.findViewById(R.id.img_item_icon);
+//        btn_add_course.setImageResource(R.drawable.add_course);
 
         return view;
     }

@@ -26,10 +26,8 @@ import android.widget.TextView;
 public class SelectCampusActivity extends ListActivity{
 	private TextView title;
 
-	private String[] canteenList = {"Hangaren, " +
-			"Gløshaugen",  
-			"Realfagsbygget, " +
-			"Gløshaugen", 
+	private String[] canteenList = {"Hangaren",  
+			"Realfagsbygget", 
 			"Dragvoll", 
 			"Tyholt", 
 			"Øya", 
@@ -57,7 +55,7 @@ public class SelectCampusActivity extends ListActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list);
+		setContentView(R.layout.dinner_campus_list);
 		
 		title = (TextView)findViewById(R.id.tv_list_title);
 		title.setText(getString(R.string.text_select_place));
@@ -70,6 +68,7 @@ public class SelectCampusActivity extends ListActivity{
 		super.onListItemClick(l, v, position, id);
 		Intent intent = new Intent(this, DinnerActivity.class);
 		intent.putExtra("URL", dinnerURL[position]);
+		intent.putExtra("canteen", canteenList[position]);
 		startActivity(intent);
 	}
 }

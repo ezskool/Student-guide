@@ -28,7 +28,7 @@
 
 	<style name="horizontal_line">
 		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">2dip</item>
-		<item name="android:background">#FF909090</item>
+		<item name="android:layout_height">2px</item>
+		<item name="android:background">@drawable/line</item>
 	</style>
 </resources>

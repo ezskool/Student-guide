@@ -9,6 +9,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
 import studentguiden.ntnu.courses.CourseActivity;
 import studentguiden.ntnu.courses.FindCourseActivity;
@@ -35,19 +36,19 @@ public class SocialActivity extends ListActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list);
+		setContentView(R.layout.social);
 
 		tv_list_title = (TextView)findViewById(R.id.tv_list_title);
 		tv_list_title.setText(getString(R.string.tv_social_title));
 
-		new EventDownloader().execute("http://www.samfundet.no/arrangement/rss");
-		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
+		new SamfundetDownloader().execute("http://www.samfundet.no/arrangement/rss");
+		//		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
 	}
 
 	private void createListContent(ArrayList<Event> entries) {
 		this.setListAdapter(new SocialListArrayAdapter(this, R.layout.list_item, entries));
 	}
-	
+
 	public void addEventList(ArrayList<Event> entries) {
 		if(currentEventList == null) {
 			currentEventList = new ArrayList<Event>();
@@ -55,9 +56,9 @@ public class SocialActivity extends ListActivity{
 		for (Event event : entries) {
 			currentEventList.add(event);
 		}
-		
+
 		createListContent(currentEventList);
-		
+
 	}
 
 	@Override
@@ -74,10 +75,11 @@ public class SocialActivity extends ListActivity{
 		startActivity(intent);
 	}
 
-	private class EventDownloader extends AsyncTask<String, Void, Integer> {
+	private class SamfundetDownloader extends AsyncTask<String, Void, Integer> {
 		private final int DOWNLOAD_SUCCESSFUL = 0;
 		private final int DOWNLOAD_FAILED = 1;
 		private final int DOWNLOAD_FAILED_INVALID_URL = 2;
+		private final int PARSING_FAILED = 3;
 		private String rawText = "";
 		private RSSHandler feedHandler;
 		private ArrayList<Event> eventList;
@@ -89,20 +91,32 @@ public class SocialActivity extends ListActivity{
 
 		@Override
 		protected Integer doInBackground(String... params) {
-			List<FeedEntry> entries = feedHandler.getLatestArticles(params[0]);
-			eventList = getEvents(entries);
-			if(entries == null){
-				Util.log("Social data download failed");
+			try {
+
+
+				List<FeedEntry> entries = feedHandler.getLatestArticles(params[0]);
+				eventList = getEvents(entries);
+			}catch(SAXException e) {
+				e.printStackTrace();
+				Util.log("samfunnet parsing failed");
+				return PARSING_FAILED;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Util.log("Samfunnet download failed");
 				return DOWNLOAD_FAILED;
-			}
+			} 
 			return DOWNLOAD_SUCCESSFUL;
 		}
-		
+
 		private ArrayList<Event> getEvents(List<FeedEntry> entries) {
 			ArrayList<Event> temp = new ArrayList<Event>();
-			
+
 			for (FeedEntry entry : entries) {
-				temp.add(new Event(entry.getTitle(), entry.getDescription(), entry.getCategory(), entry.getGuid(), R.drawable.samfundet_banner, R.drawable.ic_samfundet));
+				//				String[] titleSplit = splitTitle(entry);
+				//				String day = getDay(titleSplit[0]);
+				//				String hour = getTime(titleSplit[0]);
+
+				temp.add(new Event(entry.getTitle(), entry.getDescription(), entry.getCategory(), entry.getGuid(), R.drawable.samfundet_logo_hvit, R.drawable.ic_samfundet));
 			}
 			return temp;
 		}
@@ -112,7 +126,23 @@ public class SocialActivity extends ListActivity{
 			if(result == DOWNLOAD_SUCCESSFUL) {
 				Util.log("Samfunnet data download was successful");
 				SocialActivity.this.addEventList(eventList);
-			}	
+			}else {
+				Util.displayToastMessage(getString(R.string.download_failed_toast),SocialActivity.this.getApplicationContext());
+			}
+		}
+
+		private String[] splitTitle(FeedEntry entry) {
+			return entry.getTitle().split("-");
+		}
+
+		private String getDay(String s) {
+			String temp =  s.substring(0, s.indexOf(" "));
+			return temp.trim();
+		}
+
+		private String getTime(String s) {
+			String temp =  s.substring(s.indexOf(" "));
+			return temp.trim();
 		}
 	}
 
@@ -123,7 +153,7 @@ public class SocialActivity extends ListActivity{
 		private final int PARSING_FAILED = 3;
 		private String rawData;
 		private ArrayList<Event> eventList = new ArrayList<Event>();
-		
+
 
 		@Override
 		protected Integer doInBackground(String... params) {
@@ -132,14 +162,14 @@ public class SocialActivity extends ListActivity{
 				rawData = Util.downloadContent(url);
 
 				JSONArray eventJsonArray= new JSONObject(rawData).getJSONObject("resultsPage").getJSONObject("results").getJSONArray("event");
-				
+
 
 				int n = eventJsonArray.length();
 				for (int i = 0; i < n; i++) {
 					JSONObject temp = eventJsonArray.getJSONObject(i);
 					eventList.add(new Event(temp.getString("displayName"), "", temp.getString("type"), temp.getString("uri"), R.drawable.songkick_banner, R.drawable.ic_songkick));
 				}
-				
+
 			}catch(MalformedURLException e) {
 				Util.log("Songkick download failed: MalformedURLException"+e.getMessage());
 				return DOWNLOAD_FAILED_INVALID_URL;
@@ -152,12 +182,14 @@ public class SocialActivity extends ListActivity{
 			}
 			return DOWNLOAD_SUCCESSFUL;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Integer result) {
 			if(result==DOWNLOAD_SUCCESSFUL) {
 				Util.log("Songkick data was successfully downloaded");
 				SocialActivity.this.addEventList(eventList);
+			}else {
+				Util.displayToastMessage(getString(R.string.download_failed_toast),SocialActivity.this.getApplicationContext());
 			}
 		}
 

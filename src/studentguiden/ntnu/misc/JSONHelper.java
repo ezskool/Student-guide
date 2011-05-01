@@ -28,7 +28,7 @@ public class JSONHelper {
 					JSONObject item = jsonScheduleList.getJSONObject(i);
 					course.setCode(item.getString("courseCode"));
 					lecture.setActivityDescription(item.getString("activityDescription"));
-//					lecture.setWeeks(item.getString("weeks"));
+					course.setTimespan(item.getString("weeks"));
 
 					//TODO: iterate for more "schedules"? are there more schedules?
 					JSONObject jsonSchedule = item.getJSONArray("activitySchedules").getJSONObject(0);
@@ -67,7 +67,11 @@ public class JSONHelper {
 			course.setCourseType(getStringFromObject(jsonCourseObject, "courseTypeName"));
 			course.setCredit(getStringFromObject(jsonCourseObject, "credit"));
 			course.setStudyLevel(getStringFromObject(jsonCourseObject, "studyLevelName"));
-
+			
+				course.setTaughtInSpring(jsonCourseObject.getBoolean("taughtInSpring"));
+				course.setTaughtInAutumn(jsonCourseObject.getBoolean("taughtInAutumn"));
+			
+			
 			JSONArray infoArray = jsonCourseObject.optJSONArray("infoType");
 			if(infoArray!= null) {
 				course.setDescription(getStringFromObject(infoArray.getJSONObject(1), "text"));

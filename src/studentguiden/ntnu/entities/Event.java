@@ -1,8 +1,11 @@
 package studentguiden.ntnu.entities;
 
+import java.util.Calendar;
+
 public class Event {
-	private String link, title, description, category, guid;
+	private String link, title, description, category, guid, day, hour, exactTime;
 	private int bannerResource, iconResource;
+
 
 	public Event(String title, String description, String category, String guid, int bannerResource, int iconResource) {
 		this.title = title;
@@ -12,7 +15,8 @@ public class Event {
 		this.bannerResource = bannerResource;
 		this.iconResource = iconResource;
 	}
-	
+
+
 	/**
 	 * @return the link
 	 */
@@ -55,6 +59,35 @@ public class Event {
 		this.description = description;
 	}
 
+
+	/**
+	 * @return the day
+	 */
+	public String getDay() {
+		return day;
+	}
+
+	/**
+	 * @param day the day to set
+	 */
+	public void setDay(String day) {
+		this.day = day;
+	}
+
+	/**
+	 * @return the hour
+	 */
+	public String getHour() {
+		return hour;
+	}
+
+	/**
+	 * @param hour the hour to set
+	 */
+	public void setHour(String hour) {
+		this.hour = hour;
+	}
+
 	/**
 	 * @return the category
 	 */
@@ -76,7 +109,7 @@ public class Event {
 		return guid;
 	}
 
-	/**
+	/**String
 	 * @param guid the guid to set
 	 */
 	public void setGuid(String guid) {

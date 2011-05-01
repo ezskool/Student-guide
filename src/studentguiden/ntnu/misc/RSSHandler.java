@@ -148,10 +148,8 @@ public class RSSHandler extends DefaultHandler {
 	 * @param feedUrl
 	 * @return
 	 */
-	public List<FeedEntry> getLatestArticles(String feedUrl) {
+	public List<FeedEntry> getLatestArticles(String feedUrl)  throws IOException, SAXException, ParserConfigurationException{
 		URL url = null;
-		try {
-
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
 			XMLReader xr = sp.getXMLReader();
@@ -160,16 +158,7 @@ public class RSSHandler extends DefaultHandler {
 			
 			xr.setContentHandler(this);
 			xr.parse(new InputSource(url.openStream()));
-
-
-		} catch (IOException e) {
-			
-		} catch (SAXException e) {
-			
-		} catch (ParserConfigurationException e) {
-		
-		}
-		
+	
 		Util.log("Returning "+articleList.size()+" articles");
 		return articleList;
 	}

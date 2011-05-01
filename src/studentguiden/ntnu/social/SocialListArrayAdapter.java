@@ -46,7 +46,7 @@ public class SocialListArrayAdapter extends ArrayAdapter<Event>{
 	        image.setImageResource(item.getIconResource());
             
             text1.setText(item.getTitle());
-            text2.setText("Category: "+item.getCategory());
+            text2.setText(context.getString(R.string.category)+item.getCategory());
             }
 
         return view;
