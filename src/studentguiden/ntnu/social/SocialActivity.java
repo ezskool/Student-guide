@@ -25,12 +25,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class SocialActivity extends ListActivity{
-	private TextView tv_list_title;
+public class SocialActivity extends ListActivity implements OnClickListener{
+	private TextView tv_statusbar;
 	private ArrayList<Event> currentEventList;
+	private ImageView btn_refresh, btn_back;
 
 
 	@Override
@@ -38,8 +41,13 @@ public class SocialActivity extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.social);
 
-		tv_list_title = (TextView)findViewById(R.id.tv_list_title);
-		tv_list_title.setText(getString(R.string.tv_social_title));
+		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
+		tv_statusbar.setText(getString(R.string.tv_social_title));
+		
+		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
+		btn_back = (ImageView)findViewById(R.id.btn_back);
+		btn_refresh.setOnClickListener(this);
+		btn_back.setOnClickListener(this);
 
 		new SamfundetDownloader().execute("http://www.samfundet.no/arrangement/rss");
 		//		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
@@ -59,6 +67,21 @@ public class SocialActivity extends ListActivity{
 
 		createListContent(currentEventList);
 
+	}
+	
+	public void setEventList(ArrayList<Event> entries) {
+		this.currentEventList = entries;
+		createListContent(currentEventList);
+	}
+	
+	@Override
+	public void onClick(View v) {
+		if(v==btn_back) {
+			super.finish();
+		}else if(v==btn_refresh) {
+			new SamfundetDownloader().execute("http://www.samfundet.no/arrangement/rss");
+			//		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
+		}
 	}
 
 	@Override
@@ -125,7 +148,7 @@ public class SocialActivity extends ListActivity{
 		protected void onPostExecute(Integer result) {
 			if(result == DOWNLOAD_SUCCESSFUL) {
 				Util.log("Samfunnet data download was successful");
-				SocialActivity.this.addEventList(eventList);
+				SocialActivity.this.setEventList(eventList);
 			}else {
 				Util.displayToastMessage(getString(R.string.download_failed_toast),SocialActivity.this.getApplicationContext());
 			}

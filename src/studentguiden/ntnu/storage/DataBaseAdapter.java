@@ -13,14 +13,16 @@ public class DataBaseAdapter {
 	public static final String KEY_CODE = "code";
 	public static final String KEY_NAME = "name";  
 	private static final String TAG = "DBAdapter";
-	private static final String DATABASE_NAME = "studentguiden";
+	private static final String DATABASE_NAME = "database";
 	private static final String DATABASE_TABLE = "courses";
 	private static final int DATABASE_VERSION = 1;
 	private static final String MYCOURSES_TABLE = "mycourses";
 	private static final String LECTURES_TABLE = "lectures";
+	private static final String DIRECTORY = "data/datastudentguiden.ntnu/storage/databases/";
+	private static final String PATH = DIRECTORY+DATABASE_NAME;
 
 	private static final String CREATE_TABLE_COURSE =
-		"create table IF NOT EXISTS "+DATABASE_TABLE+" ("+KEY_CODE+" text primary key, "+KEY_NAME+" text not null);";
+		"create table IF NOT EXISTS "+DATABASE_TABLE+" ("+KEY_CODE+" text primary key unique, "+KEY_NAME+" text not null);";
 	
 	private static final String CREATE_TABLE_MYCOURSES = 
 		"create table IF NOT EXISTS "+MYCOURSES_TABLE+" ("+KEY_CODE+" text primary key );";

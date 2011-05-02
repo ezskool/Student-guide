@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Student-appen NTNU</string>
+    <string name="app_name">Student-Guiden</string>
     <!-- Home strings -->
     <string name="header_timetable">Forelesninger i dag:</string>
     <string name="no_lectures">Ingen</string>
@@ -35,7 +35,7 @@
     <string name="add_to_my_courses">Legg til i mine fag</string>
     
     <!--  SocialActivity Strings -->
-    <string name="tv_social_title">Sosiale Arrangementer</string>
+    <string name="tv_social_title">Arrangementer</string>
     <string name="btn_open_link">Åpne lenke</string>
     <string name="event_content_by">Arrangementsinfo hentet fra:</string>
     <string name="category">Kategori:</string>
@@ -51,4 +51,7 @@
     <string name="social">Sosialt</string>
     <string name="courses">Fag</string>
     <string name="dinner">Middag</string>
+    
+    <!-- Database -->
+    <string name="databaseVersion">1</string>
 </resources>

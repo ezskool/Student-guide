@@ -17,13 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DinnerListArrayAdapter extends ArrayAdapter<Canteen>{
+public class DinnerListArrayAdapter extends ArrayAdapter<String>{
 
 	private Context context;
-	private List<Canteen> items;
+	private String[] items;
 	
 	public DinnerListArrayAdapter(Context context, int textViewResourceId,
-			List<Canteen> items) {
+			String[] items) {
 		super(context, textViewResourceId, items);
 		this.context = context;
 		this.items = items;
@@ -38,17 +38,24 @@ public class DinnerListArrayAdapter extends ArrayAdapter<Canteen>{
         	view = convertView;
         }
 
-        Canteen item = items.get(position);
+        String item = items[position];
         if (item!= null) {
-        	ImageView image = (ImageView) view.findViewById(R.id.img_item_icon);
+//        	ImageView image = (ImageView) view.findViewById(R.id.img_item_icon);
             TextView text1 = (TextView) view.findViewById(R.id.text1);
          
 //            TextView text3 = (TextView) view.findViewById(R.id.text3);
             
 //            image.setImageResource(R.drawable.samfundet_logo2);
-            text1.setText(item.getPlace());
+            text1.setText(item);
+            text1.setTextSize(20);
 //            text2.setText("Category: "+item.getCategory());
             }
+        
+        if((position % 2)==1) {
+        	view.setBackgroundResource(R.drawable.layout_list_item_1);
+        }else {
+        	view.setBackgroundResource(R.drawable.layout_list_item_2);
+        }
 
         return view;
     }

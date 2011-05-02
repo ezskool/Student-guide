@@ -43,6 +43,13 @@ public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
             
             text1.setText(item.getCode());
             text2.setText(item.getName());
+            
+            if((position % 2)==1) {
+            	view.setBackgroundResource(R.drawable.layout_list_item_1);
+            }else {
+            	view.setBackgroundResource(R.drawable.layout_list_item_2);
+            }
+            
             }
         //TODO: fiks list bilde click greier
 //        ImageView btn_add_course = (ImageView)view.findViewById(R.id.img_item_icon);

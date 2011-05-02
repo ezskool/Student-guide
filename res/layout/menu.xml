@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	style="@style/studentguide_layout" >
+	style="@style/studentguide_layout">
 
-	<LinearLayout android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_centerInParent="true"
-		android:orientation="vertical">
-		<Button style="@style/buttons" android:id="@+id/btn_courses"
-			android:text="@string/btn_courses" />
+			<include layout="@layout/statusbar" /><!--
 
-		<Button style="@style/buttons" android:id="@+id/btn_timetable"
-			android:text="@string/btn_timetable" />
-		<Button style="@style/buttons" android:id="@+id/btn_dinner"
-			android:text="@string/btn_dinner" />
+	<
 
-	</LinearLayout>
+	--><TableLayout style="@style/wrap_content" android:orientation="horizontal"
+		android:layout_centerInParent="true" android:paddingTop="50dip">
+		<TableRow android:orientation="vertical">
+			<LinearLayout style="@style/wrap_content"
+				android:orientation="vertical" android:padding="20dip">
+				<ImageView style="@style/wrap_content" android:src="@drawable/ic_news"  android:id="@+id/btn_news"/>
+				<TextView style="@style/text" android:text="Nyheter"
+					android:layout_gravity="center" />
+			</LinearLayout>
+			<LinearLayout style="@style/wrap_content"
+				android:orientation="vertical" android:padding="20dip">
+				<ImageView style="@style/wrap_content" android:src="@drawable/ic_timetable" android:id="@+id/btn_timetable"/>
+				<TextView style="@style/text" android:text="Timeplan"
+					android:layout_gravity="center" />
+			</LinearLayout>
+		</TableRow>
+
+		<TableRow android:orientation="vertical">
+			<LinearLayout style="@style/wrap_content"
+				android:orientation="vertical" android:padding="20dip">
+				<ImageView style="@style/wrap_content" android:src="@drawable/ic_course" android:id="@+id/btn_course"/>
+				<TextView style="@style/text" android:text="Fag"
+					android:layout_gravity="center" />
+			</LinearLayout>
+			
+			<LinearLayout style="@style/wrap_content"
+				android:orientation="vertical" android:padding="20dip">
+				<ImageView style="@style/wrap_content" android:id="@+id/btn_dinner" android:src="@drawable/ic_dinner" />
+				<TextView style="@style/text" android:text="Middag"
+					android:layout_gravity="center" />
+			</LinearLayout>
+		</TableRow>		<TableRow android:orientation="vertical">
+			<LinearLayout style="@style/wrap_content"
+				android:orientation="vertical" android:padding="20dip">
+				<ImageView style="@style/wrap_content" android:src="@drawable/social_icon" android:id="@+id/btn_social"/>
+				<TextView style="@style/text" android:text="Arrangementer"
+					android:layout_gravity="center" />
+			</LinearLayout>
+			<LinearLayout style="@style/wrap_content"
+				android:orientation="vertical" android:padding="20dip">
+				<ImageView style="@style/wrap_content" android:src="@drawable/ic_bus" android:id="@+id/btn_bus" />
+				<TextView style="@style/text" android:text="Buss"
+					android:layout_gravity="center" />
+			</LinearLayout>
+		</TableRow>
+	
+	</TableLayout>
+	
+
 </RelativeLayout>

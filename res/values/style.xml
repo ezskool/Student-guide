@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<style name="studentguide_layout">
-		<!--<item name="android:background">#00000000</item>
-    -->
-	</style>
+		<!--<item name="android:background">@drawable/background</item>
+	--></style>
 	<style name="buttons">
 		<item name="android:layout_width">200px</item>
 		<item name="android:layout_height">wrap_content</item>
 	</style>
 	<style name="text">
-
+		<item name="android:fitsSystemWindows">true</item>
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 	</style>
 	<style name="header_text">
+		<item name="android:fitsSystemWindows">true</item>
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">20dip</item>
@@ -31,4 +31,14 @@
 		<item name="android:layout_height">2px</item>
 		<item name="android:background">@drawable/line</item>
 	</style>
+	<style name="wrap_content">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	<style name="fill_parent">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+	
+	</style>
+
 </resources>

@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-        <com.exina.android.calendar.CalendarView  android:id="@+id/calendar"
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content" />
-    <TextView android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name" />
-    <TextView android:id="@+id/hit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="hit" />
-</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+
+	<include layout="@layout/statusbar" android:id="@+id/statusbar"/>
+
+	<TextView style="@style/header_text" android:text="@string/header_timetable" android:id="@+id/timetable_header" android:layout_below="@id/statusbar"/>
+	<LinearLayout android:layout_width="fill_parent" android:layout_below="@id/timetable_header"
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:id="@+id/lecture_row" >
+		
+		</LinearLayout>
+</RelativeLayout>

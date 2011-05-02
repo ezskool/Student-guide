@@ -1,48 +1,89 @@
 package studentguiden.ntnu.timetable;
 
-import com.exina.android.calendar.CalendarView;
-import com.exina.android.calendar.Cell;
+import java.util.ArrayList;
 
+
+
+import studentguiden.ntnu.courses.CourseUtilities;
+import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
+import studentguiden.ntnu.misc.Util;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * @author Håkon Drolsum Røkenes
- * 
- */
+public class TimetableActivity extends Activity implements OnClickListener{
 
-public class TimetableActivity extends Activity implements CalendarView.OnCellTouchListener{
-	public static final String MIME_TYPE = "vnd.android.cursor.dir/vnd.exina.android.calendar.date";
-	private CalendarView mView = null;
-	private TextView mHit;
-	private Handler mHandler = new Handler();
+	private ImageView btn_back, btn_refresh;
 
-
-	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timetable);
 
-		mView = (CalendarView)findViewById(R.id.calendar);
-		mView.setOnCellTouchListener(this);
+		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
+		btn_back = (ImageView)findViewById(R.id.btn_back);
+		btn_refresh.setOnClickListener(this);
+		btn_back.setOnClickListener(this);
 
-		if(getIntent().getAction().equals(Intent.ACTION_PICK)) {
-			findViewById(R.id.hit).setVisibility(View.INVISIBLE);
+		updateTimetable();
+	}
+
+	public void updateView(ArrayList<Course> courses) {
+		LinearLayout lecture_row = (LinearLayout)findViewById(R.id.lecture_row);
+		boolean hasLecture = false;
+
+		for (Course course : courses) {
+			for (Lecture lecture : course.getLectureList()) {
+				if(Util.isLectureToday(lecture)) {
+					TextView  tv = new TextView(this);
+					tv.setText(lecture.getStart()+" - "+lecture.getEnd()+"   "+course.getCode()+" - Room: " +lecture.getRoom());
+					lecture_row.addView(tv);
+
+					hasLecture = true;
+				}
+			}
+		}
+		if(!hasLecture) {
+			TextView  tv = new TextView(this);
+			tv.setText(getString(R.string.no_lectures));
+			lecture_row.addView(tv);
+		}
+	}
+
+	private void updateTimetable() {
+		LinearLayout lecture_row = (LinearLayout)findViewById(R.id.lecture_row);
+		ArrayList<Lecture> lectures = CourseUtilities.getMyLectures(this);
+		boolean hasLecture = false;
+
+		for (Lecture lecture : lectures) {
+			if(Util.isLectureToday(lecture)) {
+				TextView tv = new TextView(this);
+				tv.setText(lecture.getCourseCode()+" "+lecture.getStart()+" - "+lecture.getEnd()+"   "+" - Room: " +lecture.getRoom());
+				lecture_row.addView(tv);
+
+				hasLecture = true;
+			}
 		}
 
-
-
+		if(!hasLecture) {
+			TextView  tv = new TextView(this);
+			tv.setText(getString(R.string.no_lectures));
+			lecture_row.addView(tv);
+		}
 	}
 
 	@Override
-	public void onTouch(Cell cell) {
-		// TODO Auto-generated method stub
-
+	public void onClick(View v) {
+		if(v==btn_back) {
+			super.finish();
+		}else if(v==btn_refresh) {
+			updateTimetable();
+		}
 	}
 }

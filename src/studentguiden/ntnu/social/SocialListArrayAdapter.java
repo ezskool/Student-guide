@@ -48,6 +48,12 @@ public class SocialListArrayAdapter extends ArrayAdapter<Event>{
             text1.setText(item.getTitle());
             text2.setText(context.getString(R.string.category)+item.getCategory());
             }
+        
+        if((position % 2)==1) {
+        	view.setBackgroundResource(R.drawable.layout_list_item_1);
+        }else {
+        	view.setBackgroundResource(R.drawable.layout_list_item_2);
+        }
 
         return view;
     }

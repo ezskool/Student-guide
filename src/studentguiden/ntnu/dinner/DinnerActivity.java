@@ -22,11 +22,12 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DinnerActivity extends Activity implements OnClickListener{
 	private TextView tv_dinner_title, tv_dinner_description, tv_statusbar;
-	private ImageButton btn_refresh, btn_back;
+	private ImageView btn_refresh, btn_back;
 	private String url;
 	
 	@Override
@@ -38,8 +39,8 @@ public class DinnerActivity extends Activity implements OnClickListener{
 		tv_dinner_description = (TextView)findViewById(R.id.tv_dinner_description);
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		
-		btn_refresh = (ImageButton)findViewById(R.id.btn_refresh);
-		btn_back = (ImageButton)findViewById(R.id.btn_back);
+		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
+		btn_back = (ImageView)findViewById(R.id.btn_back);
 		btn_refresh.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
 		

@@ -1,0 +1,7 @@
+icon pressed: fec825
+icon focused: fe9320
+
+statusbar
+
+startColor="#58798a"
+endColor="#7ab4d2"

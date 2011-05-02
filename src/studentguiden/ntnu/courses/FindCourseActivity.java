@@ -18,6 +18,7 @@ import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,11 +29,12 @@ import android.widget.ListView;
  * 
  */
 
-public class FindCourseActivity extends ListActivity implements TextWatcher{
+public class FindCourseActivity extends ListActivity implements TextWatcher, OnClickListener{
 
 	private final int DIALOG_SEARCH_COURSE = 0;
 
 	private EditText et_search;
+	private ImageView btn_back, btn_refresh;
 	//	private ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 	private ProgressDialog pd;
@@ -64,9 +66,22 @@ public class FindCourseActivity extends ListActivity implements TextWatcher{
 	}
 
 	private void initializeViewElements() {
-
+		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
+		btn_refresh.setOnClickListener(this);
+		btn_back = (ImageView)findViewById(R.id.btn_back);
+		btn_back.setOnClickListener(this);
+		
 		et_search = (EditText)findViewById(R.id.et_search);
 		et_search.addTextChangedListener(this);
+	}
+	
+	@Override
+	public void onClick(View v) {
+		if(v==btn_back) {
+			super.finish();
+		}else if(v==btn_refresh) {
+			setListContent(et_search.getText().toString());
+		}
 	}
 
 
@@ -156,5 +171,7 @@ public class FindCourseActivity extends ListActivity implements TextWatcher{
 		}
 
 	}
+
+	
 
 }

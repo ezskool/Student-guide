@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:layout_width="fill_parent" android:layout_height="50dip"
 	android:background="@drawable/statusbar_background">
 
-	<ImageButton android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_alignParentLeft="true"
-		android:src="@drawable/btn_back" android:id="@+id/btn_back"  android:layout_centerVertical="true"/>
+
+	<ImageView android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:src="@drawable/ic_back"
+		android:id="@+id/btn_back" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
+
 	<TextView style="@style/header_text" android:id="@+id/tv_statusbar"
-		android:layout_centerInParent="true"  />
-	<ImageButton android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_alignParentRight="true"
-		android:src="@drawable/btn_refresh" android:id="@+id/btn_refresh" android:layout_centerVertical="true"/>
+		android:layout_centerInParent="true" android:textColor="#FFFFFFFF"/>
+
+	<ImageView android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:src="@drawable/ic_refresh"
+		android:id="@+id/btn_refresh" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
 
 </RelativeLayout>

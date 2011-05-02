@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -27,7 +28,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
 	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar;
 	private ProgressDialog pd;
-	private ImageButton btn_back, btn_refresh;
+	private ImageView btn_back, btn_refresh;
 	private Bundle extras;
 	private String courseCode;
 	private Button btn_add_my_course;
@@ -63,8 +64,8 @@ public class CourseActivity extends Activity implements OnClickListener{
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 
-		btn_back = (ImageButton)findViewById(R.id.btn_back);
-		btn_refresh = (ImageButton)findViewById(R.id.btn_refresh);
+		btn_back = (ImageView)findViewById(R.id.btn_back);
+		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
 		btn_back.setOnClickListener(this);
 		btn_refresh.setOnClickListener(this);
 		

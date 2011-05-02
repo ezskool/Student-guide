@@ -17,8 +17,7 @@ import android.widget.TextView;
 public class EventActivity extends Activity implements OnClickListener{
 	private TextView tv_event_title, tv_event_description, tv_event_link;
 	private String link;
-	private ImageView banner;
-	private ImageButton btn_back, btn_refresh;
+	private ImageView banner, btn_back, btn_refresh;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +39,8 @@ public class EventActivity extends Activity implements OnClickListener{
 		tv_event_link.setText(content);
 		tv_event_link.setOnClickListener(this);
 		
-		btn_refresh = (ImageButton)findViewById(R.id.btn_refresh);
-		btn_back = (ImageButton)findViewById(R.id.btn_back);
+		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
+		btn_back = (ImageView)findViewById(R.id.btn_back);
 		btn_refresh.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
 		
