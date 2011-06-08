@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	style="@style/studentguide_layout" android:orientation="horizontal"
+	android:id="@+id/dinner_list_item" android:padding="5dip">
+
+	<CheckBox style="@style/wrap_content" android:id="@+id/cb_campus"
+		android:layout_gravity="right" />
+	<TextView android:id="@+id/text1" android:textSize="14dip"
+		style="@style/text" android:textStyle="bold" android:layout_gravity="center_vertical" />
+
+
+</LinearLayout>

@@ -3,11 +3,15 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" style="@style/studentguide_layout">
 
+
+	<Button android:id="@+id/btn_todays_dinner"
+		android:layout_width="200dip" android:layout_height="wrap_content" android:text="@string/todays_dinner" 
+		android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+
 	<include layout="@layout/statusbar" android:id="@+id/statusbar" />
-
-
-	<LinearLayout android:layout_width="fill_parent" android:layout_below="@id/statusbar"
-		android:layout_height="wrap_content" android:orientation="vertical">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_below="@id/statusbar" android:layout_height="wrap_content"
+		android:orientation="vertical" android:layout_above="@id/btn_todays_dinner"> 
 		<include layout="@layout/list" />
 	</LinearLayout>
 

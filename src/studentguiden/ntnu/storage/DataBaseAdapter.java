@@ -7,30 +7,30 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DataBaseAdapter {
 	public static final String KEY_CODE = "code";
 	public static final String KEY_NAME = "name";  
 	private static final String TAG = "DBAdapter";
-	private static final String DATABASE_NAME = "database";
+	private static final String DATABASE_NAME = "studassen";
 	private static final String DATABASE_TABLE = "courses";
 	private static final int DATABASE_VERSION = 1;
 	private static final String MYCOURSES_TABLE = "mycourses";
 	private static final String LECTURES_TABLE = "lectures";
-	private static final String DIRECTORY = "data/datastudentguiden.ntnu/storage/databases/";
+	
+	private static final String DIRECTORY = "data/datastudentguiden.ntnu.storage/databases/";
 	private static final String PATH = DIRECTORY+DATABASE_NAME;
 
 	private static final String CREATE_TABLE_COURSE =
 		"create table IF NOT EXISTS "+DATABASE_TABLE+" ("+KEY_CODE+" text primary key unique, "+KEY_NAME+" text not null);";
 	
 	private static final String CREATE_TABLE_MYCOURSES = 
-		"create table IF NOT EXISTS "+MYCOURSES_TABLE+" ("+KEY_CODE+" text primary key );";
+		"create table IF NOT EXISTS "+MYCOURSES_TABLE+" ("+KEY_CODE+" text primary key, name text not null);";
 	
 	private static final String CREATE_TABLE_LECTURES = 
 		"create table IF NOT EXISTS "+LECTURES_TABLE+" (_id integer primary key autoincrement, "+KEY_CODE+" text not null, start text not null," +
-				" end text not null, day text not null, weeks text not null, room text not null);";
-
+				" end text not null, day text not null, dayNumber integer not null, weeks text not null, room text not null);";
+	
 	private final Context context; 
 
 	private DatabaseHelper DBHelper;
@@ -80,6 +80,7 @@ public class DataBaseAdapter {
 	public void close() {
 		DBHelper.close();
 	}
+	
 
 	public long insertCourse(String code, String name) {
 		ContentValues initialValues = new ContentValues();
@@ -88,19 +89,21 @@ public class DataBaseAdapter {
 		return db.insert(DATABASE_TABLE, null, initialValues);
 	}
 	
-	public long insertMyCourse(String code) {
+	public long insertMyCourse(String code, String name) {
 		Util.log("inserting course to my courses: "+code);
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_CODE, code);
+		initialValues.put("name", name);
 		return db.insert(MYCOURSES_TABLE,null, initialValues);
 	}
 	
-	public long insertLecture(String code, String start, String end, String day, String week, String room) {
+	public long insertLecture(String code, String start, String end, String day, int dayNumber, String week, String room) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_CODE, code);
 		initialValues.put("start", start);
 		initialValues.put("end", end);
 		initialValues.put("day", day);
+		initialValues.put("dayNumber", dayNumber);
 		initialValues.put("weeks", week);
 		initialValues.put("room", room);
 		return db.insert(LECTURES_TABLE, null, initialValues);
@@ -130,6 +133,7 @@ public class DataBaseAdapter {
 				"start",
 				"end",
 				"day",
+				"dayNumber",
 				"weeks",
 				"room"
 		}, null, null, null, null, "start");
@@ -137,7 +141,8 @@ public class DataBaseAdapter {
 	
 	public Cursor getMyCourses() {
 		return db.query(MYCOURSES_TABLE, new String[] {
-				KEY_CODE
+				KEY_CODE,
+				"name"
 		}, null, null, null, null, KEY_CODE);
 	}
 

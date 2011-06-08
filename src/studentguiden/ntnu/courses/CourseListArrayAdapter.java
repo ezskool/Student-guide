@@ -2,17 +2,13 @@ package studentguiden.ntnu.courses;
 
 import java.util.ArrayList;
 
-
-import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.main.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{

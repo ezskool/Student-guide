@@ -32,6 +32,8 @@ public class JSONHelper {
 
 					//TODO: iterate for more "schedules"? are there more schedules?
 					JSONObject jsonSchedule = item.getJSONArray("activitySchedules").getJSONObject(0);
+					
+					lecture.setCourseCode(course.getCode());
 					lecture.setWeeks(jsonSchedule.getString("weeks"));
 					lecture.setDay(jsonSchedule.getString("dayName"));
 					lecture.setDayNumber(jsonSchedule.getInt("dayNumber"));

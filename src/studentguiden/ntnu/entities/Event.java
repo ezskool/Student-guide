@@ -1,6 +1,5 @@
 package studentguiden.ntnu.entities;
 
-import java.util.Calendar;
 
 public class Event {
 	private String link, title, description, category, guid, day, hour, exactTime;

@@ -10,17 +10,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import studentguiden.ntnu.courses.CourseUtilities;
-import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.MetaCourse;
-import studentguiden.ntnu.main.Globals;
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.social.SocialActivity;
 import studentguiden.ntnu.storage.DataBaseAdapter;
 import studentguiden.ntnu.storage.DataBaseUpdater;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.AvoidXfermode.Mode;
 import android.os.AsyncTask;
 
 

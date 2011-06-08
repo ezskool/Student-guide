@@ -7,19 +7,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 import studentguiden.ntnu.entities.Lecture;
-import studentguiden.ntnu.storage.DataBaseAdapter;
-
 import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /**
@@ -33,6 +25,11 @@ public class Util {
 		Log.d("student-guide", msg);
 	}
 	
+	/**
+	 * Displays  a toast message on the screen
+	 * @param msg - the message to display
+	 * @param context - the context (Activity) it should display for
+	 */
 	public static void displayToastMessage(String msg, Context context) {
 		int duration = Toast.LENGTH_SHORT;
 
@@ -86,8 +83,7 @@ public class Util {
 			}
 		}
 		return false;
-	}
-	
+	}	
 
 	public static String getDate(String day) {
 
@@ -118,4 +114,6 @@ public class Util {
 		
 		return cal.get(Calendar.YEAR)+"-"+cal.get(Calendar.MONTH)+"-"+cal.get(Calendar.DAY_OF_MONTH);
 	}
+	
+	
 }

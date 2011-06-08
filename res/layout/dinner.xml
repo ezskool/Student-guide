@@ -8,10 +8,7 @@
 		android:layout_height="wrap_content" android:layout_below="@id/statusbar">
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical"
-			android:scrollbarAlwaysDrawVerticalTrack="true">
-
-			<TextView style="@style/text" android:id="@+id/tv_dinner_title" />
-			<TextView style="@style/text" android:id="@+id/tv_dinner_description" />
+			android:scrollbarAlwaysDrawVerticalTrack="true" android:id="@+id/layout_dinner_entry">
 
 		</LinearLayout>
 	</ScrollView>

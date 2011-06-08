@@ -3,10 +3,8 @@ package studentguiden.ntnu.storage;
 import java.util.ArrayList;
 
 import studentguiden.ntnu.courses.CourseUtilities;
-import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.misc.Util;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -28,7 +26,7 @@ public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{
 	@Override
 	protected Integer doInBackground(String... params) {
 		DataBaseAdapter database = new DataBaseAdapter(context);
-
+		
 		Util.log("inserting courses into db");
 		database.open();
 		for (MetaCourse course : courseList) {

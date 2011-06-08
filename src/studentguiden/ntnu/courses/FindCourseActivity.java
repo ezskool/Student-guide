@@ -2,24 +2,20 @@ package studentguiden.ntnu.courses;
 
 import java.util.ArrayList;
 
-import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DataBaseAdapter;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,7 +30,7 @@ public class FindCourseActivity extends ListActivity implements TextWatcher, OnC
 	private final int DIALOG_SEARCH_COURSE = 0;
 
 	private EditText et_search;
-	private ImageView btn_back, btn_refresh;
+	private ImageView btn_back;
 	//	private ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 	private ProgressDialog pd;
@@ -66,8 +62,6 @@ public class FindCourseActivity extends ListActivity implements TextWatcher, OnC
 	}
 
 	private void initializeViewElements() {
-		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
-		btn_refresh.setOnClickListener(this);
 		btn_back = (ImageView)findViewById(R.id.btn_back);
 		btn_back.setOnClickListener(this);
 		
@@ -79,8 +73,6 @@ public class FindCourseActivity extends ListActivity implements TextWatcher, OnC
 	public void onClick(View v) {
 		if(v==btn_back) {
 			super.finish();
-		}else if(v==btn_refresh) {
-			setListContent(et_search.getText().toString());
 		}
 	}
 

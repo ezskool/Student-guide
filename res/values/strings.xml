@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Student-Guiden</string>
+    <string name="app_name">Studassen</string>
     <!-- Home strings -->
     <string name="header_timetable">Forelesninger i dag:</string>
     <string name="no_lectures">Ingen</string>
@@ -42,6 +42,7 @@
     
     <!-- DinnerActivity strings -->
     <string name="text_select_place">Velg kantine</string>
+    <string name="todays_dinner">Dagens middag</string>
     
     <!-- Waiting messages -->
     <string name="downloading_content">Laster ned data..</string>
@@ -52,6 +53,21 @@
     <string name="courses">Fag</string>
     <string name="dinner">Middag</string>
     
+    <!--  Timetable strings -->
+    <string name="monday">Mandag</string>
+    <string name="tuesday">Tirsdag</string>
+    <string name="wednesday">Onsdag</string>
+    <string name="thursday">Torsdag</string>
+    <string name="friday">Fredag</string>
+    <string name="timetable">Timeplan</string>
+    <string name="course_code">Fagkode</string>
+    <string name="my_courses">Mine fag</string>
+    
+    
     <!-- Database -->
     <string name="databaseVersion">1</string>
+    
+    <!-- error message -->
+    <string name="error_msg_header">Tilkobling feilet</string>
+    <string name="error_msg_text">Sørg for å ha en fungerende tilkobling til internett, og prøv igjen.</string>
 </resources>

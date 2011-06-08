@@ -6,6 +6,6 @@
 	<TextView style="@style/header_text" android:id="@+id/tv_list_title"/>
 	<ListView android:id="@android:id/list" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" style="@style/studentguide_layout"
-		android:divider="@drawable/line" android:dividerHeight="2px" />
+		android:divider="@drawable/line_timetable" android:dividerHeight="2px" />
 
 </LinearLayout>

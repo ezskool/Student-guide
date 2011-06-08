@@ -12,13 +12,14 @@ public class Lecture {
 
 	public Lecture(){}
 
-	public Lecture(String code, String start, String end, String day, String weeks, String room) {
+	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room) {
 		this.start = start;
 		this.end = end;
 		this.day = day;
 		this.room = room;
 		this.courseCode = code;
 		this.weeks = retrieveWeeks(weeks);
+		this.dayNumber = dayNumber;
 	}
 
 	public String[] retrieveWeeks(String weeks) {
@@ -163,7 +164,7 @@ public class Lecture {
 		studyProgrammes.add(programCode);
 	}
 	/**
-	 * @return the dayNumber - 1 for sunday, 2 for monday..
+	 * @return the dayNumber - 0 for monday, 1 tueday, 2 wednesday, 3 thursday, 4 friday
 	 */
 	public int getDayNumber() {
 		return dayNumber;
@@ -172,6 +173,7 @@ public class Lecture {
 	 * @param dayNumber the dayNumber to set
 	 */
 	public void setDayNumber(int dayNumber) {
+	
 		this.dayNumber = dayNumber;
 	}
 

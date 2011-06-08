@@ -11,12 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
-import studentguiden.ntnu.courses.CourseActivity;
-import studentguiden.ntnu.courses.FindCourseActivity;
-import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.entities.Event;
 import studentguiden.ntnu.entities.FeedEntry;
-import studentguiden.ntnu.main.Globals;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.RSSHandler;
 import studentguiden.ntnu.misc.Util;
@@ -33,7 +29,7 @@ import android.widget.TextView;
 public class SocialActivity extends ListActivity implements OnClickListener{
 	private TextView tv_statusbar;
 	private ArrayList<Event> currentEventList;
-	private ImageView btn_refresh, btn_back;
+	private ImageView btn_back;
 
 
 	@Override
@@ -44,13 +40,11 @@ public class SocialActivity extends ListActivity implements OnClickListener{
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		tv_statusbar.setText(getString(R.string.tv_social_title));
 		
-		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
 		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_refresh.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
 
 		new SamfundetDownloader().execute("http://www.samfundet.no/arrangement/rss");
-		//		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
+		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
 	}
 
 	private void createListContent(ArrayList<Event> entries) {
@@ -78,9 +72,6 @@ public class SocialActivity extends ListActivity implements OnClickListener{
 	public void onClick(View v) {
 		if(v==btn_back) {
 			super.finish();
-		}else if(v==btn_refresh) {
-			new SamfundetDownloader().execute("http://www.samfundet.no/arrangement/rss");
-			//		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
 		}
 	}
 

@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
 
-	<include layout="@layout/statusbar" android:id="@+id/statusbar"/>
-
-	<TextView style="@style/header_text" android:text="@string/header_timetable" android:id="@+id/timetable_header" android:layout_below="@id/statusbar"/>
-	<LinearLayout android:layout_width="fill_parent" android:layout_below="@id/timetable_header"
-		android:layout_height="wrap_content" android:orientation="vertical"
-		android:id="@+id/lecture_row" >
+	<include layout="@layout/statusbar" android:id="@+id/statusbar" />
 		
-		</LinearLayout>
+		<Button android:layout_width="200dip"
+			android:layout_height="wrap_content" android:id="@+id/btn_my_courses"
+			android:text="@string/my_courses" android:textSize="18dip"
+			android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:paddingBottom="15dip"/>
+
+
+
+		<ScrollView android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_below="@id/statusbar"
+			android:layout_above="@id/btn_my_courses">
+			<LinearLayout android:layout_height="wrap_content"
+				android:layout_width="fill_parent" android:orientation="vertical"
+				android:padding="15dip">
+				<TextView style="@style/header_text" android:text="@string/monday" />
+				<View style="@style/horizontal_line_timetable" />
+				<TextView style="@style/text" android:id="@+id/timetable_monday" />
+
+				<TextView style="@style/header_text" android:text="@string/tuesday" />
+				<View style="@style/horizontal_line_timetable" />
+				<TextView style="@style/text" android:id="@+id/timetable_tuesday" />
+
+				<TextView style="@style/header_text" android:text="@string/wednesday" />
+				<View style="@style/horizontal_line_timetable" />
+				<TextView style="@style/text" android:id="@+id/timetable_wednesday" />
+
+				<TextView style="@style/header_text" android:text="@string/thursday" />
+				<View style="@style/horizontal_line_timetable" />
+				<TextView style="@style/text" android:id="@+id/timetable_thursday" />
+
+				<TextView style="@style/header_text" android:text="@string/friday" />
+				<View style="@style/horizontal_line_timetable" />
+				<TextView style="@style/text" android:id="@+id/timetable_friday" />
+
+			</LinearLayout>
+		</ScrollView>
+
+
+
 </RelativeLayout>

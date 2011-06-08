@@ -1,3 +1,4 @@
+package studentguiden.ntnu.home;
 //package studentguiden.ntnu.main;
 //
 //import java.io.IOException;

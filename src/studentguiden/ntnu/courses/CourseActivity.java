@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +27,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
 	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar;
 	private ProgressDialog pd;
-	private ImageView btn_back, btn_refresh;
+	private ImageView btn_back;
 	private Bundle extras;
 	private String courseCode;
 	private Button btn_add_my_course;
@@ -65,10 +64,8 @@ public class CourseActivity extends Activity implements OnClickListener{
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 
 		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
 		btn_back.setOnClickListener(this);
-		btn_refresh.setOnClickListener(this);
-		
+
 		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
 		btn_add_my_course.setOnClickListener(this);
 	}
@@ -77,10 +74,6 @@ public class CourseActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		if(v==btn_back) {
 			super.finish();
-		}else if(v==btn_refresh) {
-			if(!courseCode.equals("")) {
-				new ContentDownloader().execute(courseCode);
-			}
 		}else if(v==btn_add_my_course) {
 			CourseUtilities.addToMyCourses(thisCourse, this);			
 		}
@@ -142,7 +135,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 				textContent = Util.downloadContent(courseURL);
 				URL scheduleURL = new URL("http://www.ime.ntnu.no/api/schedule/"+params[0]);
 				scheduleContent = Util.downloadContent(scheduleURL);
-				
+
 				JSONHelper.updateCourseData(currentCourse, textContent);
 				JSONHelper.updateScheduleData(currentCourse, scheduleContent);
 			}catch(MalformedURLException e) {

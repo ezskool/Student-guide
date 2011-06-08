@@ -1,12 +1,9 @@
 package studentguiden.ntnu.social;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import studentguiden.ntnu.entities.Event;
-import studentguiden.ntnu.entities.FeedEntry;
 import studentguiden.ntnu.main.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

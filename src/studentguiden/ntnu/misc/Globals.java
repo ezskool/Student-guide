@@ -1,4 +1,6 @@
-package studentguiden.ntnu.main;
+package studentguiden.ntnu.misc;
+
+import java.net.URI;
 
 public class Globals {
 

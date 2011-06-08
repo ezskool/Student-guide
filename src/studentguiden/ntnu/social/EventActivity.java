@@ -9,15 +9,13 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EventActivity extends Activity implements OnClickListener{
 	private TextView tv_event_title, tv_event_description, tv_event_link;
 	private String link;
-	private ImageView banner, btn_back, btn_refresh;
+	private ImageView banner, btn_back;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +37,7 @@ public class EventActivity extends Activity implements OnClickListener{
 		tv_event_link.setText(content);
 		tv_event_link.setOnClickListener(this);
 		
-		btn_refresh = (ImageView)findViewById(R.id.btn_refresh);
 		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_refresh.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
 		
 		banner = (ImageView)findViewById(R.id.iv_event_banner);
@@ -55,8 +51,6 @@ public class EventActivity extends Activity implements OnClickListener{
 			startActivity(browserIntent);
 		}else if(v==btn_back) {
 			super.finish();
-		}else if(v==btn_refresh) {
-			//TODO: omstrukturer så man kan refreshe fra social?
 		}
 	}
 }

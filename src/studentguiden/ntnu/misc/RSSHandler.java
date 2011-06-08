@@ -18,8 +18,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import studentguiden.ntnu.entities.FeedEntry;
 
-import android.util.Log;
-
 
 public class RSSHandler extends DefaultHandler {
 
