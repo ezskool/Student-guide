@@ -4,8 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import studentguiden.ntnu.entities.Course;
-import studentguiden.ntnu.entities.Lecture;
+import studentguiden.ntnu.storage.entities.Course;
+import studentguiden.ntnu.storage.entities.Lecture;
 
 public class JSONHelper {
 
@@ -37,8 +37,8 @@ public class JSONHelper {
 					lecture.setWeeks(jsonSchedule.getString("weeks"));
 					lecture.setDay(jsonSchedule.getString("dayName"));
 					lecture.setDayNumber(jsonSchedule.getInt("dayNumber"));
-					lecture.setStart(jsonSchedule.getString("start"));
-					lecture.setEnd(jsonSchedule.getString("end"));
+					lecture.setStart(getTime(jsonSchedule.getString("start")));
+					lecture.setEnd(getTime(jsonSchedule.getString("end")));
 
 					JSONObject jsonRooms = jsonSchedule.getJSONArray("rooms").getJSONObject(0);
 					lecture.setRoom(jsonRooms.getString("location"));
@@ -54,6 +54,15 @@ public class JSONHelper {
 	}
 	
 	/**
+	 * adds a zero in front of time, in case it is before 10am, thus consisting of 4 letters instead of 5. This is done to make sorting easier.
+	 * @param time
+	 * @return the standardized time string with 5 letters
+	 */
+	private static String getTime(String time) {
+			return time.length()==4 ? 0+time : time;
+	}
+	
+	/**
 	 * parses the raw course data, and updates the course object
 	 * @param description
 	 * @param schedule
@@ -65,7 +74,9 @@ public class JSONHelper {
 		JSONObject jsonCourseObject = new JSONObject(description).optJSONObject("course"); 
 		if(jsonCourseObject != null) {
 			course.setCode(getStringFromObject(jsonCourseObject, "code"));
-			course.setName(getStringFromObject(jsonCourseObject, "name"));
+			
+			//TODO: set for correct language
+			course.setNameNo(getStringFromObject(jsonCourseObject, "name"));
 			course.setCourseType(getStringFromObject(jsonCourseObject, "courseTypeName"));
 			course.setCredit(getStringFromObject(jsonCourseObject, "credit"));
 			course.setStudyLevel(getStringFromObject(jsonCourseObject, "studyLevelName"));

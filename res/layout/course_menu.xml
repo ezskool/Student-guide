@@ -18,6 +18,5 @@
 </RelativeLayout>
 
 	<ListView android:id="@android:id/list" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" style="@style/studentguide_layout"
-		android:divider="@drawable/line" android:dividerHeight="2dip" />
+		android:layout_height="fill_parent" style="@style/studentguide_layout" android:dividerHeight="1dip" />
 </LinearLayout>

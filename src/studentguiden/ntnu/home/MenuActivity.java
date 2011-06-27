@@ -1,14 +1,17 @@
 package studentguiden.ntnu.home;
 
 import studentguiden.ntnu.bus.BusActivity;
-import studentguiden.ntnu.courses.FindCourseActivity;
+import studentguiden.ntnu.courses.CourseListActivity;
+import studentguiden.ntnu.courses.CourseUtilities;
 import studentguiden.ntnu.courses.TimetableActivity;
 import studentguiden.ntnu.dinner.DinnerActivity;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.CourseDownloader;
 import studentguiden.ntnu.misc.Globals;
+import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.news.NewsActivity;
 import studentguiden.ntnu.social.SocialActivity;
+import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,13 +30,14 @@ public class MenuActivity extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu);
-		prefs = getSharedPreferences("student-guide", MODE_PRIVATE);
 		
 		initializeViewElements();
 	
-		if(!Globals.hasCalledCourseDownloader) {
-			new CourseDownloader(this, prefs).execute();
+		if(Util.hasCourseDataExpired(this)) {
+			new CourseDownloader(this).execute();
 			Globals.hasCalledCourseDownloader = true;
+		}else {
+			Util.log("Course data already downloaded and cache has not expired");
 		}
 	}
 	
@@ -65,7 +69,7 @@ public class MenuActivity extends Activity implements OnClickListener{
 			Intent intent = new Intent(this, DinnerActivity.class);
 			startActivity(intent);
 		}else if(v==btn_course) {
-			Intent intent = new Intent(this, FindCourseActivity.class);
+			Intent intent = new Intent(this, CourseListActivity.class);
 			startActivity(intent);
 		}else if(v==btn_bus) {
 			Intent intent = new Intent(this, BusActivity.class);

@@ -1,9 +1,12 @@
 package studentguiden.ntnu.courses;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
-import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.main.R;
+import studentguiden.ntnu.storage.DatabaseHelper;
+import studentguiden.ntnu.storage.entities.Course;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,20 +31,35 @@ public class MyCoursesActivity extends Activity implements OnClickListener{
 	}
 	
 	private void updateCourseList() {
-		ArrayList<MetaCourse> courseList = CourseUtilities.getMyCourses(this);
-		
-		for (MetaCourse course : courseList) {
-			TextView tv = new TextView(this);
-			tv.setText(course.getCourseText());
-			tv.setTextSize(16);
-			my_courses_list.addView(tv);
+		DatabaseHelper db = new DatabaseHelper(this);
+		try {
+			List<Course> courseList= db.getSavedCourses();
+			db.close();
 			
-			View line= new View(this);
-			line.setBackgroundResource(R.drawable.line_timetable);
-			LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 2);
-			line.setLayoutParams(params);
-			my_courses_list.addView(line);
+			for (Course course : courseList) {
+				addCourseToView(course);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * adds course name to view
+	 * @param course
+	 */
+	private void addCourseToView(Course course) {
+		TextView tv = new TextView(this);
+		tv.setText(course.getCourseText());
+		tv.setTextSize(16);
+		my_courses_list.addView(tv);
+		
+		View line= new View(this);
+		line.setBackgroundResource(R.drawable.line_timetable);
+		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 2);
+		line.setLayoutParams(params);
+		my_courses_list.addView(line);
 	}
 
 	@Override

@@ -1,15 +1,29 @@
-package studentguiden.ntnu.entities;
+package studentguiden.ntnu.storage.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import studentguiden.ntnu.misc.Util;
 
-public class Lecture {
-	private String  activityDescription, day, start, end, room, roomCode, courseCode;
-	private ArrayList<String> studyProgrammes;
-	private int dayNumber;
-	private String[] weeks;
+@DatabaseTable(tableName="lectures")
+public class Lecture implements Serializable {
+	private static final long serialVersionUID = 3599770702142308960L;
 
+	@DatabaseField(generatedId = true)
+	private int id;
+	
+	@DatabaseField
+	private String  activityDescription, day, start, end, room, roomCode, courseCode, weeks;
+	
+//	@DatabaseField
+	private ArrayList<String> studyProgrammes;
+	
+	@DatabaseField
+	private int dayNumber;
+	
 	public Lecture(){}
 
 	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room) {
@@ -18,12 +32,11 @@ public class Lecture {
 		this.day = day;
 		this.room = room;
 		this.courseCode = code;
-		this.weeks = retrieveWeeks(weeks);
+		this.weeks = weeks;
 		this.dayNumber = dayNumber;
 	}
 
-	public String[] retrieveWeeks(String weeks) {
-		Util.log("WEEK:"+weeks);
+	public String[] retrieveWeeks() {
 		String[] temp = weeks.split("-");
 		if(temp.length >1) {
 			
@@ -38,6 +51,13 @@ public class Lecture {
 		return new String[] {""};
 	}
 
+	/**
+	 * 
+	 * @return id
+	 */
+	public int getId() {
+		return this.id;
+	}
 	
 	/**
 	 * @return the courseCode
@@ -56,29 +76,30 @@ public class Lecture {
 	/**
 	 * @return the weeks
 	 */
-	public String[] getWeeks() {
+	public String getWeeks() {
 		return weeks;
 	}
 
 	public String getWeeksText() {
-		if(weeks.length==1) {
-			return weeks[0];
-		} else if(weeks.length >2) {
-			return weeks[0]+"-"+weeks[weeks.length-1];
+		String[] weekList = retrieveWeeks();
+		if(weekList.length==1) {
+			return weekList[0];
+		} else if(weekList.length >2) {
+			return weekList[0]+"-"+weekList[weekList.length-1];
 		}else {
 			return "";
 		}
 	}
-	/**
-	 * @param weeks splits the weeks on each "," separating them and creates an array of weeks
-	 */
-	public void setWeeks(String weeks) {
-		setWeeks(weeks.split(","));
-	}
-
-	public void setWeeks(String[] weeks) {
-		this.weeks = weeks;
-	}
+//	/**
+//	 * @param weeks splits the weeks on each "," separating them and creates an array of weeks
+//	 */
+//	public void setWeeks(String weeks) {
+//		setWeeks(weeks.split(","));
+//	}
+//
+//	public void setWeeks(String weeks) {
+//		this.weeks = weeks;
+//	}
 	/**
 	 * @return the activityDescription
 	 */
@@ -173,8 +194,11 @@ public class Lecture {
 	 * @param dayNumber the dayNumber to set
 	 */
 	public void setDayNumber(int dayNumber) {
-	
 		this.dayNumber = dayNumber;
+	}
+
+	public void setWeeks(String weeks) {
+		this.weeks = weeks;
 	}
 
 }

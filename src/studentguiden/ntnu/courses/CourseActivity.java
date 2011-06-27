@@ -3,12 +3,14 @@ package studentguiden.ntnu.courses;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 
-import studentguiden.ntnu.entities.Course;
-import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.JSONHelper;
 import studentguiden.ntnu.misc.Util;
+import studentguiden.ntnu.storage.DatabaseHelper;
+import studentguiden.ntnu.storage.entities.Course;
+import studentguiden.ntnu.storage.entities.Lecture;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -32,7 +34,6 @@ public class CourseActivity extends Activity implements OnClickListener{
 	private String courseCode;
 	private Button btn_add_my_course;
 	private Course thisCourse;
-	private String thisCourseId;
 
 
 	@Override
@@ -45,7 +46,6 @@ public class CourseActivity extends Activity implements OnClickListener{
 
 		if(extras !=null){
 			courseCode = extras.getString("code");
-			thisCourseId = extras.getString("id");
 			new ContentDownloader().execute(courseCode);
 		}
 
@@ -75,7 +75,15 @@ public class CourseActivity extends Activity implements OnClickListener{
 		if(v==btn_back) {
 			super.finish();
 		}else if(v==btn_add_my_course) {
-			CourseUtilities.addToMyCourses(thisCourse, this);			
+			DatabaseHelper db = new DatabaseHelper(this);
+			try {
+				db.insertSavedCourse(thisCourse);
+				db.insertLectures(thisCourse.getLectureList());
+			} catch (SQLException e) {
+				Util.log("Unable to insert course");
+				e.printStackTrace();
+			}
+			db.close();
 		}
 	}
 
@@ -87,7 +95,7 @@ public class CourseActivity extends Activity implements OnClickListener{
 		thisCourse = course;
 		Util.log("Updating course view with course data");
 		tv_statusbar.setText(course.getCode());
-		courseName.setText(course.getName());
+		courseName.setText(course.getNameNo());
 		courseLevel.setText(course.getStudyLevel());
 		courseCredit.setText(course.getCredit()+" "+getString(R.string.student_points));
 

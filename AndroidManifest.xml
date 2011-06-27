@@ -19,7 +19,7 @@
 			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.social.SocialActivity"
 			android:label="@string/app_name" />
-		<activity android:name="studentguiden.ntnu.courses.FindCourseActivity"
+		<activity android:name="studentguiden.ntnu.courses.CourseListActivity"
 			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.courses.TimetableActivity"
 			android:label="@string/app_name" />

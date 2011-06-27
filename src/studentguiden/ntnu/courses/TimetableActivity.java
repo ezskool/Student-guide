@@ -1,9 +1,13 @@
 package studentguiden.ntnu.courses;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
-import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
+import studentguiden.ntnu.misc.Util;
+import studentguiden.ntnu.storage.DatabaseHelper;
+import studentguiden.ntnu.storage.entities.Lecture;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,13 +30,13 @@ public class TimetableActivity extends Activity implements OnClickListener{
 
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		tv_statusbar.setText(getString(R.string.timetable));
-		
+
 		btn_back = (ImageView)findViewById(R.id.btn_back);
 		btn_back.setOnClickListener(this);
-		
+
 		btn_my_courses = (Button)findViewById(R.id.btn_my_courses);
 		btn_my_courses.setOnClickListener(this);
-		
+
 		tv_monday = (TextView) findViewById(R.id.timetable_monday);
 		tv_tuesday = (TextView)findViewById(R.id.timetable_tuesday);
 		tv_wednesday = (TextView)findViewById(R.id.timetable_wednesday);
@@ -43,23 +47,29 @@ public class TimetableActivity extends Activity implements OnClickListener{
 	}
 
 	private void updateTimetable() {
-		ArrayList<Lecture> lectures = CourseUtilities.getMyLectures(this);
-	
-		for (Lecture lecture : lectures) {
-			int day = lecture.getDayNumber();
-			if(day==0) {
-				appendLectureText(tv_monday, lecture);
-			}else if(day==1) {
-				appendLectureText(tv_tuesday, lecture);
-			}else if(day==2) {
-				appendLectureText(tv_wednesday, lecture);
-			}else if(day==3) {
-				appendLectureText(tv_thursday, lecture);
-			}else if(day==4) {
-				appendLectureText(tv_friday, lecture);
+		DatabaseHelper db = new DatabaseHelper(this);
+		try {
+			List<Lecture>  lectures = db.getMyLectures();
+			for (Lecture lecture : lectures) {
+				int day = lecture.getDayNumber();
+				if(day==0) {
+					appendLectureText(tv_monday, lecture);
+				}else if(day==1) {
+					appendLectureText(tv_tuesday, lecture);
+				}else if(day==2) {
+					appendLectureText(tv_wednesday, lecture);
+				}else if(day==3) {
+					appendLectureText(tv_thursday, lecture);
+				}else if(day==4) {
+					appendLectureText(tv_friday, lecture);
+				}
 			}
-		}
 
+		} catch (SQLException e) {
+			Util.log("Unable to fetch lectures");
+			e.printStackTrace();
+		}
+		db.close();
 	}
 	
 	private void appendLectureText(TextView tv, Lecture lecture) {

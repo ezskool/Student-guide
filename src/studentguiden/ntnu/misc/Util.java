@@ -7,10 +7,19 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
-import studentguiden.ntnu.entities.Lecture;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
+import studentguiden.ntnu.storage.entities.Lecture;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -77,8 +86,9 @@ public class Util {
 	}
 	
 	public static boolean isLectureThisWeek(Lecture lecture) {
-		for (int i = 0; i < lecture.getWeeks().length; i++) {
-			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == Integer.parseInt(lecture.getWeeks()[i])) {
+		String[] weeks = lecture.retrieveWeeks();
+		for (int i = 0; i < weeks.length; i++) {
+			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == Integer.parseInt(weeks[i])) {
 				return true;
 			}
 		}
@@ -115,5 +125,31 @@ public class Util {
 		return cal.get(Calendar.YEAR)+"-"+cal.get(Calendar.MONTH)+"-"+cal.get(Calendar.DAY_OF_MONTH);
 	}
 	
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static boolean hasCourseDataExpired(Context context) {
+		SharedPreferences prefs = context.getSharedPreferences("studassen", Context.MODE_PRIVATE);
+		String expirationDate = prefs.getString("CourseDataExpirationDate", "");
+		if(expirationDate == "" || expirationDate == null) {
+			return true;
+		}else {
+			return hasDateExpired(expirationDate);
+		}
+	}
 	
+	/** Compares a date string to current date, to check if it has expired or not. The date string must conform with ISO8601 Java calendar system
+	 * example string: 2011-06-24T14:25:22+02:00
+	 * 
+	 * @param expirationDate
+	 * @return
+	 */
+	public static boolean hasDateExpired(String expirationDate) {
+		DateTimeFormatter parser = ISODateTimeFormat.dateTimeNoMillis();
+		
+		DateTime expDate = parser.parseDateTime(expirationDate);
+		return expDate.isBeforeNow();
+	}
 }

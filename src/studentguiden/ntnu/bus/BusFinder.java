@@ -9,8 +9,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
-import studentguiden.ntnu.misc.Util;
-
 
 public class BusFinder {
 	private URI uri;
@@ -37,7 +35,7 @@ public class BusFinder {
 		scanner = new Scanner(connection.getInputStream());
 
 		if (scanner != null) {
-			scanner.useDelimiter("\\Z");
+			scanner.useDelimiter("$");
 			String content = scanner.next();
 			return content.trim();
 		}

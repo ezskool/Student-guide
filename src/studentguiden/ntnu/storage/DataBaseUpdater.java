@@ -1,54 +1,53 @@
 package studentguiden.ntnu.storage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import studentguiden.ntnu.courses.CourseUtilities;
-import studentguiden.ntnu.entities.MetaCourse;
 import studentguiden.ntnu.misc.Util;
+import studentguiden.ntnu.storage.entities.Course;
+import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{
-	private final int DB_UPDATE_SUCCESS = 0;
-	private final int DB_UPDATE_FAILURE = 1;
+	private final int DB_UPDATE_SUCCESS = 1;
+	private final int DB_UPDATE_FAILED = 0;
 
 	private ArrayList<MetaCourse> courseList;
-	private SharedPreferences prefs;
 	private Context context;
 
-	public DataBaseUpdater(ArrayList<MetaCourse> courses, SharedPreferences prefs, Context context) {
+	public DataBaseUpdater(ArrayList<MetaCourse> courses, Context context) {
 		this.courseList = courses;
-		this.prefs = prefs;
 		this.context = context;
 	}
 
 	@Override
 	protected Integer doInBackground(String... params) {
-		DataBaseAdapter database = new DataBaseAdapter(context);
-		
-		Util.log("inserting courses into db");
-		database.open();
+		DatabaseHelper database = new DatabaseHelper(context);
+		Util.log("inserting courses into database");
+
 		for (MetaCourse course : courseList) {
-			database.insertCourse(course.getCode(), course.getName());
+			try {
+				database.insertCourse(course);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Util.log("Database update failed while inserting course "+course.getCode());
+				return DB_UPDATE_FAILED;
+			}
 		}
+
 		database.close();
-		CourseUtilities.updateCourseList(database);
-		//TODO: ingen validering på at ting gikk riktig her. skrive om databaseadapter?
 		return DB_UPDATE_SUCCESS;
 	}
-
 
 	@Override
 	protected void onPostExecute(Integer result) {
 		if(result==DB_UPDATE_SUCCESS) {
-			prefs.edit().putBoolean("database_populated", true).commit();			
-			Util.log("Database updated: "+prefs.getBoolean("database_populated", false));
-		}else {
+			Util.log("Database updated");
+		}else if(result == DB_UPDATE_FAILED){
 			Util.log("database update failed");
 		}
-		
 	}
-
-
 }
