@@ -1,12 +1,11 @@
 package studentguiden.ntnu.courses;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DatabaseHelper;
+import studentguiden.ntnu.storage.DataBaseAdapter;
 import studentguiden.ntnu.storage.entities.Lecture;
 import android.app.Activity;
 import android.content.Intent;
@@ -47,31 +46,29 @@ public class TimetableActivity extends Activity implements OnClickListener{
 	}
 
 	private void updateTimetable() {
-		DatabaseHelper db = new DatabaseHelper(this);
-		try {
-			List<Lecture>  lectures = db.getMyLectures();
-			for (Lecture lecture : lectures) {
-				int day = lecture.getDayNumber();
-				if(day==0) {
-					appendLectureText(tv_monday, lecture);
-				}else if(day==1) {
-					appendLectureText(tv_tuesday, lecture);
-				}else if(day==2) {
-					appendLectureText(tv_wednesday, lecture);
-				}else if(day==3) {
-					appendLectureText(tv_thursday, lecture);
-				}else if(day==4) {
-					appendLectureText(tv_friday, lecture);
-				}
-			}
-
-		} catch (SQLException e) {
-			Util.log("Unable to fetch lectures");
-			e.printStackTrace();
-		}
+		DataBaseAdapter db = new DataBaseAdapter(this);
+		db.openReadOnly();
+		List<Lecture>  lectures = db.getMyLectures();
 		db.close();
+		
+		for (Lecture lecture : lectures) {
+			int day = lecture.getDayNumber();
+			if(day==0) {
+				appendLectureText(tv_monday, lecture);
+			}else if(day==1) {
+				appendLectureText(tv_tuesday, lecture);
+			}else if(day==2) {
+				appendLectureText(tv_wednesday, lecture);
+			}else if(day==3) {
+				appendLectureText(tv_thursday, lecture);
+			}else if(day==4) {
+				appendLectureText(tv_friday, lecture);
+			}
+		}
+
+		
 	}
-	
+
 	private void appendLectureText(TextView tv, Lecture lecture) {
 		tv.append(lecture.getStart()+" - "+lecture.getEnd()+" "+lecture.getCourseCode()+" "+getString(R.string.room)+" "+lecture.getRoom()+"\n");
 	}

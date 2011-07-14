@@ -4,21 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable(tableName = "my_courses")
 public class Course implements Serializable{
 	
 	private static final long serialVersionUID = 6539649775644656485L;
 
-	@DatabaseField(id = true)
 	private String code;
 	
-	@DatabaseField
 	private String name_no;
 	
-	@DatabaseField
 	private String name_en;
 	
 	private String credit, studyLevel, courseType, goals, description, prerequisites, timespan;

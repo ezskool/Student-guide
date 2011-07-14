@@ -7,10 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -19,7 +16,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import studentguiden.ntnu.storage.entities.Lecture;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 

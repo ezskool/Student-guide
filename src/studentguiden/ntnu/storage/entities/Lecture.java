@@ -3,25 +3,17 @@ package studentguiden.ntnu.storage.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
 import studentguiden.ntnu.misc.Util;
 
-@DatabaseTable(tableName="lectures")
 public class Lecture implements Serializable {
 	private static final long serialVersionUID = 3599770702142308960L;
 
-	@DatabaseField(generatedId = true)
 	private int id;
 	
-	@DatabaseField
 	private String  activityDescription, day, start, end, room, roomCode, courseCode, weeks;
 	
-//	@DatabaseField
 	private ArrayList<String> studyProgrammes;
 	
-	@DatabaseField
 	private int dayNumber;
 	
 	public Lecture(){}

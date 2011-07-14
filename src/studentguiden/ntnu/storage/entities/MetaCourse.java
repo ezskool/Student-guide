@@ -2,21 +2,14 @@ package studentguiden.ntnu.storage.entities;
 
 import java.io.Serializable;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "courses")
 public class MetaCourse implements Serializable{
 
 	private static final long serialVersionUID = -1761189591586938961L;
 
-	@DatabaseField(id = true)
 	private String code;
 	
-	@DatabaseField
 	private String name_no;
-	
-	@DatabaseField
 	private String name_en;
 
 	public MetaCourse() {}

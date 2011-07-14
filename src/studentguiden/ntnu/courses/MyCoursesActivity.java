@@ -1,11 +1,10 @@
 package studentguiden.ntnu.courses;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.storage.DatabaseHelper;
+import studentguiden.ntnu.storage.DataBaseAdapter;
 import studentguiden.ntnu.storage.entities.Course;
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,33 +17,29 @@ import android.widget.TextView;
 public class MyCoursesActivity extends Activity implements OnClickListener{
 	private TextView tv_statusbar;
 	private LinearLayout my_courses_list;
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_courses);
-		
+
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		tv_statusbar.setText(getString(R.string.my_courses));
-		
+
 		my_courses_list = (LinearLayout)findViewById(R.id.my_courses_list);
 		updateCourseList();
 	}
-	
+
 	private void updateCourseList() {
-		DatabaseHelper db = new DatabaseHelper(this);
-		try {
-			List<Course> courseList= db.getSavedCourses();
-			db.close();
-			
-			for (Course course : courseList) {
-				addCourseToView(course);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		DataBaseAdapter db = new DataBaseAdapter(this);
+		db.openReadOnly();
+		List<Course> courseList= db.getMyCourses();
+		db.close();
+
+		for (Course course : courseList) {
+			addCourseToView(course);
 		}
 	}
-	
+
 	/**
 	 * adds course name to view
 	 * @param course
@@ -54,7 +49,7 @@ public class MyCoursesActivity extends Activity implements OnClickListener{
 		tv.setText(course.getCourseText());
 		tv.setTextSize(16);
 		my_courses_list.addView(tv);
-		
+
 		View line= new View(this);
 		line.setBackgroundResource(R.drawable.line_timetable);
 		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 2);
@@ -65,6 +60,6 @@ public class MyCoursesActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

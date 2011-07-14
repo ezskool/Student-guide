@@ -6,8 +6,7 @@ import java.util.List;
 
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DatabaseHelper;
-import studentguiden.ntnu.storage.entities.Course;
+import studentguiden.ntnu.storage.DataBaseAdapter;
 import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -15,7 +14,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -56,13 +54,11 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 	}
 
 	private void fetchCourses() {
-		DatabaseHelper db = new DatabaseHelper(this);
-		try {
-			courses = db.getAllCourses();
-			Util.log(courses.size()+" courses fetched from database");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		DataBaseAdapter db = new DataBaseAdapter(this);
+		db.openReadOnly();
+		courses = db.getAllCourses();
+		db.close();
+		Util.log(courses.size()+" courses fetched from database");
 	}
 
 	private void initializeViewElements() {
@@ -141,7 +137,7 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 	}
 
 
-	
+
 
 
 

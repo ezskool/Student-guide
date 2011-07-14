@@ -2,7 +2,6 @@ package studentguiden.ntnu.home;
 
 import studentguiden.ntnu.bus.BusActivity;
 import studentguiden.ntnu.courses.CourseListActivity;
-import studentguiden.ntnu.courses.CourseUtilities;
 import studentguiden.ntnu.courses.TimetableActivity;
 import studentguiden.ntnu.dinner.DinnerActivity;
 import studentguiden.ntnu.main.R;
@@ -11,7 +10,6 @@ import studentguiden.ntnu.misc.Globals;
 import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.news.NewsActivity;
 import studentguiden.ntnu.social.SocialActivity;
-import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +35,7 @@ public class MenuActivity extends Activity implements OnClickListener{
 			new CourseDownloader(this).execute();
 			Globals.hasCalledCourseDownloader = true;
 		}else {
-			Util.log("Course data already downloaded and cache has not expired");
+			Util.log("Course data already downloaded and cache has not expired: skipping download of course content");
 		}
 	}
 	

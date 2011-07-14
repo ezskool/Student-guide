@@ -9,10 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import studentguiden.ntnu.courses.CourseUtilities;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.storage.DataBaseUpdater;
-import studentguiden.ntnu.storage.entities.Course;
 import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -79,10 +77,10 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 			prefs.edit().putString("CourseDataExpirationDate", cacheDate).commit();
 			new DataBaseUpdater(courseList, context).execute();
 
-		}else if(result == DOWNLOAD_FAILED) {
+		}else if(result == DOWNLOAD_FAILED || result == PARSING_FAILED) {
 			Util.displayToastMessage(context.getString(R.string.download_failed_toast),context);
-		}else if(result == PARSING_FAILED){
-			Util.log("parsing failed: coursedownloader");
+			Util.log("Course download failed");
+//			new DatabaseHelper(context);
 		}
 	}
 

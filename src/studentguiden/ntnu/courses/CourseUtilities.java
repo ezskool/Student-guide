@@ -1,15 +1,10 @@
 package studentguiden.ntnu.courses;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
-import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DatabaseHelper;
 import studentguiden.ntnu.storage.entities.Course;
 import studentguiden.ntnu.storage.entities.Lecture;
 import android.content.Context;
-import android.database.Cursor;
 
 public class CourseUtilities {
 	private static ArrayList<Course> courseList;

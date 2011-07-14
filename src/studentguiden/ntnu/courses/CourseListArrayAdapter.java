@@ -3,7 +3,6 @@ package studentguiden.ntnu.courses;
 import java.util.List;
 
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.storage.entities.Course;
 import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.content.Context;
 import android.view.LayoutInflater;

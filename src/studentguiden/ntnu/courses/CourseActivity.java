@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.JSONHelper;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DatabaseHelper;
+import studentguiden.ntnu.storage.DataBaseAdapter;
 import studentguiden.ntnu.storage.entities.Course;
 import studentguiden.ntnu.storage.entities.Lecture;
 import android.app.Activity;
@@ -75,14 +75,10 @@ public class CourseActivity extends Activity implements OnClickListener{
 		if(v==btn_back) {
 			super.finish();
 		}else if(v==btn_add_my_course) {
-			DatabaseHelper db = new DatabaseHelper(this);
-			try {
-				db.insertSavedCourse(thisCourse);
-				db.insertLectures(thisCourse.getLectureList());
-			} catch (SQLException e) {
-				Util.log("Unable to insert course");
-				e.printStackTrace();
-			}
+			DataBaseAdapter db = new DataBaseAdapter(this);
+			db.openReadWrite();
+			db.insertMyCourse(thisCourse);
+			db.insertLectures(thisCourse.getLectureList());
 			db.close();
 		}
 	}
