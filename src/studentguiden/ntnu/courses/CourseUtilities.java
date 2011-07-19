@@ -2,8 +2,8 @@ package studentguiden.ntnu.courses;
 
 import java.util.ArrayList;
 
-import studentguiden.ntnu.storage.entities.Course;
-import studentguiden.ntnu.storage.entities.Lecture;
+import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.Lecture;
 import android.content.Context;
 
 public class CourseUtilities {

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 
@@ -13,7 +14,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import studentguiden.ntnu.storage.entities.Lecture;
+import studentguiden.ntnu.entities.Lecture;
+import studentguiden.ntnu.storage.DatabaseHelper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -58,12 +60,23 @@ public class Util {
 	}
 	
 	/**
-	 * Downloads raw content from an url
+	 * Downloads raw content from an url. Encodes the postFix in case non-english characters are used 
 	 * @param url the url to download from
 	 * @return String the raw text string containing the content
 	 * @throws IOException
 	 */
-	public static String downloadContent(URL url) throws IOException {
+	public static String downloadContent(String url, String postFix) throws IOException {
+		return downloadContent(url+URLEncoder.encode(postFix, "UTF-8"));
+	}
+	
+	/**
+	 * Downloads raw content from an url.  
+	 * @param url the url to download from
+	 * @return String the raw text string containing the content
+	 * @throws IOException
+	 */
+	public static String downloadContent(String s) throws IOException {
+		URL url = new URL(s);
 		Util.log("Downloading content from url: "+url.toString());
 		InputStream in = url.openStream();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
@@ -148,4 +161,5 @@ public class Util {
 		DateTime expDate = parser.parseDateTime(expirationDate);
 		return expDate.isBeforeNow();
 	}
+
 }

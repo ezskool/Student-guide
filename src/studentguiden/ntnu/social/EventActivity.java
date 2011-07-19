@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class EventActivity extends Activity implements OnClickListener{
 	private TextView tv_event_title, tv_event_description, tv_event_link;
 	private String link;
-	private ImageView banner, btn_back;
+	private ImageView banner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,6 @@ public class EventActivity extends Activity implements OnClickListener{
 		tv_event_link.setText(content);
 		tv_event_link.setOnClickListener(this);
 		
-		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_back.setOnClickListener(this);
-		
 		banner = (ImageView)findViewById(R.id.iv_event_banner);
 		banner.setImageResource(extras.getInt("bannerResource"));
 	}
@@ -49,8 +46,6 @@ public class EventActivity extends Activity implements OnClickListener{
 		if(v==tv_event_link) {
 			Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(link));
 			startActivity(browserIntent);
-		}else if(v==btn_back) {
-			super.finish();
 		}
 	}
 }

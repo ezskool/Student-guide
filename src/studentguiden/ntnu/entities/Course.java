@@ -1,32 +1,44 @@
-package studentguiden.ntnu.storage.entities;
+package studentguiden.ntnu.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable(tableName = "my_courses")
 public class Course implements Serializable{
 	
 	private static final long serialVersionUID = 6539649775644656485L;
 
+	@DatabaseField(id = true)
 	private String code;
 	
+	@DatabaseField
 	private String name_no;
 	
+	@DatabaseField
 	private String name_en;
 	
 	private String credit, studyLevel, courseType, goals, description, prerequisites, timespan;
 	private boolean taughtInSpring, taughtInAutumn;
 	private ArrayList<Lecture> lectureList;
 	
-	public Course() {
-		lectureList = new ArrayList<Lecture>();
-	}
+	public Course() {}
 	
 	public Course(String code, String name_no, String name_en) {
 		this.code = code;
 		this.name_no = name_no;
 		this.name_en = name_en;
-		lectureList = new ArrayList<Lecture>();
+	}
+	
+	/**Returns name, with correct language based on phone selection
+	 * 
+	 * @return
+	 */
+	public String getName(){
+		//TODO: fix riktig språk
+		return name_no;
 	}
 
 	/**
@@ -78,7 +90,7 @@ public class Course implements Serializable{
 	}
 
 	public void addLecture(Lecture lecture) {		
-		lectureList.add(lecture);
+		getLectureList().add(lecture);
 	}
 
 	/**
@@ -207,10 +219,13 @@ public class Course implements Serializable{
 		this.taughtInAutumn = taughtInAutumn;
 	}
 
-	/**
-	 * @return the lectureList
+	/** 
+	 * @return the lectureList - lazily created.
 	 */
 	public ArrayList<Lecture> getLectureList() {
+		if(lectureList == null) {
+			lectureList = new ArrayList<Lecture>();
+		}
 		return lectureList;
 	}
 

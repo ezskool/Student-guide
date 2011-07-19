@@ -3,9 +3,10 @@ package studentguiden.ntnu.courses;
 import java.sql.SQLException;
 import java.util.List;
 
+import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.storage.DataBaseAdapter;
-import studentguiden.ntnu.storage.entities.Course;
+import studentguiden.ntnu.misc.Util;
+import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,13 +31,18 @@ public class MyCoursesActivity extends Activity implements OnClickListener{
 	}
 
 	private void updateCourseList() {
-		DataBaseAdapter db = new DataBaseAdapter(this);
-		db.openReadOnly();
-		List<Course> courseList= db.getMyCourses();
-		db.close();
-
-		for (Course course : courseList) {
-			addCourseToView(course);
+		DatabaseHelper db = new DatabaseHelper(this);
+		db.openReadableConnection();
+		List<Course> courseList;
+		try {
+			courseList = db.getMyCourses();
+			db.close();
+			for (Course course : courseList) {
+				addCourseToView(course);
+			}
+		} catch (SQLException e) {
+			Util.log("Failed to retrieve my courses");
+			e.printStackTrace();
 		}
 	}
 

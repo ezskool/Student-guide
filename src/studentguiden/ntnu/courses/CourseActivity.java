@@ -3,14 +3,15 @@ package studentguiden.ntnu.courses;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 
+import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.JSONHelper;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DataBaseAdapter;
-import studentguiden.ntnu.storage.entities.Course;
-import studentguiden.ntnu.storage.entities.Lecture;
+import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -29,7 +30,6 @@ public class CourseActivity extends Activity implements OnClickListener{
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
 	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar;
 	private ProgressDialog pd;
-	private ImageView btn_back;
 	private Bundle extras;
 	private String courseCode;
 	private Button btn_add_my_course;
@@ -63,8 +63,6 @@ public class CourseActivity extends Activity implements OnClickListener{
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 
-		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_back.setOnClickListener(this);
 
 		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
 		btn_add_my_course.setOnClickListener(this);
@@ -72,13 +70,17 @@ public class CourseActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		if(v==btn_back) {
-			super.finish();
-		}else if(v==btn_add_my_course) {
-			DataBaseAdapter db = new DataBaseAdapter(this);
-			db.openReadWrite();
-			db.insertMyCourse(thisCourse);
-			db.insertLectures(thisCourse.getLectureList());
+		if(v==btn_add_my_course) {
+			DatabaseHelper db = new DatabaseHelper(this);
+			db.openWritableConnection();
+			try {
+				db.insertMyCourse(thisCourse);
+				db.insertLectures(thisCourse.getLectureList());
+			} catch (SQLException e) {
+				Util.log("Insertion of my courses and lectures failed");
+				e.printStackTrace();
+			}
+
 			db.close();
 		}
 	}
@@ -135,10 +137,8 @@ public class CourseActivity extends Activity implements OnClickListener{
 		protected Integer doInBackground(String... params) {
 			currentCourse = new Course();
 			try {
-				URL courseURL = new URL("http://www.ime.ntnu.no/api/course/"+params[0]);
-				textContent = Util.downloadContent(courseURL);
-				URL scheduleURL = new URL("http://www.ime.ntnu.no/api/schedule/"+params[0]);
-				scheduleContent = Util.downloadContent(scheduleURL);
+				textContent = Util.downloadContent("http://www.ime.ntnu.no/api/course/", params[0]);
+				scheduleContent = Util.downloadContent("http://www.ime.ntnu.no/api/schedule/", params[0]);
 
 				JSONHelper.updateCourseData(currentCourse, textContent);
 				JSONHelper.updateScheduleData(currentCourse, scheduleContent);

@@ -3,10 +3,10 @@ package studentguiden.ntnu.courses;
 import java.sql.SQLException;
 import java.util.List;
 
+import studentguiden.ntnu.entities.Lecture;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DataBaseAdapter;
-import studentguiden.ntnu.storage.entities.Lecture;
+import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +18,6 @@ import android.widget.TextView;
 
 public class TimetableActivity extends Activity implements OnClickListener{
 
-	private ImageView btn_back;
-	private Button btn_my_courses;
 	private TextView tv_monday, tv_tuesday, tv_wednesday, tv_thursday, tv_friday, tv_statusbar;
 
 	@Override
@@ -30,24 +28,23 @@ public class TimetableActivity extends Activity implements OnClickListener{
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		tv_statusbar.setText(getString(R.string.timetable));
 
-		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_back.setOnClickListener(this);
-
-		btn_my_courses = (Button)findViewById(R.id.btn_my_courses);
-		btn_my_courses.setOnClickListener(this);
-
 		tv_monday = (TextView) findViewById(R.id.timetable_monday);
 		tv_tuesday = (TextView)findViewById(R.id.timetable_tuesday);
 		tv_wednesday = (TextView)findViewById(R.id.timetable_wednesday);
 		tv_thursday = (TextView)findViewById(R.id.timetable_thursday);
 		tv_friday = (TextView)findViewById(R.id.timetable_friday);
 
-		updateTimetable();
+		try {
+			updateTimetable();
+		} catch (SQLException e) {
+			Util.log("Unable to retrieve timetable from db");
+			e.printStackTrace();
+		}
 	}
 
-	private void updateTimetable() {
-		DataBaseAdapter db = new DataBaseAdapter(this);
-		db.openReadOnly();
+	private void updateTimetable() throws SQLException {
+		DatabaseHelper db = new DatabaseHelper(this);
+		db.openReadableConnection();
 		List<Lecture>  lectures = db.getMyLectures();
 		db.close();
 		
@@ -75,11 +72,5 @@ public class TimetableActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		if(v==btn_back) {
-			super.finish();
-		}else if(v==btn_my_courses) {
-			Intent intent = new Intent(this, MyCoursesActivity.class);
-			startActivity(intent);
-		}
 	}
 }

@@ -4,8 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import studentguiden.ntnu.storage.entities.Course;
-import studentguiden.ntnu.storage.entities.Lecture;
+import studentguiden.ntnu.entities.Course;
+import studentguiden.ntnu.entities.Lecture;
 
 public class JSONHelper {
 

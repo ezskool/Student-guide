@@ -2,8 +2,8 @@ package studentguiden.ntnu.courses;
 
 import java.util.List;
 
+import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
-import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
+public class CourseListArrayAdapter extends ArrayAdapter<Course>{
 
 	private Context context;
-	private List<MetaCourse> items;
+	private List<Course> items;
 
 	public CourseListArrayAdapter(Context context, int textViewResourceId,
-			List<MetaCourse> items) {
+			List<Course> items) {
 		super(context, textViewResourceId, items);
 		this.context = context;
 		this.items = items;
@@ -32,13 +32,15 @@ public class CourseListArrayAdapter extends ArrayAdapter<MetaCourse>{
 			view = convertView;
 		}
 
-		MetaCourse item = items.get(position);
+		Course item = items.get(position);
 		if (item!= null) {
 			TextView text1 = (TextView) view.findViewById(R.id.text1);
 			TextView text2 = (TextView) view.findViewById(R.id.text2);
+			TextView text3 = (TextView) view.findViewById(R.id.text3);
 
 			text1.setText(item.getCode());
 			text2.setText(item.getName());
+			text3.setText(item.getName_en());
 
 			if((position % 2)==1) {
 				view.setBackgroundResource(R.drawable.layout_list_item_1);

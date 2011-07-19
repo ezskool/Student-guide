@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	style="@style/studentguide_layout" android:orientation="vertical">
+
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="50dip"
+	android:background="@drawable/statusbar_background" android:id="@+id/statusbar">
+
+
+	<ImageView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:src="@drawable/ic_back"
+		android:id="@+id/btn_back" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
+
+	<EditText android:layout_width="200px" android:layout_height="wrap_content"
+		android:id="@+id/et_search" android:hint="@string/et_search_course"
+		android:singleLine="true" android:layout_centerInParent="true"/>
+
+</RelativeLayout>
+
+	<ListView android:id="@android:id/list" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" style="@style/studentguide_layout" android:dividerHeight="1dip" />
+</LinearLayout>

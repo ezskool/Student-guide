@@ -9,20 +9,6 @@
 
 	--><TableLayout style="@style/wrap_content" android:orientation="horizontal"
 		android:layout_centerInParent="true" android:paddingTop="50dip">
-		<TableRow android:orientation="vertical">
-			<LinearLayout style="@style/wrap_content"
-				android:orientation="vertical" android:padding="20dip">
-				<ImageView style="@style/wrap_content" android:src="@drawable/ic_news"  android:id="@+id/btn_news"/>
-				<TextView style="@style/text" android:text="Nyheter"
-					android:layout_gravity="center" />
-			</LinearLayout>
-			<LinearLayout style="@style/wrap_content"
-				android:orientation="vertical" android:padding="20dip">
-				<ImageView style="@style/wrap_content" android:src="@drawable/ic_timetable" android:id="@+id/btn_timetable"/>
-				<TextView style="@style/text" android:text="Timeplan"
-					android:layout_gravity="center" />
-			</LinearLayout>
-		</TableRow>
 
 		<TableRow android:orientation="vertical">
 			<LinearLayout style="@style/wrap_content"

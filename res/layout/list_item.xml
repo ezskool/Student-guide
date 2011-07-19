@@ -9,11 +9,14 @@
 
 
 	<LinearLayout android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:orientation="vertical" android:layout_margin="5dip">
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:layout_margin="5dip">
 		<TextView android:id="@+id/text1" android:textSize="16dip"
 			style="@style/text" android:textStyle="bold" />
 
 		<TextView android:id="@+id/text2" style="@style/text"
+			android:textSize="14dip" />
+		<TextView android:id="@+id/text3" style="@style/text"
 			android:textSize="14dip" />
 	</LinearLayout>
 

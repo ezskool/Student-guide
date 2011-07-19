@@ -1,9 +1,10 @@
 package studentguiden.ntnu.storage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -11,20 +12,26 @@ public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{
 	private final int DB_UPDATE_SUCCESS = 1;
 	private final int DB_UPDATE_FAILED = 0;
 
-	private ArrayList<MetaCourse> courseList;
+	private ArrayList<Course> courseList;
 	private Context context;
 
-	public DataBaseUpdater(ArrayList<MetaCourse> courses, Context context) {
+	public DataBaseUpdater(ArrayList<Course> courses, Context context) {
 		this.courseList = courses;
 		this.context = context;
 	}
 
 	@Override
 	protected Integer doInBackground(String... params) {
-		DataBaseAdapter db = new DataBaseAdapter(context);
+		DatabaseHelper db = new DatabaseHelper(context);
 		Util.log("inserting courses into database");
-		db.openReadWrite();
-		db.insertCourseList(courseList);
+		db.openWritableConnection();
+		try {
+			db.insertCourseList(courseList);
+		} catch (SQLException e) {
+			Util.log("Insertion of course list failed");
+			e.printStackTrace();
+			return DB_UPDATE_FAILED;
+		}
 
 		db.close();
 		return DB_UPDATE_SUCCESS;

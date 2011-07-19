@@ -9,9 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.storage.DataBaseUpdater;
-import studentguiden.ntnu.storage.entities.MetaCourse;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -25,7 +25,7 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 
 	private Context context;
 	private String rawData;
-	private ArrayList<MetaCourse> courseList;
+	private ArrayList<Course> courseList;
 	private String cacheDate = "";
 
 	public CourseDownloader(Context context) {
@@ -37,17 +37,16 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 		try{
 
 			Util.log("downloading course data");
-			URL url = new URL(Globals.courseListURL);
-			rawData = Util.downloadContent(url);
+			rawData = Util.downloadContent(Globals.courseListURL);
 
 			Util.log("creating json objects");
-			courseList = new ArrayList<MetaCourse>();
+			courseList = new ArrayList<Course>();
 			JSONArray jsonCourseArray = new JSONObject(rawData).getJSONArray("course");
 			int amountOfCourses = jsonCourseArray.length();
 
 			for (int i = 0; i < amountOfCourses; i++) {
 				JSONObject temp = jsonCourseArray.getJSONObject(i);
-				MetaCourse course = getCourseObject(temp);
+				Course course = getCourseObject(temp);
 				if(course==null) {
 					continue;
 				}else {
@@ -92,10 +91,10 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 		return "";
 	}
 
-	private MetaCourse getCourseObject(JSONObject object) {
-		MetaCourse course;
+	private Course getCourseObject(JSONObject object) {
+		Course course;
 		try {
-			course = new MetaCourse(object.getString("code"), getAttribute(object, "name"), getAttribute(object, "englishName"));
+			course = new Course(object.getString("code"), getAttribute(object, "name"), getAttribute(object, "englishName"));
 		} catch (Exception e) {
 			return null;
 		}

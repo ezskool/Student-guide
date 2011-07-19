@@ -10,6 +10,10 @@
     <string name="btn_timetable">Timeplan</string>
     <string name="btn_dinner">Middag</string>
     
+    <!-- CourseMenu strings -->
+    <string name="tab_timetable">Timeplan</string>
+    <string name="tab_my_courses">Mine fag</string>
+    
     <!-- CourseSearchActivity strings -->
     <string name="et_search_course">Filtrer fag</string>
     <string name="dialog_find_course_title">Velg fag</string>

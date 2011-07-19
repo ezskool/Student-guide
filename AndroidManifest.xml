@@ -21,6 +21,8 @@
 			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.courses.CourseListActivity"
 			android:label="@string/app_name" />
+		<activity android:name="studentguiden.ntnu.courses.CourseMenu"
+			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.courses.TimetableActivity"
 			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.courses.CourseActivity"
@@ -35,12 +37,15 @@
 			android:label="@string/app_name" />
 		<activity android:name="studentguiden.ntnu.courses.MyCoursesActivity"
 			android:label="@string/app_name" />
-		
-		
+
+
 
 	</application>
 
-	<uses-permission android:name="android.permission.INTERNET" /><!--
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
---></manifest>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!--
+		<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+		<uses-permission
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	-->
+</manifest>

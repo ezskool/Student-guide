@@ -4,10 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
-import studentguiden.ntnu.storage.DataBaseAdapter;
-import studentguiden.ntnu.storage.entities.MetaCourse;
+import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -32,38 +32,52 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 	private final int DIALOG_SEARCH_COURSE = 0;
 
 	private EditText et_search;
-	private ImageView btn_back;
 	//	private ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 	private ProgressDialog pd;
 	private Dialog searchDialog;
 	//	private ContentUpdater updater;
 	private ImageView btn_add_course;
-	private List<MetaCourse> courses;
+	private List<Course> courses;
+	private DatabaseHelper db;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.course_menu);
-		btn_add_course = (ImageView)findViewById(R.id.img_item_icon);
+		setContentView(R.layout.course_list);
 
 		initializeViewElements();
-		fetchCourses();
-		setListContent(et_search.getText().toString());		
+//		fetchCourses();
+//		setListContent(et_search.getText().toString());
 	}
 
-	private void fetchCourses() {
-		DataBaseAdapter db = new DataBaseAdapter(this);
-		db.openReadOnly();
-		courses = db.getAllCourses();
+	/**
+	 * Lazily instantiates the database object, if needed
+	 * @return
+	 */
+	private DatabaseHelper getDBInstance() {
+		if(db == null) {
+			db = new DatabaseHelper(this);
+			db.openReadableConnection();
+		}else if(!db.isOpen()){
+			db.openReadableConnection();
+		}
+		return db;
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
 		db.close();
-		Util.log(courses.size()+" courses fetched from database");
+	}
+	
+	private ArrayList<Course> autocomplete(String query) {
+		ArrayList<Course> list = (ArrayList<Course>)getDBInstance().getAutocomplete(query);
+		return list;
 	}
 
 	private void initializeViewElements() {
-		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_back.setOnClickListener(this);
 
 		et_search = (EditText)findViewById(R.id.et_search);
 		et_search.addTextChangedListener(this);
@@ -71,24 +85,13 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 
 	@Override
 	public void onClick(View v) {
-		if(v==btn_back) {
-			super.finish();
-		}
 	}
 
 	private void setListContent(String searchString) {
-		if(searchString=="" || searchString==null) {
-			this.setListAdapter(new CourseListArrayAdapter(this, R.layout.list_item, courses));
-		}else {
+		if(!(searchString=="" || searchString==null)) {
 			searchString.toLowerCase();
-			Util.log("filtering course list, on searchString: "+searchString);
-			ArrayList<MetaCourse> filteredCourseList = new ArrayList<MetaCourse>();
-			for (MetaCourse course : courses) {
-				if(course.getCourseText().toLowerCase().contains(searchString.toLowerCase())) {
-					filteredCourseList.add(course);
-				}
-			}
-			this.setListAdapter(new CourseListArrayAdapter(this, android.R.layout.simple_list_item_1, filteredCourseList));
+			ArrayList<Course> autoCompleteList = autocomplete(searchString);
+			this.setListAdapter(new CourseListArrayAdapter(this, android.R.layout.simple_list_item_1, autoCompleteList));
 		}
 	}
 
@@ -98,7 +101,7 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 		if(v == btn_add_course) {
 			Util.log("clicked");
 		}else {
-			MetaCourse selectedCourse = (MetaCourse) this.getListAdapter().getItem(position);
+			Course selectedCourse = (Course) this.getListAdapter().getItem(position);
 			startCourseActivity(selectedCourse.getCode());
 		}
 	}
@@ -135,37 +138,4 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		setListContent(et_search.getText().toString());
 	}
-
-
-
-
-
-
-
-	//	private class ContentUpdater extends CountDownTimer {
-	//		private boolean keepChecking = true;
-	//
-	//		public ContentUpdater(long millisInFuture, long countDownInterval) {
-	//			super(millisInFuture, countDownInterval);
-	//		}
-	//
-	//		@Override
-	//		public void onTick(long millisUntilFinished) {
-	//			if(CourseUtilities.getCourseList() != null && keepChecking) {
-	//				CourseListActivity.this.setListContent(et_search.getText().toString());
-	//				CourseListActivity.this.pd.cancel();
-	//				keepChecking = false;
-	//			}
-	//		}
-	//
-	//		@Override
-	//		public void onFinish() {
-	//			// TODO Auto-generated method stub
-	//			
-	//		}
-	//
-	//	}
-
-
-
 }

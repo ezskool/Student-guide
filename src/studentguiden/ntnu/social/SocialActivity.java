@@ -29,7 +29,6 @@ import android.widget.TextView;
 public class SocialActivity extends ListActivity implements OnClickListener{
 	private TextView tv_statusbar;
 	private ArrayList<Event> currentEventList;
-	private ImageView btn_back;
 
 
 	@Override
@@ -40,9 +39,6 @@ public class SocialActivity extends ListActivity implements OnClickListener{
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		tv_statusbar.setText(getString(R.string.tv_social_title));
 		
-		btn_back = (ImageView)findViewById(R.id.btn_back);
-		btn_back.setOnClickListener(this);
-
 		new SamfundetDownloader().execute("http://www.samfundet.no/arrangement/rss");
 		new SongkickDownloader().execute("http://api.songkick.com/api/3.0/events.json?apikey=34K3IoUdXDTHcSz3&location=sk:31425");
 	}
@@ -70,9 +66,6 @@ public class SocialActivity extends ListActivity implements OnClickListener{
 	
 	@Override
 	public void onClick(View v) {
-		if(v==btn_back) {
-			super.finish();
-		}
 	}
 
 	@Override
@@ -172,8 +165,7 @@ public class SocialActivity extends ListActivity implements OnClickListener{
 		@Override
 		protected Integer doInBackground(String... params) {
 			try {
-				URL url = new URL(params[0]);
-				rawData = Util.downloadContent(url);
+				rawData = Util.downloadContent(params[0]);
 
 				JSONArray eventJsonArray= new JSONObject(rawData).getJSONObject("resultsPage").getJSONObject("results").getJSONArray("event");
 
