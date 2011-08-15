@@ -3,30 +3,22 @@ package studentguiden.ntnu.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
 import studentguiden.ntnu.misc.Util;
 
-@DatabaseTable(tableName="my_lectures")
-public class Lecture implements Serializable {
-	private static final long serialVersionUID = 3599770702142308960L;
+public class Lecture {
 
-	@DatabaseField(generatedId = true)
 	private int id;
 	
-	@DatabaseField
 	private String  activityDescription, day, start, end, room, roomCode, courseCode, weeks;
 	
 	//TODO: add databasefield(egen tabell?) for studyprogrammes
 	private ArrayList<String> studyProgrammes;
 	
-	@DatabaseField
 	private int dayNumber;
 	
 	public Lecture(){}
 
-	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room) {
+	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room, String roomCode, String activityDescription) {
 		this.start = start;
 		this.end = end;
 		this.day = day;
@@ -34,6 +26,8 @@ public class Lecture implements Serializable {
 		this.courseCode = code;
 		this.weeks = weeks;
 		this.dayNumber = dayNumber;
+		this.activityDescription = activityDescription;
+		this.roomCode = roomCode;
 	}
 
 	public String[] retrieveWeeks() {

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
@@ -20,7 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 
-public class CourseMenu extends TabActivity{
+public class CourseMenu extends TabActivity {
 	private TabHost mTabHost;
 //	private AutoCompleteTextView ac_search_courses;
 //	private Cursor c;
@@ -39,6 +40,7 @@ public class CourseMenu extends TabActivity{
 		Intent findCoursesIntent = new Intent().setClass(this, CourseActivity.class);
 		setupTab(new TextView(this), getString(R.string.tab_find_courses), findCoursesIntent);
 
+
 //		initCursorAdapter();
 //		initItemFilter();
 	}
@@ -54,6 +56,7 @@ public class CourseMenu extends TabActivity{
 		tv.setText(text);
 		return view;
 	}
+
 
 //	public void initCursorAdapter(){
 //		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);

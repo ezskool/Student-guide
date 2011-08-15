@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public class CourseActivity extends Activity implements OnClickListener, OnItemClickListener {
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
-	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar;
+	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar_page, tv_home;
 	private ProgressDialog pd;
 	private Bundle extras;
 	private String courseCode;
@@ -45,7 +46,6 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 	private AutoCompleteTextView ac_search_courses;
 	private Cursor c;
 	private CourseCursorAdapter cursorAdapter;
-	private ScrollView svBackground;
 
 
 	@Override
@@ -53,13 +53,13 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course);
 
-//		Bundle extras = getIntent().getExtras();
-//		pd = 
-//
-//		if(extras !=null){
-//			courseCode = extras.getString("code");
-//			new ContentDownloader().execute(courseCode);
-//		}
+		//		Bundle extras = getIntent().getExtras();
+		//		pd = 
+		//
+		//		if(extras !=null){
+		//			courseCode = extras.getString("code");
+		//			new ContentDownloader().execute(courseCode);
+		//		}
 
 		courseName = (TextView)findViewById(R.id.tv_coursename);
 		courseDescription = (TextView)findViewById(R.id.tv_coursedescription);
@@ -73,12 +73,15 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		coursePrerequisites = (TextView)findViewById(R.id.tv_course_prerequisites);
 		courseSchedule = (TextView)findViewById(R.id.tv_course_schedule);
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
-		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
-		svBackground = (ScrollView)findViewById(R.id.sv_course_background);
-
+		tv_statusbar_page = (TextView)findViewById(R.id.tv_statusbar_page);
+		tv_statusbar_page.setText(getString(R.string.courses_page));
 		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
 		btn_add_my_course.setOnClickListener(this);
-		
+
+		tv_home = (TextView)findViewById(R.id.tv_statusbar);
+		tv_home.setOnClickListener(this);
+
+
 		initCursorAdapter();
 	}
 
@@ -98,7 +101,10 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 			}
 
 			db.close();
+		}else if(v==tv_home) {
+			this.finish();
 		}
+
 	}
 
 	/**
@@ -106,10 +112,11 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 	 * @param course
 	 */
 	public void updateView(Course course) {
+		btn_add_my_course.setVisibility(Button.VISIBLE);
 		thisCourse = course;
 		Util.log("Updating course view with course data");
-		tv_statusbar.setText(course.getCode());
-		courseName.setText(course.getNameNo());
+		tv_statusbar_page.setText(getString(R.string.courses_page)+"/"+course.getCode());
+		courseName.setText(course.getCode()+" - "+course.getNameNo());
 		courseLevel.setText(course.getStudyLevel());
 		courseCredit.setText(course.getCredit()+" "+getString(R.string.student_points));
 
@@ -136,7 +143,7 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 			}
 		}		
 	}
-	
+
 
 
 	@Override
@@ -145,9 +152,10 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		new ContentDownloader(this).execute(text.getText().toString());
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(ac_search_courses.getWindowToken(), 0);
+		ac_search_courses.setText("");
 	}
 
-	
+
 	public void initCursorAdapter(){
 		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);
 		DatabaseHelper db = new DatabaseHelper(this);
@@ -157,7 +165,7 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		startManagingCursor(c);
 
 		cursorAdapter = new CourseCursorAdapter(this, c);
-		
+
 		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);
 		ac_search_courses.setAdapter(cursorAdapter);
 		ac_search_courses.setThreshold(1);
@@ -180,12 +188,12 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		public ContentDownloader(Context context) {
 			this.context = context;
 		}
-		
+
 		@Override
 		protected void onPreExecute(){
 			CourseActivity.this.pd = ProgressDialog.show(context, "", getString(R.string.downloading_content));
 		}
-		
+
 		@Override
 		protected Integer doInBackground(String... params) {
 			currentCourse = new Course();

@@ -96,12 +96,14 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 		db.openWritableConnection();
 				try {
 					db.removeMyCourse(course);
-					Util.log("Successfully deleted course "+course.getCode());
+				
 				} catch (SQLException e) {
 					Util.log("Unable to delete item from db: "+course.getCode());
 					e.printStackTrace();
+				} finally {
+					this.remove(course);
 				}
 		db.close();
-		this.remove(course);
+		
 	}
 }

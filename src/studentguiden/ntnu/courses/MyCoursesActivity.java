@@ -25,8 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MyCoursesActivity extends ListActivity {
-	private TextView tv_statusbar;
+public class MyCoursesActivity extends ListActivity implements OnClickListener{
+	private TextView tv_statusbar_page, tv_home;
 //	private ImageButton btn_remove_course;
 
 	@Override
@@ -34,9 +34,11 @@ public class MyCoursesActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course_list);
 
-		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
-		tv_statusbar.setText(getString(R.string.my_courses));
+		tv_statusbar_page = (TextView)findViewById(R.id.tv_statusbar_page);
+		tv_statusbar_page.setText("/"+getString(R.string.my_courses));
 
+		tv_home = (TextView)findViewById(R.id.tv_statusbar);
+		tv_home.setOnClickListener(this);
 	}
 	
 	@Override
@@ -56,6 +58,7 @@ public class MyCoursesActivity extends ListActivity {
 			Util.log("Unable to retrieve my courses");
 			e.printStackTrace();
 		}
+		db.close();
 	}
 
 	private void removeCourse() {
@@ -63,6 +66,13 @@ public class MyCoursesActivity extends ListActivity {
 		db.openWritableConnection();
 		//		db.removeMyCourse(course)
 		db.close();
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v==tv_home) {
+			this.finish();
+		}
 	}
 	
 

@@ -12,30 +12,29 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
-import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 
 
 /**
  * Database helper class used to manage the creation and upgrading of the database, as well as insertion/removal of database entities.
  */
-public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "studassen.db";
 	private static final int DATABASE_VERSION = 1;
-	private Dao<Course, String> myCoursesDao;
-	private Dao<Lecture, Integer> lectureDao;
 	private SQLiteDatabase db;
 	private Context context;
 	private static final String CREATE_TABLE_COURSES =
 		"create table IF NOT EXISTS courses (_id integer primary key, code text unique not null, name_no text not null, name_en text not null);";
+	//TODO: foreign key courses table
+	private static final String CREATE_TABLE_MYCOURSES =
+		"create table IF NOT EXISTS my_courses (code text primary key, name_no text not null, name_en text not null);";
+	private static final String CREATE_TABLE_LECTURES =
+		"create table IF NOT EXISTS my_lectures (course_code text primary key, day text not null, day_number integer not null, start text not null, end text not null, room text not null, room_code text, weeks text, activity_description text);";
 
-
+	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
@@ -43,31 +42,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
 	@Override
-	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-		try{
-			db.execSQL(CREATE_TABLE_COURSES);
-			//			TableUtils.createTableIfNotExists(connectionSource, MetaCourse.class);
-			TableUtils.createTableIfNotExists(connectionSource, Lecture.class);
-			TableUtils.createTableIfNotExists(connectionSource, Course.class);
-			this.db = db;
-		}catch (SQLException e) {
-			Util.log("Unable to create database: SQLException");
-			e.printStackTrace();
-		} 
-
+	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(CREATE_TABLE_COURSES);
+		db.execSQL(CREATE_TABLE_MYCOURSES);
+		db.execSQL(CREATE_TABLE_LECTURES);
+		this.db = db;
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-		try {
-			//TODO: drop table courses?
-			TableUtils.dropTable(connectionSource, Lecture.class, true);
-			TableUtils.dropTable(connectionSource, Course.class, true);
-			onCreate(db, connectionSource);
-		} catch (SQLException e) {
-			Util.log("Unable to upgrade database");
-			throw new RuntimeException(e);
-		}
+	public void onUpgrade(SQLiteDatabase db,  int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS courses");
+		db.execSQL("DROP TABLE IF EXISTS my_courses");
+		db.execSQL("DROP TABLE IF EXISTS my_lectures");
+		onCreate(db);
 	}
 
 	public void openWritableConnection() {
@@ -78,30 +65,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		db = getReadableDatabase();
 	}
 
-
-
-	/**
-	 * Returns the Database Access Object (DAO) for the Lecture class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<Lecture, Integer> getLectureDao() throws SQLException {
-		if(lectureDao == null) {
-			lectureDao = getDao(Lecture.class);
-		}
-		return lectureDao;
-	}
-
-	/**
-	 * Returns the Database Access Object (DAO) for the Course class. It will create it or just give the cached value. 
-	 * @return
-	 * @throws SQLException
-	 */
-	public Dao<Course, String> getMyCourseDao() throws SQLException {
-		if(myCoursesDao == null) {
-			myCoursesDao = getDao(Course.class);
-		}
-		return myCoursesDao;
-	}
 
 	/**
 	 * Inserts the course object into the database
@@ -161,7 +124,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 				"code",
 				null,
 				null);
-		}
+	}
 	//TODO: preparedstatements?
 	public Cursor getAutocompleteCursor(String query) {	
 		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '"+query+"%' "+
@@ -170,32 +133,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 				, null);
 		return c;
 	}
-	
-	//TODO: preparedstatements
-//	public List<Course> getAutocomplete(String query) {
-//		List<Course> courses = new ArrayList<Course>();
-//		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '"+query+"%' "+
-//				"UNION SELECT * FROM courses WHERE name_en LIKE '"+query+"%' " +
-//				"UNION SELECT * FROM courses WHERE code LIKE '"+query+"%' LIMIT 0,10"
-//				, null);
-//
-//		while(c.moveToNext()) {
-//			courses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
-//		}
-//		c.close();
-//
-//		return courses;
-//
-//	}
 
 	/**
-	 * Removes a saved course 
+	 * Removes a saved course and its corresponding lectures
 	 * @param course
 	 * @throws SQLException
 	 */
 	public void removeMyCourse(Course course) throws SQLException {
-		removeLecturesFromCourse(course);
-		getMyCourseDao().delete(course);
+//		removeLecturesFromCourse(course);
+		db.delete("my_courses", "code=?", new String[] { course.getCode() });
+		db.delete("my_lectures", "course_code=?", new String[] { course.getCode() });
+		Util.log("Deleted course "+course.getCode());
 	}
 
 	/**
@@ -204,10 +152,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public List<Lecture> getMyLectures() throws SQLException {
-		QueryBuilder<Lecture, Integer> builder = getLectureDao().queryBuilder();
-		builder.orderBy("start", true);
+		List<Lecture> lectures = new ArrayList<Lecture>();
+		Cursor c = getMyLecturesCursor();
 
-		return getLectureDao().query(builder.prepare());
+		while(c.moveToNext()) {// 		code			start				end			day				daynumber	weeks				room			roomcode		activitydescr
+			lectures.add(new Lecture(c.getString(0), c.getString(3), c.getString(4), c.getString(1), c.getInt(2), c.getString(7), c.getString(5), c.getString(6), c.getString(8)));
+		}
+		c.close();
+
+		return lectures;
+	}
+
+	public Cursor getMyLecturesCursor() {
+		return db.query("my_lectures", 
+				new String[] {"course_code", "day", "day_number", "start", "end", "room", "room_code", "weeks", "activity_description"},
+				null,
+				null,
+				"start",
+				null,
+				null);
 	}
 
 	/**
@@ -215,8 +178,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param lecture
 	 * @throws SQLException
 	 */
-	public void insertLecture(Lecture lecture) throws SQLException {
-		getLectureDao().create(lecture);
+	public long insertLecture(Lecture lecture) throws SQLException {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("course_code", lecture.getCourseCode());
+		initialValues.put("start", lecture.getStart());
+		initialValues.put("end", lecture.getEnd());
+		initialValues.put("day", lecture.getDay());
+		initialValues.put("day_number", lecture.getDayNumber());
+		initialValues.put("weeks", lecture.getWeeks());
+		initialValues.put("room", lecture.getRoom());
+		initialValues.put("room_code", lecture.getRoomCode());
+		return db.insert("my_lectures", null, initialValues);
 	}
 
 	/**
@@ -225,33 +197,52 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void insertLectures(List<Lecture> lectureList) throws SQLException {
+		db.beginTransaction();
 		for (Lecture lecture : lectureList) {
-			getLectureDao().create(lecture);
+			insertLecture(lecture);
 		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
 	}
 
 	//TODO: fjerner kanskje ikke riktig. generated id blir vel annerledes? bør vel fjerne etter id. (deleteIds()
 	public void removeLecture(Lecture lecture) throws SQLException {
-		getLectureDao().delete(lecture);
+		db.delete("my_lectures", "course_code='"+lecture.getCourseCode()+"'", null);
 		Util.log("Removing lecture at "+lecture.getStart()+" for course "+lecture.getCourseCode());
 	}
-	
+
 	public void removeLecturesFromCourse(Course course) throws SQLException {
+		db.beginTransaction();
 		for (Lecture lecture: course.getLectureList()) {
 			removeLecture(lecture);
 		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
 	}
 
-	public void insertMyCourse(Course course) throws SQLException {
-		getMyCourseDao().create(course);
-		Util.log("Inserting course "+course.getCode()+" into my courses table");
+	public long insertMyCourse(Course course) throws SQLException {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("code", course.getCode());
+		initialValues.put("name_no", course.getName_no());
+		initialValues.put("name_en", course.getName_en());
+
+		Util.log("Inserting course "+course.getCode()+" into my_courses table");
+		return db.insert("my_courses",null, initialValues);
 	}
 
 	public List<Course> getMyCourses() throws SQLException {
-		QueryBuilder<Course, String> builder = getMyCourseDao().queryBuilder();
-		builder.orderBy("code", true);
-
-		return getMyCourseDao().query(builder.prepare());
+		List<Course> myCourses = new ArrayList<Course>();
+		Cursor c = db.query("my_courses", new String[] {
+				"code",
+				"name_no",
+				"name_en"
+		}, null, null, null, null, "code");
+		Util.log("cursor count my_courses: "+c.getCount());
+		while(c.moveToNext()) {
+			myCourses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
+		}
+		c.close();
+		return myCourses;
 	}
 
 
@@ -262,7 +253,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void close() {
 		super.close();
 		db = null;
-		lectureDao = null;
-		myCoursesDao = null;
 	}
 }

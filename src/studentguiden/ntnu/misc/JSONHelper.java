@@ -76,7 +76,8 @@ public class JSONHelper {
 			course.setCode(getStringFromObject(jsonCourseObject, "code"));
 			
 			//TODO: set for correct language
-			course.setNameNo(getStringFromObject(jsonCourseObject, "name"));
+			course.setNameNo(getStringFromObject(jsonCourseObject, "norwegianName"));
+			course.setNameEn(getStringFromObject(jsonCourseObject, "englishName"));
 			course.setCourseType(getStringFromObject(jsonCourseObject, "courseTypeName"));
 			course.setCredit(getStringFromObject(jsonCourseObject, "credit"));
 			course.setStudyLevel(getStringFromObject(jsonCourseObject, "studyLevelName"));

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="50dip"
-	android:background="@drawable/statusbar_background">
+	android:background="@drawable/statusbar_background"
+	android:orientation="horizontal">
 
-	<TextView style="@style/wrap_content" android:textSize="22dip" android:textStyle="bold" android:id="@+id/tv_statusbar" 
-		android:layout_alignParentLeft="true" android:paddingLeft="10dip" android:layout_centerVertical="true" android:textColor="#FFFFFFFF"/><!--
-
-	<ImageView android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:src="@drawable/ic_refresh"
-		android:id="@+id/btn_refresh" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
-
---></RelativeLayout>
+	<LinearLayout style="@style/wrap_content"
+		android:paddingLeft="10dip" android:layout_gravity="center_vertical">
+		<TextView style="@style/wrap_content" android:textSize="22dip"
+			android:textStyle="bold" android:id="@+id/tv_statusbar"
+			android:textColor="#FFFFFFFF" android:text="@string/app_name" />
+		<TextView style="@style/wrap_content" android:textSize="22dip"
+			android:id="@+id/tv_statusbar_page" android:textColor="#FFFFFFFF" />
+	</LinearLayout>
+</LinearLayout>

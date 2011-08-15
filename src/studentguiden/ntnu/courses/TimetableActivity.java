@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 public class TimetableActivity extends Activity implements OnClickListener{
 
-	private TextView tv_monday, tv_tuesday, tv_wednesday, tv_thursday, tv_friday, tv_statusbar;
+	private TextView tv_monday, tv_tuesday, tv_wednesday, tv_thursday, tv_friday, tv_statusbar_page, tv_home;
 	private AutoCompleteTextView ac_search_courses;
 
 	@Override
@@ -29,14 +29,18 @@ public class TimetableActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timetable);
 
-//		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
-//		tv_statusbar.setText(getString(R.string.timetable));
-
+		tv_statusbar_page = (TextView)findViewById(R.id.tv_statusbar_page);
+		tv_statusbar_page.setText("/"+getString(R.string.timetable));
+		tv_home = (TextView)findViewById(R.id.tv_statusbar);
+		tv_home.setOnClickListener(this);
+		
 		tv_monday = (TextView) findViewById(R.id.timetable_monday);
 		tv_tuesday = (TextView)findViewById(R.id.timetable_tuesday);
 		tv_wednesday = (TextView)findViewById(R.id.timetable_wednesday);
 		tv_thursday = (TextView)findViewById(R.id.timetable_thursday);
 		tv_friday = (TextView)findViewById(R.id.timetable_friday);
+		
+		
 	}
 	
 	@Override
@@ -57,11 +61,14 @@ public class TimetableActivity extends Activity implements OnClickListener{
 		List<Lecture>  lectures = db.getMyLectures();
 		db.close();
 		
-		tv_monday.clearComposingText();
-		tv_tuesday.clearComposingText();
-		tv_wednesday.clearComposingText();
-		tv_thursday.clearComposingText();
-		tv_friday.clearComposingText();
+		//TODO: ikke veldig pent. fix
+		tv_monday.setText("");
+		tv_monday.setText("");
+		tv_tuesday.setText("");
+		tv_wednesday.setText("");
+		tv_thursday.setText("");
+		tv_friday.setText("");
+		tv_friday.setText("");
 		
 		for (Lecture lecture : lectures) {
 			int day = lecture.getDayNumber();
@@ -87,5 +94,8 @@ public class TimetableActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
+		if(v==tv_home) {
+			this.finish();
+		}
 	}
 }
