@@ -24,15 +24,14 @@
 	</style>
 
 	<style name="vertical_line">
-		<item name="android:layout_width">2dip</item>
+		<item name="android:layout_width">1px</item>
 		<item name="android:layout_height">fill_parent</item>
-		<item name="android:background">#FF909090</item>
 	</style>
 
 	<style name="horizontal_line">
 		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">2px</item>
-		<item name="android:background">@drawable/line</item>
+		<item name="android:layout_height">1px</item>
+		
 	</style>
 
 	<style name="horizontal_line_timetable">

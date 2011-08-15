@@ -14,19 +14,27 @@ import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * @author Håkon Drolsum Røkenes
  * 
  */
-public class CourseActivity extends Activity implements OnClickListener{
+public class CourseActivity extends Activity implements OnClickListener, OnItemClickListener {
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
 	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar;
 	private ProgressDialog pd;
@@ -34,6 +42,10 @@ public class CourseActivity extends Activity implements OnClickListener{
 	private String courseCode;
 	private Button btn_add_my_course;
 	private Course thisCourse;
+	private AutoCompleteTextView ac_search_courses;
+	private Cursor c;
+	private CourseCursorAdapter cursorAdapter;
+	private ScrollView svBackground;
 
 
 	@Override
@@ -41,13 +53,13 @@ public class CourseActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course);
 
-		Bundle extras = getIntent().getExtras();
-		pd = ProgressDialog.show(this, "", getString(R.string.downloading_content));
-
-		if(extras !=null){
-			courseCode = extras.getString("code");
-			new ContentDownloader().execute(courseCode);
-		}
+//		Bundle extras = getIntent().getExtras();
+//		pd = 
+//
+//		if(extras !=null){
+//			courseCode = extras.getString("code");
+//			new ContentDownloader().execute(courseCode);
+//		}
 
 		courseName = (TextView)findViewById(R.id.tv_coursename);
 		courseDescription = (TextView)findViewById(R.id.tv_coursedescription);
@@ -62,12 +74,16 @@ public class CourseActivity extends Activity implements OnClickListener{
 		courseSchedule = (TextView)findViewById(R.id.tv_course_schedule);
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
-
+		svBackground = (ScrollView)findViewById(R.id.sv_course_background);
 
 		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
 		btn_add_my_course.setOnClickListener(this);
+		
+		initCursorAdapter();
 	}
 
+
+	//TODO: async
 	@Override
 	public void onClick(View v) {
 		if(v==btn_add_my_course) {
@@ -118,8 +134,35 @@ public class CourseActivity extends Activity implements OnClickListener{
 				courseSchedule.append(getString(R.string.taught_in_weeks)+lecture.getWeeksText());
 				courseSchedule.append("\n\n");
 			}
-		}
+		}		
+	}
+	
 
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		TextView text = (TextView) arg0.findViewById(R.id.text1);
+		new ContentDownloader(this).execute(text.getText().toString());
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(ac_search_courses.getWindowToken(), 0);
+	}
+
+	
+	public void initCursorAdapter(){
+		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);
+		DatabaseHelper db = new DatabaseHelper(this);
+		db.openReadableConnection();
+
+		c = db.getAutocompleteCursor("");
+		startManagingCursor(c);
+
+		cursorAdapter = new CourseCursorAdapter(this, c);
+		
+		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);
+		ac_search_courses.setAdapter(cursorAdapter);
+		ac_search_courses.setThreshold(1);
+		ac_search_courses.setOnItemClickListener(this);
+		db.close();
 	}
 
 
@@ -132,7 +175,17 @@ public class CourseActivity extends Activity implements OnClickListener{
 		private final int DOWNLOAD_FAILED_INVALID_URL = 2;
 		private final int PARSING_FAILED = 3;
 		private Course currentCourse;
+		private Context context;
 
+		public ContentDownloader(Context context) {
+			this.context = context;
+		}
+		
+		@Override
+		protected void onPreExecute(){
+			CourseActivity.this.pd = ProgressDialog.show(context, "", getString(R.string.downloading_content));
+		}
+		
 		@Override
 		protected Integer doInBackground(String... params) {
 			currentCourse = new Course();
@@ -172,7 +225,4 @@ public class CourseActivity extends Activity implements OnClickListener{
 			CourseActivity.this.pd.cancel();
 		}
 	}
-
-
-
 }

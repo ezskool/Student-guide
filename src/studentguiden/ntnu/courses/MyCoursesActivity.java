@@ -7,65 +7,84 @@ import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.storage.DatabaseHelper;
+import android.R.anim;
 import android.app.Activity;
+import android.app.ListActivity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MyCoursesActivity extends Activity implements OnClickListener{
+
+public class MyCoursesActivity extends ListActivity {
 	private TextView tv_statusbar;
-	private LinearLayout my_courses_list;
+//	private ImageButton btn_remove_course;
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.my_courses);
+		setContentView(R.layout.course_list);
 
 		tv_statusbar = (TextView)findViewById(R.id.tv_statusbar);
 		tv_statusbar.setText(getString(R.string.my_courses));
 
-		my_courses_list = (LinearLayout)findViewById(R.id.my_courses_list);
-		updateCourseList();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		fetchCourses();
+		}
 
-	private void updateCourseList() {
+	private void fetchCourses() {
 		DatabaseHelper db = new DatabaseHelper(this);
 		db.openReadableConnection();
-		List<Course> courseList;
 		try {
-			courseList = db.getMyCourses();
-			db.close();
-			for (Course course : courseList) {
-				addCourseToView(course);
-			}
+			List<Course> myCourses = db.getMyCourses();
+			this.setListAdapter(new CourseListArrayAdapter(this, R.layout.my_courses_list_item, myCourses));
+			
 		} catch (SQLException e) {
-			Util.log("Failed to retrieve my courses");
+			Util.log("Unable to retrieve my courses");
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * adds course name to view
-	 * @param course
-	 */
-	private void addCourseToView(Course course) {
-		TextView tv = new TextView(this);
-		tv.setText(course.getCourseText());
-		tv.setTextSize(16);
-		my_courses_list.addView(tv);
-
-		View line= new View(this);
-		line.setBackgroundResource(R.drawable.line_timetable);
-		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 2);
-		line.setLayoutParams(params);
-		my_courses_list.addView(line);
+	private void removeCourse() {
+		DatabaseHelper db = new DatabaseHelper(this);
+		db.openWritableConnection();
+		//		db.removeMyCourse(course)
+		db.close();
 	}
+	
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
 
-	}
+	//
+	//	private void updateCourseList() {
+	//		my_courses_list.removeAllViews();
+	//		DatabaseHelper db = new DatabaseHelper(this);
+	//		db.openReadableConnection();
+	//		List<Course> courseList;
+	//		try {
+	//			courseList = db.getMyCourses();
+	//			db.close();
+	//			for (Course course : courseList) {
+	//				addCourseToView(course);
+	//			}
+	//		} catch (SQLException e) {
+	//			Util.log("Failed to retrieve my courses");
+	//			e.printStackTrace();
+	//		}
+	//	}
+
+
+
 }

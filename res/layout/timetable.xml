@@ -3,7 +3,8 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
 
-	<include layout="@layout/statusbar" android:id="@+id/statusbar" />
+<include layout="@layout/statusbar" android:id="@+id/statusbar"/>
+
 
 	<ScrollView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_below="@id/statusbar">

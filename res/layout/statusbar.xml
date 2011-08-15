@@ -3,8 +3,8 @@
 	android:layout_width="fill_parent" android:layout_height="50dip"
 	android:background="@drawable/statusbar_background">
 
-	<TextView style="@style/header_text" android:id="@+id/tv_statusbar"
-		android:layout_centerInParent="true" android:textColor="#FFFFFFFF"/><!--
+	<TextView style="@style/wrap_content" android:textSize="22dip" android:textStyle="bold" android:id="@+id/tv_statusbar" 
+		android:layout_alignParentLeft="true" android:paddingLeft="10dip" android:layout_centerVertical="true" android:textColor="#FFFFFFFF"/><!--
 
 	<ImageView android:layout_width="wrap_content"
 		android:layout_height="fill_parent" android:src="@drawable/ic_refresh"

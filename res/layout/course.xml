@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	style="@style/studentguide_layout" android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	android:layout_width="fill_parent" android:layout_height="fill_parent">	
 
 	<include layout="@layout/statusbar" android:id="@+id/statusbar"/>
-	
 
-	<ScrollView android:layout_width="wrap_content"
+	<ScrollView android:layout_width="wrap_content" android:id="@+id/sv_course_background"
 		android:layout_height="wrap_content" android:layout_below="@id/statusbar">
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:layout_centerHorizontal="true"
 			android:layout_alignParentTop="true" android:orientation="vertical"
 			android:scrollbarAlwaysDrawVerticalTrack="true">
+			
+			<AutoCompleteTextView android:layout_width="300dip"
+			android:layout_height="wrap_content" android:id="@+id/ac_search_course"
+			android:hint="@string/ac_find_course_hint"/>
+			
 			<TextView style="@style/header_text" android:id="@+id/tv_coursename" />
 			<TextView style="@style/text" android:id="@+id/tv_courseLevel" />
 			<TextView style="@style/text" android:id="@+id/tv_courseCredit" />

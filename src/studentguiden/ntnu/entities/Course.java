@@ -86,7 +86,7 @@ public class Course implements Serializable{
 	}
 	
 	public String getCourseText() {
-		return code+name_no+name_en;
+		return getCode()+" - "+getName();
 	}
 
 	public void addLecture(Lecture lecture) {		

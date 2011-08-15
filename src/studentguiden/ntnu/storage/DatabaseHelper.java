@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -32,7 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private SQLiteDatabase db;
 	private Context context;
 	private static final String CREATE_TABLE_COURSES =
-		"create table IF NOT EXISTS courses (code text primary key unique, name_no text not null, name_en text not null);";
+		"create table IF NOT EXISTS courses (_id integer primary key, code text unique not null, name_no text not null, name_en text not null);";
 
 
 	public DatabaseHelper(Context context) {
@@ -139,37 +140,53 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public List<Course> getAllCourses() {
 		List<Course> courses = new ArrayList<Course>();
-		Cursor c = db.query("courses", 
+		Cursor c = getAllCoursesCursor();
+
+		while(c.moveToNext()) {
+			courses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
+		}
+		c.close();
+
+		return courses;
+	}
+	/**
+	 * Retrieves the cursor for all the courses in the database, ordered by "code"
+	 * @return
+	 */
+	public Cursor getAllCoursesCursor() {
+		return db.query("courses", 
 				new String[] {"code","name_no","name_en"},
 				null,
 				null,
 				"code",
 				null,
 				null);
-
-		while(c.moveToNext()) {
-			courses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
 		}
-		c.close();
-
-		return courses;
-	}
-
-	public List<Course> getAutocomplete(String query) {
-		List<Course> courses = new ArrayList<Course>();
+	//TODO: preparedstatements?
+	public Cursor getAutocompleteCursor(String query) {	
 		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '"+query+"%' "+
 				"UNION SELECT * FROM courses WHERE name_en LIKE '"+query+"%' " +
 				"UNION SELECT * FROM courses WHERE code LIKE '"+query+"%' LIMIT 0,10"
 				, null);
-
-		while(c.moveToNext()) {
-			courses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
-		}
-		c.close();
-
-		return courses;
-
+		return c;
 	}
+	
+	//TODO: preparedstatements
+//	public List<Course> getAutocomplete(String query) {
+//		List<Course> courses = new ArrayList<Course>();
+//		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '"+query+"%' "+
+//				"UNION SELECT * FROM courses WHERE name_en LIKE '"+query+"%' " +
+//				"UNION SELECT * FROM courses WHERE code LIKE '"+query+"%' LIMIT 0,10"
+//				, null);
+//
+//		while(c.moveToNext()) {
+//			courses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
+//		}
+//		c.close();
+//
+//		return courses;
+//
+//	}
 
 	/**
 	 * Removes a saved course 
@@ -177,6 +194,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void removeMyCourse(Course course) throws SQLException {
+		removeLecturesFromCourse(course);
 		getMyCourseDao().delete(course);
 	}
 
@@ -215,10 +233,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	//TODO: fjerner kanskje ikke riktig. generated id blir vel annerledes? bør vel fjerne etter id. (deleteIds()
 	public void removeLecture(Lecture lecture) throws SQLException {
 		getLectureDao().delete(lecture);
+		Util.log("Removing lecture at "+lecture.getStart()+" for course "+lecture.getCourseCode());
+	}
+	
+	public void removeLecturesFromCourse(Course course) throws SQLException {
+		for (Lecture lecture: course.getLectureList()) {
+			removeLecture(lecture);
+		}
 	}
 
 	public void insertMyCourse(Course course) throws SQLException {
 		getMyCourseDao().create(course);
+		Util.log("Inserting course "+course.getCode()+" into my courses table");
 	}
 
 	public List<Course> getMyCourses() throws SQLException {

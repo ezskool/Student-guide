@@ -1,7 +1,6 @@
 package studentguiden.ntnu.home;
 
 import studentguiden.ntnu.bus.BusActivity;
-import studentguiden.ntnu.courses.CourseListActivity;
 import studentguiden.ntnu.courses.CourseMenu;
 import studentguiden.ntnu.courses.TimetableActivity;
 import studentguiden.ntnu.dinner.DinnerActivity;
