@@ -30,14 +30,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		"create table IF NOT EXISTS courses (_id integer primary key, code text unique not null, name_no text not null, name_en text not null);";
 	//TODO: foreign key courses table
 	private static final String CREATE_TABLE_MYCOURSES =
-		"create table IF NOT EXISTS my_courses (code text primary key, name_no text not null, name_en text not null);";
+		"create table IF NOT EXISTS my_courses (code text primary key, name_no text not null, name_en text not null, color text not null);";
 	private static final String CREATE_TABLE_LECTURES =
-		"create table IF NOT EXISTS my_lectures (course_code text primary key, day text not null, day_number integer not null, start text not null, end text not null, room text not null, room_code text, weeks text, activity_description text);";
+		"create table IF NOT EXISTS my_lectures (id_ integer primary key, course_code text not null, day text not null, day_number integer not null, start text not null, end text not null, room text not null, room_code text, weeks text, activity_description text, color text not null);";
 
-	
+
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
+	}
+
+	public boolean isOpen() {
+		return db!=null ? db.isOpen() : false;
 	}
 
 
@@ -127,11 +131,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	//TODO: preparedstatements?
 	public Cursor getAutocompleteCursor(String query) {	
-		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '"+query+"%' "+
-				"UNION SELECT * FROM courses WHERE name_en LIKE '"+query+"%' " +
-				"UNION SELECT * FROM courses WHERE code LIKE '"+query+"%' LIMIT 0,10"
+		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '%"+query+"%' "+
+				"UNION SELECT * FROM courses WHERE name_en LIKE '%"+query+"%' " +
+				"UNION SELECT * FROM courses WHERE code LIKE '"+query+"%' LIMIT 0,100"
 				, null);
 		return c;
+	}
+
+	public List<Course> getAutocompleteList(String query) {
+		Cursor c = getAutocompleteCursor(query);
+		List<Course> courses = new ArrayList<Course>();
+
+		while(c.moveToNext()) {
+			courses.add(new Course(c.getString(1), c.getString(2), c.getString(3)));
+		}
+		c.close();
+
+		return courses;
 	}
 
 	/**
@@ -140,7 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void removeMyCourse(Course course) throws SQLException {
-//		removeLecturesFromCourse(course);
+		//		removeLecturesFromCourse(course);
 		db.delete("my_courses", "code=?", new String[] { course.getCode() });
 		db.delete("my_lectures", "course_code=?", new String[] { course.getCode() });
 		Util.log("Deleted course "+course.getCode());
@@ -154,23 +170,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<Lecture> getMyLectures() throws SQLException {
 		List<Lecture> lectures = new ArrayList<Lecture>();
 		Cursor c = getMyLecturesCursor();
-
-		while(c.moveToNext()) {// 		code			start				end			day				daynumber	weeks				room			roomcode		activitydescr
-			lectures.add(new Lecture(c.getString(0), c.getString(3), c.getString(4), c.getString(1), c.getInt(2), c.getString(7), c.getString(5), c.getString(6), c.getString(8)));
+		while(c.moveToNext()) {
+			Util.log("fetching lectures. at index: "+c.getPosition()+". total lectures: "+c.getCount());
+			
+			lectures.add(new Lecture(c.getString(0), c.getString(3), c.getString(4), c.getString(1), c.getInt(2), c.getString(7), c.getString(5), c.getString(6), c.getString(8), c.getString(9)));
 		}
 		c.close();
 
+		Util.log("Retrieved "+lectures.size()+" lectures from db");
 		return lectures;
 	}
 
 	public Cursor getMyLecturesCursor() {
 		return db.query("my_lectures", 
-				new String[] {"course_code", "day", "day_number", "start", "end", "room", "room_code", "weeks", "activity_description"},
+				new String[] {"course_code", "day", "day_number", "start", "end", "room", "room_code", "weeks", "activity_description", "color"},
 				null,
 				null,
-				"start",
 				null,
-				null);
+				null,
+				"start");
 	}
 
 	/**
@@ -188,6 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put("weeks", lecture.getWeeks());
 		initialValues.put("room", lecture.getRoom());
 		initialValues.put("room_code", lecture.getRoomCode());
+		initialValues.put("color", lecture.getColor());
 		return db.insert("my_lectures", null, initialValues);
 	}
 
@@ -225,6 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		initialValues.put("code", course.getCode());
 		initialValues.put("name_no", course.getName_no());
 		initialValues.put("name_en", course.getName_en());
+		initialValues.put("color", course.getColor());
 
 		Util.log("Inserting course "+course.getCode()+" into my_courses table");
 		return db.insert("my_courses",null, initialValues);
@@ -235,11 +255,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Cursor c = db.query("my_courses", new String[] {
 				"code",
 				"name_no",
-				"name_en"
+				"name_en",
+				"color"
 		}, null, null, null, null, "code");
 		Util.log("cursor count my_courses: "+c.getCount());
 		while(c.moveToNext()) {
-			myCourses.add(new Course(c.getString(0), c.getString(1), c.getString(2)));
+			myCourses.add(new Course(c.getString(0), c.getString(1), c.getString(2), c.getString(3)));
 		}
 		c.close();
 		return myCourses;

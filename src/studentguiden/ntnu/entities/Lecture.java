@@ -9,7 +9,7 @@ public class Lecture {
 
 	private int id;
 	
-	private String  activityDescription, day, start, end, room, roomCode, courseCode, weeks;
+	private String  activityDescription, day, start, end, room, roomCode, courseCode, weeks, color;
 	
 	//TODO: add databasefield(egen tabell?) for studyprogrammes
 	private ArrayList<String> studyProgrammes;
@@ -18,7 +18,7 @@ public class Lecture {
 	
 	public Lecture(){}
 
-	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room, String roomCode, String activityDescription) {
+	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room, String roomCode, String activityDescription, String color) {
 		this.start = start;
 		this.end = end;
 		this.day = day;
@@ -28,21 +28,42 @@ public class Lecture {
 		this.dayNumber = dayNumber;
 		this.activityDescription = activityDescription;
 		this.roomCode = roomCode;
+		this.color = color;
 	}
 
+//	public String[] retrieveWeeks() {
+//		String[] temp = weeks.split("-");
+//		if(temp.length >1) {
+//			
+//			int duration = Integer.parseInt(temp[1])-Integer.parseInt(temp[0]);
+//			Util.log("lecture has a duration of "+duration+". this is parsed from "+weeks);
+//			String[] out = new String[duration+1];
+//			for (int i = 0; i < duration+1; i++) {
+//				out[i] = Integer.toString(i+Integer.parseInt(temp[0]));
+//			}
+//			return out;
+//		}
+//		return new String[] {""};
+//	}
+	
+	
+	
 	public String[] retrieveWeeks() {
-		String[] temp = weeks.split("-");
-		if(temp.length >1) {
-			
-			int duration = Integer.parseInt(temp[1])-Integer.parseInt(temp[0]);
-			Util.log("lecture has a duration of "+duration+". this is parsed from "+weeks);
-			String[] out = new String[duration+1];
-			for (int i = 0; i < duration+1; i++) {
-				out[i] = Integer.toString(i+Integer.parseInt(temp[0]));
-			}
-			return out;
-		}
-		return new String[] {""};
+		return weeks.split(",");
+	}
+
+	/**
+	 * @return the color
+	 */
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	/**
@@ -75,10 +96,11 @@ public class Lecture {
 	}
 
 	public String getWeeksText() {
-		String[] weekList = retrieveWeeks();
+		String[] weekList = weeks.split(",");
+		Util.log("----- length: "+weekList.length);
 		if(weekList.length==1) {
 			return weekList[0];
-		} else if(weekList.length >2) {
+		} else if(weekList.length >1) {
 			return weekList[0]+"-"+weekList[weekList.length-1];
 		}else {
 			return "";

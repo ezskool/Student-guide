@@ -4,15 +4,12 @@ import java.util.ArrayList;
 
 
 public class Course {
-	private String code;
+	private String code, name_no,name_en;
 	
-	private String name_no;
-	
-	private String name_en;
-	
-	private String credit, studyLevel, courseType, goals, description, prerequisites, timespan;
+	private String credit, studyLevel, courseType, goals, description, prerequisites, timespan, color;
 	private boolean taughtInSpring, taughtInAutumn;
 	private ArrayList<Lecture> lectureList;
+
 	
 	public Course() {}
 	
@@ -20,6 +17,11 @@ public class Course {
 		this.code = code;
 		this.name_no = name_no;
 		this.name_en = name_en;
+	}
+	
+	public Course(String code, String name_no, String name_en, String color) {
+		this(code, name_no, name_en);
+		this.color = color;
 	}
 	
 	/**Returns name, with correct language based on phone selection
@@ -73,13 +75,28 @@ public class Course {
 	 */
 	public String getName_en() {
 		return name_en;
-	}
+	}	
 	
+	/**
+	 * @return the color
+	 */
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(String color) {
+		this.color = color;
+	}
+
 	public String getCourseText() {
 		return getCode()+" - "+getName();
 	}
 
-	public void addLecture(Lecture lecture) {		
+	public void addLecture(Lecture lecture) {
+		lecture.setColor(getColor());
 		getLectureList().add(lecture);
 	}
 

@@ -32,13 +32,13 @@ public class MyCoursesActivity extends ListActivity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.course_list);
+		setContentView(R.layout.my_courses);
 
-		tv_statusbar_page = (TextView)findViewById(R.id.tv_statusbar_page);
-		tv_statusbar_page.setText("/"+getString(R.string.my_courses));
+//		tv_statusbar_page = (TextView)findViewById(R.id.tv_statusbar_page);
+//		tv_statusbar_page.setText("/"+getString(R.string.my_courses));
 
-		tv_home = (TextView)findViewById(R.id.tv_statusbar);
-		tv_home.setOnClickListener(this);
+//		tv_home = (TextView)findViewById(R.id.tv_statusbar);
+//		tv_home.setOnClickListener(this);
 	}
 	
 	@Override
@@ -70,9 +70,9 @@ public class MyCoursesActivity extends ListActivity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		if(v==tv_home) {
-			this.finish();
-		}
+//		if(v==tv_home) {
+//			this.finish();
+//		}
 	}
 	
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="color_codes">
+        <item>#b1e1d5</item>
+        <item>#b1d7e1</item>
+        <item>#e1dbb1</item>
+        <item>#e1b1cd</item>
+        <item>#b1b2e1</item>
+        <item>#c2e1b1</item>
+        <item>#e0e1b1</item>
+        <item>#d5b1e1</item>
+        <item>#e1b1b1</item>
+        <item>#e1b1cc</item>
+    </string-array>
+</resources>

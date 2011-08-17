@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!--  statusbar strings -->
+    <string name="app_name">Studassen</string>
+    <!-- Home strings -->
+    <string name="header_timetable">Forelesninger i dag:</string>
+    <string name="no_lectures">Ingen</string>
+    
+    <!-- MenuActivity strings -->
+    <string name="btn_courses">Fag</string>
+    <string name="btn_timetable">Timeplan</string>
+    <string name="btn_dinner">Middag</string>
+    
+    <!-- CourseMenu strings -->
+    <string name="tab_timetable">Timeplan</string>
+    <string name="tab_my_courses">Mine fag</string>
+    <string name="tab_find_courses">Finn fag</string>
+    <string name="courses_page">/fag</string>
+    
+    <!-- CourseSearchActivity strings -->
+    <string name="et_search_course">Filtrer fag</string>
+    <string name="dialog_find_course_title">Velg fag</string>
+    <string name="tv_search_course">Søk etter fag</string>
+    <string name="btn_find_courses">Finn fag</string>    
+    <string name="fetching_courses">Henter fag..</string>
+    <string name="ac_find_course_hint">Fagkode eller fagnavn</string>
+    <string name="toast_course_added">Fag lagret. For å fjerne fag, gå til "Mine fag"</string>
+    <string name="toast_course_add_failed">Kunne ikke lagre fag.</string>
+    
+    
+    <!-- CourseActivity strings -->
+    <string name="course_type">Fagtype: </string>
+	<string name="student_points">Studiepoeng: </string>
+	<string name="taught_in_semester_spring">Undervises i vårsemesteret</string>
+	<string name="taught_in_semester_autumn">Undervises i høstsemesteret</string>
+    <string name="et_course_id">Fagkode</string>
+    <string name="btn_search">Søk</string>
+    <string name="title_search_course">Søk etter fag</string>
+    <string name="download_failed_toast">Nedlastning feilet. Sørg for at du har fungerende tilgang til internett, og prøv igjen.</string>
+    <string name="invalid_url_toast">Nedlastning feilet: Kunne ikke finne fag (web server kan være nede).</string>
+    <string name="course_goals">Mål</string>
+    <string name="course_description">Beskrivelse</string>
+    <string name="room">Rom: </string>
+    <string name="tv_course_schedule_header">Tidsplan</string>
+    <string name="taught_in_weeks">Undervises i uke </string>
+    <string name="add_to_my_courses">Legg til i mine fag</string>
+    
+    <!--  SocialActivity Strings -->
+    <string name="tv_social_title">Arrangementer</string>
+    <string name="btn_open_link">Åpne lenke</string>
+    <string name="event_content_by">Arrangementsinfo hentet fra:</string>
+    <string name="category">Kategori:</string>
+    
+    <!-- DinnerActivity strings -->
+    <string name="text_select_place">Velg kantine</string>
+    <string name="todays_dinner">Dagens middag</string>
+    
+    <!-- Waiting messages -->
+    <string name="downloading_content">Laster ned data..</string>
+    
+    <!-- TabActivity strings -->
+    <string name="home">Hjem</string>
+    <string name="social">Sosialt</string>
+    <string name="courses">Fag</string>
+    <string name="dinner">Middag</string>
+    
+    <!--  Timetable strings -->
+    <string name="monday">Mandag</string>
+    <string name="tuesday">Tirsdag</string>
+    <string name="wednesday">Onsdag</string>
+    <string name="thursday">Torsdag</string>
+    <string name="friday">Fredag</string>
+    <string name="timetable">Timeplan</string>
+    <string name="course_code">Fagkode</string>
+    <string name="my_courses">Mine fag</string>
+    
+    
+    <!-- Database -->
+    <string name="databaseVersion">1</string>
+    
+    <!-- error message -->
+    <string name="error_msg_header">Tilkobling feilet</string>
+    <string name="error_msg_text">Sørg for å ha en fungerende tilkobling til internett, og prøv igjen.</string>
+    <string name="no_connection">Vennligst skru på Wifi eller 3g</string>
+    <string name="no_connection_title">Får ikke kontakt med internett</string>
+    <string name="settings">Instillinger</string>
+    <string name="cancel">Avbryt</string>
+</resources>

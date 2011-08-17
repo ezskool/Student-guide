@@ -3,39 +3,35 @@
 	style="@style/studentguide_layout" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-	<include layout="@layout/statusbar" android:id="@+id/statusbar" />
 
 	<ScrollView android:layout_width="fill_parent" android:id="@+id/sv_course_background"
 		android:layout_height="wrap_content" android:layout_below="@id/statusbar">
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:layout_centerHorizontal="true"
 			android:layout_alignParentTop="true" android:orientation="vertical"
-			android:scrollbarAlwaysDrawVerticalTrack="true" android:padding="20dip">
-			
-				<TextView style="@style/header_text" android:text="@string/tv_search_course" />
-				<AutoCompleteTextView android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:id="@+id/ac_search_course"
-					android:hint="@string/ac_find_course_hint" />
-					
-			
-				<TextView style="@style/header_text" android:id="@+id/tv_coursename" android:paddingTop="20dip"/>
-				<TextView style="@style/text" android:id="@+id/tv_courseLevel" />
-				<TextView style="@style/text" android:id="@+id/tv_courseCredit" />
-				<TextView style="@style/text" android:id="@+id/tv_course_type" />
-				<TextView style="@style/text" android:id="@+id/tv_course_semester" />
-				<TextView style="@style/text" android:id="@+id/tv_course_prerequisites" />
+			android:scrollbarAlwaysDrawVerticalTrack="true" android:padding="15dip">
 
-				<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:paddingTop="20dip"
-					android:text="@string/add_to_my_courses" android:id="@+id/btn_add_to_my_courses" android:textSize="18dip" 
-					android:layout_gravity="left" android:visibility="gone" />
+			<TextView style="@style/header_text" android:id="@+id/tv_coursename"
+				android:paddingTop="20dip" />
+			<TextView style="@style/text" android:id="@+id/tv_courseLevel" />
+			<TextView style="@style/text" android:id="@+id/tv_courseCredit" />
+			<TextView style="@style/text" android:id="@+id/tv_course_type" />
+			<TextView style="@style/text" android:id="@+id/tv_course_semester" />
+			<TextView style="@style/text" android:id="@+id/tv_course_prerequisites" />
 
-			
-				<TextView style="@style/header_text" android:id="@+id/tv_courseGoals_title" android:paddingTop="20dip"/>
-				<TextView style="@style/text" android:id="@+id/tv_courseGoals" />
-				<TextView style="@style/header_text" android:id="@+id/tv_courseDescription_title" />
-				<TextView style="@style/text" android:id="@+id/tv_coursedescription" />
-				<TextView style="@style/header_text" android:id="@+id/tv_course_schedule_title" />
-				<TextView style="@style/text" android:id="@+id/tv_course_schedule" />
-			</LinearLayout>
+				<Button android:layout_height="wrap_content"
+					android:layout_width="fill_parent" android:paddingTop="20dip"
+					android:text="@string/add_to_my_courses" android:id="@+id/btn_add_to_my_courses"
+					android:textSize="18dip" android:layout_gravity="left"
+					android:visibility="gone" />
+
+			<TextView style="@style/header_text" android:id="@+id/tv_courseGoals_title"
+				android:paddingTop="20dip" />
+			<TextView style="@style/text" android:id="@+id/tv_courseGoals" />
+			<TextView style="@style/header_text" android:id="@+id/tv_courseDescription_title" />
+			<TextView style="@style/text" android:id="@+id/tv_coursedescription" />
+			<TextView style="@style/header_text" android:id="@+id/tv_course_schedule_title" />
+			<TextView style="@style/text" android:id="@+id/tv_course_schedule" />
+		</LinearLayout>
 	</ScrollView>
 </RelativeLayout>

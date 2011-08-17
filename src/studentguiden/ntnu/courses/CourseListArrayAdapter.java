@@ -8,6 +8,8 @@ import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.storage.DatabaseHelper;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,7 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 		this.items = items;
 		this.listItemLayoutResource = textViewResourceId;
 	}
-	
+
 
 	//TODO: implement viewholder pattern
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -48,7 +50,7 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 		btn_remove_course.setOnClickListener(new OnButtonClickListener(position));
 		list_item_text = (LinearLayout) view.findViewById(R.id.list_item_text);
 		list_item_text.setOnClickListener(new OnItemClickListener(position));
-		
+
 		Course item = items.get(position);
 		if (item!= null) {
 			TextView text1 = (TextView) view.findViewById(R.id.tv_code);
@@ -59,10 +61,11 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 			text2.setText(item.getName_no());
 			text3.setText(item.getName_en());
 
-			if((position % 2)==1) {
-				view.setBackgroundResource(R.drawable.layout_list_item_1);
-			}else {
-				view.setBackgroundResource(R.drawable.layout_list_item_2);
+			if(item.getColor() != null) {
+				view.setBackgroundColor(Integer.parseInt(item.getColor()));
+				//btn_add_my_course.setBackgroundColor(Integer.parseInt(thisCourse.getColor()));
+
+
 			}
 
 		}
@@ -70,40 +73,47 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 	}
 
 	private class OnItemClickListener implements OnClickListener{           
-        private int mPosition;
-        OnItemClickListener(int position){
-                mPosition = position;
-        }
-        @Override
-        public void onClick(View v) {
-                Util.log("list item clicked at position" + mPosition);  
-        }               
-    }
-	
+		private int mPosition;
+		OnItemClickListener(int position){
+			mPosition = position;
+		}
+		@Override
+		public void onClick(View v) {
+			startCourseActivity(getItem(mPosition).getCode());
+		}               
+	}
+
+	private void startCourseActivity(String code) {
+		Intent intent = new Intent(context, CourseActivity.class);
+		intent.putExtra("code", code);
+		context.startActivity(intent);
+	}
+
+
 	private class OnButtonClickListener implements OnClickListener{           
-        private int mPosition;
-        OnButtonClickListener(int position){
-                mPosition = position;
-        }
-        @Override
-        public void onClick(View v) {
-                removeCourse(getItem(mPosition)); 
-        }               
-    }
-	
+		private int mPosition;
+		OnButtonClickListener(int position){
+			mPosition = position;
+		}
+		@Override
+		public void onClick(View v) {
+			removeCourse(getItem(mPosition)); 
+		}               
+	}
+
 	private void removeCourse(Course course) {
 		DatabaseHelper db = new DatabaseHelper(context);
 		db.openWritableConnection();
-				try {
-					db.removeMyCourse(course);
-				
-				} catch (SQLException e) {
-					Util.log("Unable to delete item from db: "+course.getCode());
-					e.printStackTrace();
-				} finally {
-					this.remove(course);
-				}
+		try {
+			db.removeMyCourse(course);
+
+		} catch (SQLException e) {
+			Util.log("Unable to delete item from db: "+course.getCode());
+			e.printStackTrace();
+		} finally {
+			this.remove(course);
+		}
 		db.close();
-		
+
 	}
 }

@@ -1,6 +1,9 @@
 package studentguiden.ntnu.courses;
 
 import studentguiden.ntnu.main.R;
+import studentguiden.ntnu.misc.CourseDownloader;
+import studentguiden.ntnu.misc.Globals;
+import studentguiden.ntnu.misc.Util;
 import studentguiden.ntnu.storage.DatabaseHelper;
 import android.app.Activity;
 import android.app.TabActivity;
@@ -37,9 +40,13 @@ public class CourseMenu extends TabActivity {
 		setupTab(new TextView(this), getString(R.string.tab_timetable), timetableIntent);
 		Intent coursesIntent = new Intent().setClass(this, MyCoursesActivity.class);
 		setupTab(new TextView(this), getString(R.string.tab_my_courses), coursesIntent);
-		Intent findCoursesIntent = new Intent().setClass(this, CourseActivity.class);
+		Intent findCoursesIntent = new Intent().setClass(this, CourseListActivity.class);
 		setupTab(new TextView(this), getString(R.string.tab_find_courses), findCoursesIntent);
 
+		if(Util.hasCourseDataExpired(this) && !Globals.hasCalledCourseDownloader) {
+			new CourseDownloader(this).execute();
+			Globals.hasCalledCourseDownloader = true;
+		}
 
 //		initCursorAdapter();
 //		initItemFilter();

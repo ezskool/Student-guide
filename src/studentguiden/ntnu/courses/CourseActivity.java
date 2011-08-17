@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -35,17 +37,14 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author Håkon Drolsum Røkenes
  * 
  */
-public class CourseActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class CourseActivity extends Activity implements OnClickListener {
 	private TextView courseName, courseDescription, courseCredit, courseLevel, courseGoals, courseDescriptionTitle, 
-	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle, tv_statusbar_page, tv_home;
+	courseGoalsTitle, courseType, courseSemesterTaught, coursePrerequisites, courseSchedule, courseScheduleTitle;
 	private ProgressDialog pd;
 	private Bundle extras;
 	private String courseCode;
 	private Button btn_add_my_course;
 	private Course thisCourse;
-	private AutoCompleteTextView ac_search_courses;
-	private Cursor c;
-	private CourseCursorAdapter cursorAdapter;
 
 
 	@Override
@@ -53,13 +52,12 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course);
 
-		//		Bundle extras = getIntent().getExtras();
-		//		pd = 
-		//
-		//		if(extras !=null){
-		//			courseCode = extras.getString("code");
-		//			new ContentDownloader().execute(courseCode);
-		//		}
+		Bundle extras = getIntent().getExtras();
+
+		if(extras !=null){
+			courseCode = extras.getString("code");
+			new ContentDownloader(this).execute(courseCode);
+		}
 
 		courseName = (TextView)findViewById(R.id.tv_coursename);
 		courseDescription = (TextView)findViewById(R.id.tv_coursedescription);
@@ -73,38 +71,17 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		coursePrerequisites = (TextView)findViewById(R.id.tv_course_prerequisites);
 		courseSchedule = (TextView)findViewById(R.id.tv_course_schedule);
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
-		tv_statusbar_page = (TextView)findViewById(R.id.tv_statusbar_page);
-		tv_statusbar_page.setText(getString(R.string.courses_page));
 		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
 		btn_add_my_course.setOnClickListener(this);
 
-		tv_home = (TextView)findViewById(R.id.tv_statusbar);
-		tv_home.setOnClickListener(this);
 
-
-		initCursorAdapter();
 	}
 
-
-	//TODO: async
 	@Override
 	public void onClick(View v) {
 		if(v==btn_add_my_course) {
-			DatabaseHelper db = new DatabaseHelper(this);
-			db.openWritableConnection();
-			try {
-				db.insertMyCourse(thisCourse);
-				db.insertLectures(thisCourse.getLectureList());
-			} catch (SQLException e) {
-				Util.log("Insertion of my courses and lectures failed");
-				e.printStackTrace();
-			}
-
-			db.close();
-		}else if(v==tv_home) {
-			this.finish();
+			new CourseAdder(this).execute("");
 		}
-
 	}
 
 	/**
@@ -112,10 +89,10 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 	 * @param course
 	 */
 	public void updateView(Course course) {
-		btn_add_my_course.setVisibility(Button.VISIBLE);
 		thisCourse = course;
+		btn_add_my_course.setVisibility(Button.VISIBLE);
+//		btn_add_my_course.setBackgroundColor(Integer.parseInt(thisCourse.getColor()));
 		Util.log("Updating course view with course data");
-		tv_statusbar_page.setText(getString(R.string.courses_page)+"/"+course.getCode());
 		courseName.setText(course.getCode()+" - "+course.getNameNo());
 		courseLevel.setText(course.getStudyLevel());
 		courseCredit.setText(course.getCredit()+" "+getString(R.string.student_points));
@@ -144,36 +121,6 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		}		
 	}
 
-
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		TextView text = (TextView) arg0.findViewById(R.id.text1);
-		new ContentDownloader(this).execute(text.getText().toString());
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(ac_search_courses.getWindowToken(), 0);
-		ac_search_courses.setText("");
-	}
-
-
-	public void initCursorAdapter(){
-		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);
-		DatabaseHelper db = new DatabaseHelper(this);
-		db.openReadableConnection();
-
-		c = db.getAutocompleteCursor("");
-		startManagingCursor(c);
-
-		cursorAdapter = new CourseCursorAdapter(this, c);
-
-		ac_search_courses = (AutoCompleteTextView) findViewById(R.id.ac_search_course);
-		ac_search_courses.setAdapter(cursorAdapter);
-		ac_search_courses.setThreshold(1);
-		ac_search_courses.setOnItemClickListener(this);
-		db.close();
-	}
-
-
 	private class ContentDownloader extends AsyncTask<String, Void, Integer>{
 
 		private String textContent = "";
@@ -197,8 +144,14 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 		@Override
 		protected Integer doInBackground(String... params) {
 			currentCourse = new Course();
+			currentCourse.setColor(Integer.toString(Color.parseColor(Util.getUnusedColor(context))));
+
 			try {
-				textContent = Util.downloadContent("http://www.ime.ntnu.no/api/course/", params[0]);
+				String languageIdentifier = "";
+				if(!Util.isLanguageNorwegian(context)) {
+					languageIdentifier = "en/";
+				}
+				textContent = Util.downloadContent("http://www.ime.ntnu.no/api/course/"+languageIdentifier, params[0]);
 				scheduleContent = Util.downloadContent("http://www.ime.ntnu.no/api/schedule/", params[0]);
 
 				JSONHelper.updateCourseData(currentCourse, textContent);
@@ -231,6 +184,45 @@ public class CourseActivity extends Activity implements OnClickListener, OnItemC
 				Util.displayToastMessage(getString(R.string.invalid_url_toast),CourseActivity.this.getApplicationContext());
 			}
 			CourseActivity.this.pd.cancel();
+		}
+	}
+
+	private class CourseAdder extends AsyncTask<String, Void, Integer> {
+		private Context context;
+		private final int DB_INSERT_SUCCESS = 0;
+		private final int DB_INSERT_FAILED = 1;
+
+		public CourseAdder(Context context) {
+			this.context = context;
+		}
+
+		@Override
+		protected Integer doInBackground(String... arg0) {
+			DatabaseHelper db = new DatabaseHelper(context);
+			db.openWritableConnection();
+			try {
+				db.insertMyCourse(thisCourse);
+				db.insertLectures(thisCourse.getLectureList());
+			} catch (SQLException e) {
+				Util.log("Insertion of my courses and lectures failed");
+				e.printStackTrace();
+				return DB_INSERT_FAILED;
+			}
+
+			db.close();
+			return DB_INSERT_SUCCESS;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(result==DB_INSERT_SUCCESS) {
+				Util.incrementNextColor(context);
+				Util.log("Course added: "+thisCourse.getCode()+" with "+thisCourse.getLectureList().size()+" lectures");
+				Util.displayToastMessage(getString(R.string.toast_course_added), context);
+			}else if(result==DB_INSERT_FAILED) {
+				Util.log("Failed to add course "+thisCourse.getCode());
+				Util.displayToastMessage(getString(R.string.toast_course_add_failed), context);
+			}
 		}
 	}
 }

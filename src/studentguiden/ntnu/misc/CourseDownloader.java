@@ -12,9 +12,13 @@ import org.json.JSONObject;
 import studentguiden.ntnu.entities.Course;
 import studentguiden.ntnu.main.R;
 import studentguiden.ntnu.storage.DataBaseUpdater;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.provider.Settings;
 
 
 public class CourseDownloader extends AsyncTask<String, Void, Integer>{
@@ -77,9 +81,11 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 			new DataBaseUpdater(courseList, context).execute();
 
 		}else if(result == DOWNLOAD_FAILED || result == PARSING_FAILED) {
-			Util.displayToastMessage(context.getString(R.string.download_failed_toast),context);
+//			Util.displayToastMessage(context.getString(R.string.download_failed_toast),context);
 			Util.log("Course download failed");
+			Globals.hasCalledCourseDownloader=false;
 //			new DatabaseHelper(context);
+			Util.showNoConnectionDialog(context);
 		}
 	}
 
@@ -100,4 +106,6 @@ public class CourseDownloader extends AsyncTask<String, Void, Integer>{
 		}
 		return course;
 	}
+	
+
 }

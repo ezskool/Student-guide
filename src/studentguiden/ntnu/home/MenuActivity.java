@@ -1,5 +1,7 @@
 package studentguiden.ntnu.home;
 
+import java.util.Locale;
+
 import studentguiden.ntnu.bus.BusActivity;
 import studentguiden.ntnu.courses.CourseMenu;
 import studentguiden.ntnu.courses.TimetableActivity;
@@ -29,13 +31,23 @@ public class MenuActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.menu);
 		
 		initializeViewElements();
-	
+		checkLanguage();
 		//TODO: fiks sjekk om database er updated ok.
-		if(Util.hasCourseDataExpired(this)) {
+		if(Util.hasCourseDataExpired(this) && !Globals.hasCalledCourseDownloader) {
 			new CourseDownloader(this).execute();
 			Globals.hasCalledCourseDownloader = true;
 		}else {
 			Util.log("Course data already downloaded and cache has not expired: skipping download of course content");
+		}
+	}
+	
+	private void checkLanguage() {
+		prefs = getSharedPreferences("studassen", MODE_PRIVATE);
+		String language = Locale.getDefault().getDisplayLanguage();
+		if(language.contains("Norsk")) {
+			prefs.edit().putBoolean("lang_no", true).commit();
+		}else{
+			prefs.edit().putBoolean("lang_no", false).commit();
 		}
 	}
 	

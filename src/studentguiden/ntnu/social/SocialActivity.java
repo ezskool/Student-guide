@@ -133,7 +133,7 @@ public class SocialActivity extends ListActivity implements OnClickListener{
 			if(result == DOWNLOAD_SUCCESSFUL) {
 				Util.log("Samfunnet data download was successful");
 				SocialActivity.this.setEventList(eventList);
-			}else {
+			}else if(result == DOWNLOAD_FAILED){
 				Util.displayToastMessage(getString(R.string.download_failed_toast),SocialActivity.this.getApplicationContext());
 			}
 		}

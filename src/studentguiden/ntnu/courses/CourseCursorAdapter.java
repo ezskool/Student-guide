@@ -39,7 +39,7 @@ public class CourseCursorAdapter extends CursorAdapter{
     
     @Override
     public CharSequence convertToString(Cursor cursor) {
-    	return cursor.getString(1);
+    	return cursor.getString(1)+cursor.getString(2);
     }
  
     @Override
