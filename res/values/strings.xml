@@ -10,6 +10,8 @@
     <string name="btn_courses">NTNU Courses</string>
     <string name="btn_timetable">Timetable</string>
     <string name="btn_dinner">Dinner</string>
+    <string name="btn_bus">Bus</string>
+    <string name="btn_social">Social events</string>
     
     <!-- CourseMenu strings -->
     <string name="tab_timetable">Timetable</string>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	style="@style/studentguide_layout">
+
+	<LinearLayout style="@style/fill_parent"
+		android:orientation="vertical" android:padding="40dip">
+
+		<!--  column 1 -->
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_weight="1">
+
+			<!-- course menu item -->
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:layout_weight="1">
+				<LinearLayout style="@style/wrap_content"
+					android:orientation="vertical" android:layout_centerInParent="true"  android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/ic_course"
+						android:id="@+id/btn_course" />
+					<TextView style="@style/text" android:text="@string/btn_courses"/>
+				</LinearLayout>
+			</RelativeLayout>
+
+			<!-- social menu item -->
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:layout_weight="1">
+				<LinearLayout style="@style/wrap_content"
+					android:orientation="vertical" android:layout_centerInParent="true" android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/social_icon"
+						android:id="@+id/btn_social" />
+					<TextView style="@style/text" android:text="@string/btn_social" />
+				</LinearLayout>
+			</RelativeLayout>
+		</LinearLayout>
+
+		<!-- column 2 -->
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_weight="1">
+
+			<!-- dinner menu item -->
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:layout_weight="1">
+				<LinearLayout style="@style/wrap_content"
+					android:orientation="vertical" android:layout_centerInParent="true" android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/ic_dinner"
+						android:id="@+id/btn_dinner" />
+					<TextView style="@style/text" android:text="@string/btn_dinner" />
+				</LinearLayout>
+			</RelativeLayout>
+
+			<!-- bus menu item -->
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:layout_weight="1">
+				<LinearLayout style="@style/wrap_content"
+					android:orientation="vertical" android:layout_centerInParent="true" android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/ic_bus"
+						android:id="@+id/btn_bus" />
+					<TextView style="@style/text" android:text="@string/btn_bus" />
+				</LinearLayout>
+			</RelativeLayout>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

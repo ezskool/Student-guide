@@ -1,0 +1,5 @@
+<resources>
+    <color name="focused">#7ab4d2</color>
+    <color name="selected">#7ab4d2</color>
+   	<color name="unselected">#ffffff</color>
+</resources>

@@ -5,7 +5,7 @@
 
 	<LinearLayout android:layout_height="wrap_content"
 		android:layout_width="0dip" android:layout_weight="1"
-		android:orientation="vertical" android:id="@+id/list_item_text">
+		android:orientation="vertical" android:id="@+id/list_item_text" >
 		<TextView android:id="@+id/tv_code" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="16dip"
 			android:textStyle="bold" />
