@@ -33,11 +33,6 @@ public class CourseTabwidget extends TabActivity {
 		Intent findCoursesIntent = new Intent().setClass(this, CourseListActivity.class);
 		setupTab(new TextView(this), getString(R.string.tab_find_courses), findCoursesIntent);
 
-		if(Util.hasCourseDataExpired(this) && !Globals.hasCalledCourseDownloader) {
-			new CourseDownloader(this).execute();
-			Globals.hasCalledCourseDownloader = true;
-		}
-
 //		initCursorAdapter();
 //		initItemFilter();
 	}

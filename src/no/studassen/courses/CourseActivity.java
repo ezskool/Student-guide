@@ -132,7 +132,6 @@ public class CourseActivity extends Activity implements OnClickListener {
 		@Override
 		protected Integer doInBackground(String... params) {
 			currentCourse = new Course();
-			currentCourse.setColor(Integer.toString(Color.parseColor(Util.getUnusedColor(context))));
 
 			try {
 				String languageIdentifier = "";
@@ -190,7 +189,6 @@ public class CourseActivity extends Activity implements OnClickListener {
 			db.openWritableConnection();
 			try {
 				db.insertMyCourse(thisCourse);
-				db.insertLectures(thisCourse.getLectureList());
 			} catch (SQLException e) {
 				Util.log("Insertion of my courses and lectures failed");
 				e.printStackTrace();
@@ -204,7 +202,6 @@ public class CourseActivity extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Integer result) {
 			if(result==DB_INSERT_SUCCESS) {
-				Util.incrementNextColor(context);
 				Util.log("Course added: "+thisCourse.getCode()+" with "+thisCourse.getLectureList().size()+" lectures");
 				Util.displayToastMessage(getString(R.string.toast_course_added), context);
 			}else if(result==DB_INSERT_FAILED) {

@@ -227,23 +227,23 @@ public class Util {
 		alert.show();
 	}
 
-	public static String getUnusedColor(Context context) {
-		String[] colorCodes = context.getResources().getStringArray(R.array.color_codes);
-		SharedPreferences prefs = getSharedPreferences(context);
-		int nextColor = prefs.getInt("nextColor", 0);
-
-		if(colorCodes.length > nextColor) {
-			return colorCodes[nextColor];
-		}else {
-			return "#ffffff";
-		}
-	}
-
-	public static void incrementNextColor(Context context) {
-		SharedPreferences prefs = getSharedPreferences(context);
-		int nextColor = prefs.getInt("nextColor", 0);
-		prefs.edit().putInt("nextColor", nextColor+1).commit();
-	}
+//	public static String getUnusedColor(Context context) {
+//		String[] colorCodes = context.getResources().getStringArray(R.array.color_codes);
+//		SharedPreferences prefs = getSharedPreferences(context);
+//		int nextColor = prefs.getInt("nextColor", 0);
+//
+//		if(colorCodes.length > nextColor) {
+//			return colorCodes[nextColor];
+//		}else {
+//			return "#ffffff";
+//		}
+//	}
+//
+//	public static void incrementNextColor(Context context) {
+//		SharedPreferences prefs = getSharedPreferences(context);
+//		int nextColor = prefs.getInt("nextColor", 0);
+//		prefs.edit().putInt("nextColor", nextColor+1).commit();
+//	}
 
 	public static SharedPreferences getSharedPreferences(Context context) {
 		return context.getSharedPreferences("studassen", Context.MODE_PRIVATE);

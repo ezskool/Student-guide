@@ -4,8 +4,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import no.studassen.entities.Course;
+import no.studassen.main.R;
 import no.studassen.misc.Util;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 
 public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{
@@ -27,6 +30,7 @@ public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{
 		db.openWritableConnection();
 		try {
 			db.insertCourseList(courseList);
+			insertCourseColors(db);
 		} catch (SQLException e) {
 			Util.log("Insertion of course list failed");
 			e.printStackTrace();
@@ -45,4 +49,10 @@ public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{
 			Util.log("database update failed");
 		}
 	}
+	
+	private void insertCourseColors(DatabaseHelper db) throws SQLException{
+		String[] colorCodes = context.getResources().getStringArray(R.array.color_codes);
+		db.insertColorList(colorCodes);
+	}
 }
+

@@ -17,7 +17,9 @@ public class Lecture {
 	
 	public Lecture(){}
 
-	public Lecture(String code, String start, String end, String day, int dayNumber, String weeks, String room, String roomCode, String activityDescription, String color) {
+	//course_code text primary key, day text not null, day_number integer not null, start text not null, end text not null, room text not null, room_code text, weeks text, activity_description text, color_id integer not null);";
+
+	public Lecture(String code, String day, int dayNumber, String start, String end, String room, String roomCode, String weeks, String activityDescription, String color) {
 		this.start = start;
 		this.end = end;
 		this.day = day;

@@ -9,6 +9,7 @@ import no.studassen.entities.Lecture;
 import no.studassen.misc.Util;
 import no.studassen.storage.DatabaseHelper;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 public class TimetableActivity extends Activity implements OnClickListener{
 
 	private LinearLayout layout_monday, layout_tuesday, layout_wednesday, layout_thursday, layout_friday;
-	private AutoCompleteTextView ac_search_courses;
 	private TextView tv_week;
 
 	@Override
@@ -65,7 +65,7 @@ public class TimetableActivity extends Activity implements OnClickListener{
 
 		Util.log("printing "+lectures.size()+" lectures");
 		for (Lecture lecture : lectures) {
-//			if(Util.isLectureThisWeek(lecture)) {
+			if(Util.isLectureThisWeek(lecture)) {
 			Util.log("printing lecture on day:"+lecture.getDay()+"("+lecture.getDayNumber()+"). code: "+lecture.getCourseCode());
 				int day = lecture.getDayNumber();
 				if(day==0) {
@@ -81,7 +81,7 @@ public class TimetableActivity extends Activity implements OnClickListener{
 				}else {
 					Util.log("some course did not get printed, on day:"+lecture.getDay()+"("+lecture.getDayNumber()+"). code: "+lecture.getCourseCode());
 				}
-//			}
+			}
 		}
 
 
@@ -90,7 +90,7 @@ public class TimetableActivity extends Activity implements OnClickListener{
 	private TextView createLectureText(Lecture lecture) {
 		TextView temp = new TextView(this);
 		temp.setText(lecture.getStart()+" - "+lecture.getEnd()+" "+lecture.getCourseCode()+" "+getString(R.string.room)+" "+lecture.getRoom()+"\n");
-		temp.setBackgroundColor(Integer.parseInt(lecture.getColor()));
+		temp.setBackgroundColor(Color.parseColor(lecture.getColor()));
 		return temp;
 	}
 

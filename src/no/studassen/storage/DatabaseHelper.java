@@ -13,6 +13,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 
 
@@ -29,9 +30,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		"create table IF NOT EXISTS courses (_id integer primary key, code text unique not null, name_no text not null, name_en text not null);";
 	//TODO: foreign key courses table
 	private static final String CREATE_TABLE_MYCOURSES =
-		"create table IF NOT EXISTS my_courses (code text primary key, name_no text not null, name_en text not null, color text not null);";
+		"create table IF NOT EXISTS my_courses (code text primary key, name_no text not null, name_en text not null, color_id integer not null);";
 	private static final String CREATE_TABLE_LECTURES =
-		"create table IF NOT EXISTS my_lectures (id_ integer primary key, course_code text not null, day text not null, day_number integer not null, start text not null, end text not null, room text not null, room_code text, weeks text, activity_description text, color text not null);";
+		"create table IF NOT EXISTS my_lectures (_id integer primary key, course_code text not null, day text not null, day_number integer not null, start text not null, end text not null, room text not null, room_code text, weeks text, activity_description text, color_id integer not null);";
+	private static final String CREATE_TABLE_COLORS = 
+		"create table IF NOT EXISTS colors (id integer primary key, color_code text not null);";
 
 
 	public DatabaseHelper(Context context) {
@@ -49,6 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_COURSES);
 		db.execSQL(CREATE_TABLE_MYCOURSES);
 		db.execSQL(CREATE_TABLE_LECTURES);
+		db.execSQL(CREATE_TABLE_COLORS);
 		this.db = db;
 	}
 
@@ -57,6 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS courses");
 		db.execSQL("DROP TABLE IF EXISTS my_courses");
 		db.execSQL("DROP TABLE IF EXISTS my_lectures");
+		db.execSQL("DROP TABLE IF EXISTS colors");
 		onCreate(db);
 	}
 
@@ -74,12 +79,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @param course
 	 * @throws SQLException
 	 */
+	//TODO: update hvis lista finnes? db.replace?
 	public void insertCourse(Course course) throws SQLException{
 		ContentValues initialValues = new ContentValues();
 		initialValues.put("code", course.getCode());
 		initialValues.put("name_no", course.getName_no());
 		initialValues.put("name_en", course.getName_en());
-		db.insert("courses", null, initialValues);
+		db.replace("courses", null, initialValues);
 	}
 
 	/**
@@ -128,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				null,
 				null);
 	}
+
 	//TODO: preparedstatements?
 	public Cursor getAutocompleteCursor(String query) {	
 		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '%"+query+"%' "+
@@ -154,6 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @param course
 	 * @throws SQLException
 	 */
+	//TODO: fjern farge fra table colors
 	public void removeMyCourse(Course course) throws SQLException {
 		//		removeLecturesFromCourse(course);
 		db.delete("my_courses", "code=?", new String[] { course.getCode() });
@@ -166,13 +174,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
+	//TODO: add color: , c.getString(9)
 	public List<Lecture> getMyLectures() throws SQLException {
 		List<Lecture> lectures = new ArrayList<Lecture>();
 		Cursor c = getMyLecturesCursor();
 		while(c.moveToNext()) {
 			Util.log("fetching lectures. at index: "+c.getPosition()+". total lectures: "+c.getCount());
-			
-			lectures.add(new Lecture(c.getString(0), c.getString(3), c.getString(4), c.getString(1), c.getInt(2), c.getString(7), c.getString(5), c.getString(6), c.getString(8), c.getString(9)));
+
+			lectures.add(new Lecture(c.getString(0), c.getString(1), c.getInt(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9)));
 		}
 		c.close();
 
@@ -181,13 +190,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public Cursor getMyLecturesCursor() {
-		return db.query("my_lectures", 
-				new String[] {"course_code", "day", "day_number", "start", "end", "room", "room_code", "weeks", "activity_description", "color"},
-				null,
-				null,
-				null,
-				null,
-				"start");
+		return db.rawQuery("SELECT L.course_code, L.day, L.day_number, L.start, L.end, L.room, L.room_code, L.weeks, L.activity_description, C.color_code " +
+				"FROM my_lectures L INNER JOIN colors C ON L.color_id=C.id ORDER BY L.start", null);
 	}
 
 	/**
@@ -195,18 +199,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @param lecture
 	 * @throws SQLException
 	 */
-	public long insertLecture(Lecture lecture) throws SQLException {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put("course_code", lecture.getCourseCode());
-		initialValues.put("start", lecture.getStart());
-		initialValues.put("end", lecture.getEnd());
-		initialValues.put("day", lecture.getDay());
-		initialValues.put("day_number", lecture.getDayNumber());
-		initialValues.put("weeks", lecture.getWeeks());
-		initialValues.put("room", lecture.getRoom());
-		initialValues.put("room_code", lecture.getRoomCode());
-		initialValues.put("color", lecture.getColor());
-		return db.insert("my_lectures", null, initialValues);
+	public void insertLecture(Lecture lecture) throws SQLException {
+		Util.log("Inserting lecture for course: "+lecture.getCourseCode());
+		
+		db.execSQL("INSERT INTO my_lectures (course_code, day, day_number, start, end, room, room_code, weeks, activity_description, color_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, (SELECT color_id FROM my_courses WHERE code=?))", 
+				new String[] {lecture.getCourseCode(), lecture.getDay(), Integer.toString(lecture.getDayNumber()), lecture.getStart(), lecture.getEnd(),
+				lecture.getRoom(), lecture.getRoomCode(), lecture.getWeeks(), lecture.getActivityDescription(), lecture.getCourseCode() });
 	}
 
 	/**
@@ -223,7 +221,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.endTransaction();
 	}
 
-	//TODO: fjerner kanskje ikke riktig. generated id blir vel annerledes? bør vel fjerne etter id. (deleteIds()
 	public void removeLecture(Lecture lecture) throws SQLException {
 		db.delete("my_lectures", "course_code='"+lecture.getCourseCode()+"'", null);
 		Util.log("Removing lecture at "+lecture.getStart()+" for course "+lecture.getCourseCode());
@@ -238,16 +235,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.endTransaction();
 	}
 
-	public long insertMyCourse(Course course) throws SQLException {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put("code", course.getCode());
-		initialValues.put("name_no", course.getName_no());
-		initialValues.put("name_en", course.getName_en());
-		initialValues.put("color", course.getColor());
+	/**
+	 * Inserts the course as my course, and its corresponding lectures. A free color is assigned to the course, and its lectures.
+	 * @param course
+	 * @throws SQLException
+	 */
+	public void insertMyCourse(Course course) throws SQLException {
+		db.execSQL("INSERT INTO my_courses VALUES (?, ?, ?, (SELECT id FROM colors WHERE id NOT IN (SELECT color_id FROM my_courses) LIMIT 0,1))", 
+				new String[] {course.getCode(), course.getName_no(), course.getName_en()} );
+		insertLectures(course.getLectureList());
 
 		Util.log("Inserting course "+course.getCode()+" into my_courses table");
-		return db.insert("my_courses",null, initialValues);
 	}
+	
+	
 
 	public List<Course> getMyCourses() throws SQLException {
 		List<Course> myCourses = new ArrayList<Course>();
@@ -255,14 +256,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				"code",
 				"name_no",
 				"name_en",
-				"color"
+				"color_id"
 		}, null, null, null, null, "code");
 		Util.log("cursor count my_courses: "+c.getCount());
 		while(c.moveToNext()) {
-			myCourses.add(new Course(c.getString(0), c.getString(1), c.getString(2), c.getString(3)));
+			Course course = new Course(c.getString(0), c.getString(1), c.getString(2));
+			course.setColor(getCourseColor(Integer.toString(c.getInt(3))));
+			myCourses.add(course);
 		}
+
 		c.close();
 		return myCourses;
+	}
+
+	public String getCourseColor(String id) {
+		Cursor c = db.rawQuery("SELECT color_code FROM colors WHERE id=?", new String[] {id});
+		c.moveToFirst();
+		String colorCode = c.getString(0);
+		c.close();
+
+		return colorCode;
+	}
+
+	public long insertColor(String colorCode) throws SQLException {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put("color_code", colorCode);
+		return db.replace("colors",null, initialValues);
+	}
+
+	public void insertColorList(String[] colors) throws SQLException {
+		db.beginTransaction();
+		for (String colorCode: colors) {
+			insertColor(colorCode);
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
+	}
+
+	public int getUnusedColorId() throws SQLException {
+		Cursor c = db.rawQuery("SELECT id FROM colors WHERE id NOT IN (SELECT color_id FROM my_courses) LIMIT 0,1", null);
+		
+		c.moveToFirst();
+		int colorId = c.getInt(0);
+		c.close();
+		Util.log("Retrieved unused color: "+colorId);
+		return colorId;
 	}
 
 

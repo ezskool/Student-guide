@@ -9,6 +9,7 @@ import no.studassen.misc.Util;
 import no.studassen.storage.DatabaseHelper;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 	}
 
 
-	//TODO: implement viewholder pattern
+	//TODO: implement viewholder pattern?
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
 		if (view == null) {
@@ -61,10 +62,7 @@ public class CourseListArrayAdapter extends ArrayAdapter<Course> {
 			text3.setText(item.getName_en());
 
 			if(item.getColor() != null) {
-				view.setBackgroundColor(Integer.parseInt(item.getColor()));
-				//btn_add_my_course.setBackgroundColor(Integer.parseInt(thisCourse.getColor()));
-
-
+				view.setBackgroundColor(Color.parseColor(item.getColor()));
 			}
 
 		}
