@@ -135,12 +135,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				null);
 	}
 
-	//TODO: preparedstatements?
+	/**
+	 * Retrieves the cursor when autocompleting the query. 
+	 * @param query
+	 * @return
+	 */
 	public Cursor getAutocompleteCursor(String query) {	
-		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE '%"+query+"%' "+
-				"UNION SELECT * FROM courses WHERE name_en LIKE '%"+query+"%' " +
-				"UNION SELECT * FROM courses WHERE code LIKE '"+query+"%' LIMIT 0,100"
-				, null);
+		Cursor c =  db.rawQuery("SELECT * FROM courses WHERE name_no LIKE ? "+
+				"UNION SELECT * FROM courses WHERE name_en LIKE ? " +
+				"UNION SELECT * FROM courses WHERE code LIKE ? LIMIT 0,100"
+				, new String[] {"%"+query+"%", "%"+query+"%", query+"%" });
 		return c;
 	}
 
