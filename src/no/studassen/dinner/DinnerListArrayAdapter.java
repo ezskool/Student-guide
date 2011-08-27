@@ -1,7 +1,7 @@
 package no.studassen.dinner;
+import no.studassen.R;
 
 import no.studassen.entities.Canteen;
-import no.studassen.main.R;
 import no.studassen.misc.Util;
 import android.content.Context;
 import android.view.LayoutInflater;

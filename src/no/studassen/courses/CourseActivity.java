@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
+import no.studassen.R;
 import no.studassen.entities.Course;
 import no.studassen.entities.Lecture;
-import no.studassen.main.R;
 import no.studassen.misc.JSONHelper;
 import no.studassen.misc.Util;
 import no.studassen.storage.DatabaseHelper;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;

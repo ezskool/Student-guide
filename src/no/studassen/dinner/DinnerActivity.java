@@ -1,6 +1,7 @@
 package no.studassen.dinner;
 
 import java.io.IOException;
+import no.studassen.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -10,7 +11,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import no.studassen.entities.Canteen;
 import no.studassen.entities.Dinner;
 import no.studassen.entities.FeedEntry;
-import no.studassen.main.R;
 import no.studassen.misc.RSSHandler;
 import no.studassen.misc.Util;
 

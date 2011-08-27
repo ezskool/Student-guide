@@ -1,14 +1,12 @@
 package no.studassen.storage;
 
 import java.sql.SQLException;
+import no.studassen.R;
 import java.util.ArrayList;
 
 import no.studassen.entities.Course;
-import no.studassen.main.R;
 import no.studassen.misc.Util;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 
 public class DataBaseUpdater extends AsyncTask<String, Void, Integer>{

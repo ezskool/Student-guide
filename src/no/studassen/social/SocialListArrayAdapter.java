@@ -1,7 +1,7 @@
 package no.studassen.social;
 
 import java.util.ArrayList;
-import no.studassen.main.R;
+import no.studassen.R;
 
 import no.studassen.entities.Event;
 import android.content.Context;

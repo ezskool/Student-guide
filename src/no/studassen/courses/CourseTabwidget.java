@@ -1,9 +1,5 @@
 package no.studassen.courses;
 
-import no.studassen.misc.CourseDownloader;
-import no.studassen.main.R;
-import no.studassen.misc.Globals;
-import no.studassen.misc.Util;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +9,7 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
+import no.studassen.R;
 
 public class CourseTabwidget extends TabActivity {
 	private TabHost mTabHost;

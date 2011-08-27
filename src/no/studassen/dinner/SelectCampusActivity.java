@@ -2,8 +2,8 @@ package no.studassen.dinner;
 
 import java.util.ArrayList;
 
+import no.studassen.R;
 import no.studassen.entities.Canteen;
-import no.studassen.main.R;
 import no.studassen.misc.Util;
 import android.app.ListActivity;
 import android.content.Intent;

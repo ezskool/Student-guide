@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
-import no.studassen.main.R;
+import no.studassen.R;
 import no.studassen.misc.Util;
 import android.app.Activity;
 import android.app.Dialog;

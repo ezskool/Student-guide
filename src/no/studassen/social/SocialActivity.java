@@ -1,7 +1,7 @@
 package no.studassen.social;
 
 import java.io.IOException;
-import no.studassen.main.R;
+import no.studassen.R;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;

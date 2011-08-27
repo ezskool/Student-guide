@@ -3,8 +3,8 @@ package no.studassen.courses;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.studassen.R;
 import no.studassen.entities.Course;
-import no.studassen.main.R;
 import no.studassen.storage.DatabaseHelper;
 import android.app.Dialog;
 import android.app.ListActivity;

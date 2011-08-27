@@ -3,8 +3,8 @@ package no.studassen.courses;
 import java.sql.SQLException;
 import java.util.List;
 
+import no.studassen.R;
 import no.studassen.entities.Course;
-import no.studassen.main.R;
 import no.studassen.misc.Util;
 import no.studassen.storage.DatabaseHelper;
 import android.content.Context;

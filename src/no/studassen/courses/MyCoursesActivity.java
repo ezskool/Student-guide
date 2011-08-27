@@ -1,6 +1,7 @@
 package no.studassen.courses;
 
 import java.sql.SQLException;
+import no.studassen.R;
 import java.util.List;
 
 import no.studassen.entities.Course;
@@ -11,8 +12,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-
-import no.studassen.main.R;
 
 public class MyCoursesActivity extends ListActivity implements OnClickListener{
 	private TextView tv_statusbar_page, tv_home;

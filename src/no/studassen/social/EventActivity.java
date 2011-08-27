@@ -1,7 +1,7 @@
 package no.studassen.social;
 
 import android.app.Activity;
-import no.studassen.main.R;
+import no.studassen.R;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;

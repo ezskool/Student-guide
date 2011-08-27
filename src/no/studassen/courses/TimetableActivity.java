@@ -1,7 +1,7 @@
 package no.studassen.courses;
 
 import java.sql.SQLException;
-import no.studassen.main.R;
+import no.studassen.R;
 import java.util.Calendar;
 import java.util.List;
 
@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

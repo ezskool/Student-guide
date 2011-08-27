@@ -1,7 +1,7 @@
 package no.studassen.misc;
 
 import java.io.BufferedReader;
-import no.studassen.main.R;
+import no.studassen.R;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
