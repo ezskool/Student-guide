@@ -30,7 +30,7 @@ public class CourseActivity extends Activity implements OnClickListener {
 	private ProgressDialog pd;
 	private Bundle extras;
 	private String courseCode;
-	private Button btn_add_my_course;
+	private Button btn_add_my_course, btn_remove_my_course;
 	private Course thisCourse;
 
 
@@ -60,14 +60,16 @@ public class CourseActivity extends Activity implements OnClickListener {
 		courseScheduleTitle = (TextView)findViewById(R.id.tv_course_schedule_title);
 		btn_add_my_course = (Button)findViewById(R.id.btn_add_to_my_courses);
 		btn_add_my_course.setOnClickListener(this);
-
-
+		btn_remove_my_course = (Button)findViewById(R.id.btn_remove_my_courses);
+		btn_remove_my_course.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
 		if(v==btn_add_my_course) {
 			new CourseAdder(this).execute("");
+		}else if(v==btn_remove_my_course) {
+			new CourseRemover(this).execute("");
 		}
 	}
 
@@ -77,8 +79,8 @@ public class CourseActivity extends Activity implements OnClickListener {
 	 */
 	public void updateView(Course course) {
 		thisCourse = course;
-		btn_add_my_course.setVisibility(Button.VISIBLE);
-//		btn_add_my_course.setBackgroundColor(Integer.parseInt(thisCourse.getColor()));
+		showAddOrRemoveButton();
+		
 		Util.log("Updating course view with course data");
 		courseName.setText(course.getCode()+" - "+course.getNameNo());
 		courseLevel.setText(course.getStudyLevel());
@@ -106,6 +108,29 @@ public class CourseActivity extends Activity implements OnClickListener {
 				courseSchedule.append("\n\n");
 			}
 		}		
+	}
+	
+	private void showAddOrRemoveButton() {
+		DatabaseHelper db = new DatabaseHelper(this);
+		db.openReadableConnection();
+		String color = db.getCourseColor(courseCode);
+		
+		if(color.equals("")) {
+			displayAddButton();
+		}else {
+			displayRemoveButton();
+		}
+		
+	}
+	
+	private void displayAddButton() {
+		btn_remove_my_course.setVisibility(Button.GONE);
+		btn_add_my_course.setVisibility(Button.VISIBLE);
+	}
+	
+	private void displayRemoveButton() {
+		btn_add_my_course.setVisibility(Button.GONE);
+		btn_remove_my_course.setVisibility(Button.VISIBLE);
 	}
 
 	private class ContentDownloader extends AsyncTask<String, Void, Integer>{
@@ -173,6 +198,45 @@ public class CourseActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private class CourseRemover extends AsyncTask<String, Void, Integer> {
+		private Context context;
+		private final int DB_REMOVE_SUCCESS = 0;
+		private final int DB_REMOVE_FAILED = 1;
+		
+		public CourseRemover(Context context) {
+			this.context = context;
+		}
+		
+		@Override
+		protected Integer doInBackground(String... arg0) {
+			DatabaseHelper db = new DatabaseHelper(context);
+			db.openWritableConnection();
+			try {
+				db.removeMyCourse(thisCourse);
+			} catch (SQLException e) {
+				Util.log("Insertion of my courses and lectures failed");
+				e.printStackTrace();
+				return DB_REMOVE_FAILED;
+			}
+
+			db.close();
+			return DB_REMOVE_SUCCESS;
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(result==DB_REMOVE_SUCCESS) {
+				Util.log("Course removed: "+thisCourse.getCode()+" with "+thisCourse.getLectureList().size()+" lectures");
+				Util.displayToastMessage(getString(R.string.toast_course_removed), context);
+				displayAddButton();
+			}else if(result==DB_REMOVE_FAILED) {
+				Util.log("Failed to remove course "+thisCourse.getCode());
+				Util.displayToastMessage(getString(R.string.toast_course_remove_failed), context);
+			}
+		}
+		
+	}
+	
 	private class CourseAdder extends AsyncTask<String, Void, Integer> {
 		private Context context;
 		private final int DB_INSERT_SUCCESS = 0;
@@ -203,6 +267,7 @@ public class CourseActivity extends Activity implements OnClickListener {
 			if(result==DB_INSERT_SUCCESS) {
 				Util.log("Course added: "+thisCourse.getCode()+" with "+thisCourse.getLectureList().size()+" lectures");
 				Util.displayToastMessage(getString(R.string.toast_course_added), context);
+				displayRemoveButton();
 			}else if(result==DB_INSERT_FAILED) {
 				Util.log("Failed to add course "+thisCourse.getCode());
 				Util.displayToastMessage(getString(R.string.toast_course_add_failed), context);

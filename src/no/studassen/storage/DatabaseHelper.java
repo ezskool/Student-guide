@@ -264,7 +264,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Util.log("cursor count my_courses: "+c.getCount());
 		while(c.moveToNext()) {
 			Course course = new Course(c.getString(0), c.getString(1), c.getString(2));
-			course.setColor(getCourseColor(Integer.toString(c.getInt(3))));
+			course.setColor(getColorById(Integer.toString(c.getInt(3))));
 			myCourses.add(course);
 		}
 
@@ -272,7 +272,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return myCourses;
 	}
 
-	public String getCourseColor(String id) {
+	public String getCourseColor(String code) {
+		Cursor c = db.rawQuery("SELECT color_code FROM colors WHERE id=(SELECT color_id FROM my_courses WHERE code=?)", new String[] {code});
+		String colorCode = "";
+		if(c.moveToFirst()) {
+			colorCode = c.getString(0);
+		}
+		c.close();
+		return colorCode;
+	}
+	
+	public String getColorById(String id) {
 		Cursor c = db.rawQuery("SELECT color_code FROM colors WHERE id=?", new String[] {id});
 		c.moveToFirst();
 		String colorCode = c.getString(0);

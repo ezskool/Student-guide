@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	style="@style/studentguide_layout" android:padding="40dip">
+
+	<LinearLayout style="@style/fill_parent"
+		android:orientation="vertical">
+
+		<LinearLayout style="@style/wrap_content"
+			android:orientation="horizontal">
+			<ImageView style="@style/wrap_content" android:src="@drawable/studassen_logo" />
+			<TextView style="@style/app_logo" android:text="@string/app_name"
+				android:layout_gravity="center_vertical" />
+		</LinearLayout>
+		<View style="@style/horizontal_line_timetable" />
+		<!--  column 1 -->
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+
+			<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:orientation="horizontal" android:layout_gravity="center" >
+				<LinearLayout android:layout_height="wrap_content" android:layout_width="0dip" android:layout_weight="1"
+					android:orientation="vertical" android:layout_centerInParent="true"
+					android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/ic_course"
+						android:id="@+id/btn_course" />
+					<TextView style="@style/text" android:text="@string/btn_courses" />
+				</LinearLayout>
+
+				<LinearLayout android:layout_height="wrap_content" android:layout_width="0dip" android:layout_weight="1"
+					android:orientation="vertical" android:layout_centerInParent="true"
+					android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/social_icon"
+						android:id="@+id/btn_social" />
+					<TextView style="@style/text" android:text="@string/btn_social" />
+				</LinearLayout>
+
+
+				<LinearLayout android:layout_height="wrap_content" android:layout_width="0dip" android:layout_weight="1"
+					android:orientation="vertical" android:layout_centerInParent="true"
+					android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/ic_dinner"
+						android:id="@+id/btn_dinner" />
+					<TextView style="@style/text" android:text="@string/btn_dinner" />
+				</LinearLayout>
+
+				<LinearLayout android:layout_height="wrap_content" android:layout_width="0dip" android:layout_weight="1"
+					android:orientation="vertical" android:layout_centerInParent="true"
+					android:gravity="center">
+					<ImageView style="@style/wrap_content" android:src="@drawable/ic_bus"
+						android:id="@+id/btn_bus" />
+					<TextView style="@style/text" android:text="@string/btn_bus" />
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

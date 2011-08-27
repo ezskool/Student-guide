@@ -15,27 +15,27 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="no.studassen.social.EventActivity"
+		<activity android:name=".social.EventActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.social.SocialActivity"
+		<activity android:name=".social.SocialActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.courses.CourseListActivity"
+		<activity android:name=".courses.CourseListActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.courses.CourseTabwidget"
+		<activity android:name=".courses.CourseTabwidget"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.courses.TimetableActivity"
+		<activity android:name=".courses.TimetableActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.courses.CourseActivity"
+		<activity android:name=".courses.CourseActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.dinner.DinnerActivity"
+		<activity android:name=".dinner.DinnerActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.dinner.SelectCampusActivity"
+		<activity android:name=".dinner.SelectCampusActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.news.NewsActivity"
+		<activity android:name=".news.NewsActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.bus.BusActivity"
+		<activity android:name=".bus.BusActivity"
 			android:label="@string/app_name" />
-		<activity android:name="no.studassen.courses.MyCoursesActivity"
+		<activity android:name=".courses.MyCoursesActivity"
 			android:label="@string/app_name" />
 
 

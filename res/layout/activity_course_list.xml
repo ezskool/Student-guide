@@ -5,9 +5,14 @@
 
 	<TextView style="@style/header_text" android:text="@string/tv_search_course" />
 
-	<EditText android:id="@+id/et_search_courses"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:lines="1" android:hint="@string/ac_find_course_hint"/>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<EditText android:id="@+id/et_search_courses"
+			android:layout_width="0dip" android:layout_weight="1" android:layout_height="wrap_content"
+			android:lines="1" android:hint="@string/ac_find_course_hint" />
+		<Button style="@style/wrap_content" android:id="@+id/btn_clear_course_search" android:text="@string/btn_clear_course_search"/>
+	</LinearLayout>
+	
 	<ListView android:id="@android:id/list" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" style="@style/studentguide_layout"
 		android:dividerHeight="1dip" />

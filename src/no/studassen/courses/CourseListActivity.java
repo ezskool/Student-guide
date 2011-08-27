@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 
 /**
@@ -27,10 +28,7 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 
 
 	private EditText et_search;
-	private SharedPreferences prefs;
-	private ProgressDialog pd;
-	private Dialog searchDialog;
-	private List<Course> courses;
+	private Button btn_clear;
 	private DatabaseHelper db;
 
 	/** Called when the activity is first created. */
@@ -41,7 +39,8 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 
 		et_search = (EditText)findViewById(R.id.et_search_courses);
 		et_search.addTextChangedListener(this);
-
+		btn_clear = (Button)findViewById(R.id.btn_clear_course_search);
+		btn_clear.setOnClickListener(this);
 	}
 
 	/**
@@ -81,40 +80,18 @@ public class CourseListActivity extends ListActivity implements TextWatcher, OnC
 
 	@Override
 	public void onClick(View v) {
+		if(v==btn_clear) {
+			et_search.setText("");
+		}
 	}
-
-
-	//	@Override
-	//	protected void onListItemClick(ListView l, View v, int position, long id) {
-	//		super.onListItemClick(l, v, position, id);
-	//		if(v == btn_add_course) {
-	//			Util.log("clicked");
-	//		}else {
-	//			Course selectedCourse = (Course) this.getListAdapter().getItem(position);
-	//			startCourseActivity(selectedCourse.getCode());
-	//		}
-	//	}
-
-	/**
-	 * Starts the CourseActivity class for a course id
-	 * @param courseId the respective course id
-	 */
-	private void startCourseActivity(String code){
-		Intent intent = new Intent(CourseListActivity.this, CourseActivity.class);
-		intent.putExtra("code", code);
-		startActivity(intent);
-	}
-
 
 	@Override
 	public void afterTextChanged(Editable s) {
-
 	}
 
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
-
 	}
 
 	@Override
